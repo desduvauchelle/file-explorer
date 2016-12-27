@@ -8,7 +8,7 @@ export default class Favorites extends Component {
 
     render( ) {
         const { settings, selectPath, currentPath } = this.props;
-        const favorites = settings.favorites;
+        const favorites = [ ];
         return (
             <div>
                 {favorites.map(( favorite, i ) => {

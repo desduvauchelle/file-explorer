@@ -6,17 +6,6 @@ export default {
             height: 728
         }
     },
-    favorites : [
-        {
-            name: 'Favorites',
-            isOpen: true,
-            links: [ '/Users/denisduvauchelle/Documents/code/file-explorer', '/Users/denisduvauchelle/Downloads', '/Users/denisduvauchelle/Documents' ]
-        }, {
-            name: 'Favorites',
-            isOpen: true,
-            links: [ '/Users/denisduvauchelle/Documents/code/file-explorer', '/Users/denisduvauchelle/Downloads', '/Users/denisduvauchelle/Documents' ]
-        }
-    ],
     icons : {
         folder: 'fa fa-folder fa-fw',
         file: 'fa fa-file fa-fw',
