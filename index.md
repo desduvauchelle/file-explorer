@@ -1,37 +1,37 @@
-## Welcome to GitHub Pages
+# File explorer
 
-You can use the [editor on GitHub](https://github.com/desduvauchelle/file-explorer/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
+The perfect file explorer for all operating system.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+![Image](src)
 
-### Markdown
+## What's a perfect file explorer
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+A perfect file explorer will change from person to person. For that reason, we aim to make it extremely flexible so that you can transform it into anything you want as well as plugins to add more power.
 
-```markdown
-Syntax highlighted code block
+## Status
 
-# Header 1
-## Header 2
-### Header 3
+It's in very early development. We're expecting that by February 2017, most of the base features will be functional. You can find here a list and status of the upcoming features we want for v1.0.0 [Project status for v1.0](https://github.com/desduvauchelle/file-explorer/projects/1)
 
-- Bulleted
-- List
+The next stage will be to make the application more modular and customizable.
 
-1. Numbered
-2. List
+## Issues
 
-**Bold** and _Italic_ and `Code` text
+If you have issues or questions with the application, feel free to reach out to us: [Reach out](https://github.com/desduvauchelle/file-explorer/issues)
 
-[Link](url) and ![Image](src)
-```
+## How to build the application on your computer
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+1. Make sure you have NodeJs installed on your computer
+2. In terminal, navigate to the directory `cd your/folder`
+3. Install dependencies `npm install`
 
-### Jekyll Themes
+That's it, it's ready. But here is how to do things:
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/desduvauchelle/file-explorer/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+- To package the application in your OS `npm run package`
+- To package for all OS `npm run package-all` (Please note that you might run into some errors, see [Electron mutli platform build](https://github.com/electron-userland/electron-builder/wiki/Multi-Platform-Build) )
+- To run in dev `npm run dev`
 
-### Support or Contact
+## Who's the team?
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+### Denis Duvauchelle
+
+User Experience, Product design, Front-end development. Fanatical about nodeJS.
