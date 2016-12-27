@@ -1,35 +1,22 @@
-# electron-react-boilerplate
+# File explorer
 
-[![Build Status][travis-image]][travis-url] [![Appveyor Build Status][appveyor-image]][appveyor-url] [![Dependency Status][david_img]][david_site] [![NPM version][npm-image]][npm-url] [![Join the chat at https://gitter.im/electron-react-boilerplate/Lobby](https://badges.gitter.im/electron-react-boilerplate/Lobby.svg)](https://gitter.im/electron-react-boilerplate/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-![](./erb-logo.png)
-
-> Live editing development on desktop app
-
-[Electron](http://electron.atom.io/) application boilerplate based on [React](https://facebook.github.io/react/), [Redux](https://github.com/reactjs/redux), [React Router](https://github.com/reactjs/react-router), [Webpack](http://webpack.github.io/docs/), [React Transform HMR](https://github.com/gaearon/react-transform-hmr) for rapid application development
-
-## Screenshot
-
-![Electron Boilerplate Demo](https://cloud.githubusercontent.com/assets/3382565/10557547/b1f07a4e-74e3-11e5-8d27-79ab6947d429.gif)
+The best file explorer for all platforms.
 
 ## Install
 
 - **Note: requires a node version >= 6 and an npm version >= 3.**
-- **If you have installation or compilation issues with this project, please see [our debugging guide](https://github.com/chentsulin/electron-react-boilerplate/issues/400)**
 
 First, clone the repo via git:
 
 ```bash
-git clone https://github.com/chentsulin/electron-react-boilerplate.git your-project-name
+git clone https://github.com/desduvauchelle/file-explorer.git your-project-name
 ```
 
-And then install dependencies. **ProTip**: Install with [yarn](https://github.com/yarnpkg/yarn) for faster and safer installation
+And then install dependencies.
 
 ```bash
 $ cd your-project-name && npm install
 ```
-
-:bulb: _In order to remove boilerplate sample code, simply run `npm run cleanup`. After this is run, the initial sample boilerplate code will be removed in order for a clean project for starting custom dev_
 
 ## Run
 
@@ -68,79 +55,6 @@ apm install editorconfig es6-javascript atom-ternjs javascript-snippets linter l
 - Babel Syntax Plugin
 
 ## DevTools
-
-### Toggle Chrome DevTools
-
-- OS X:
-
-  <kbd>Cmd</kbd>
-
-<kbd>Alt</kbd>
-
-<kbd>I</kbd>
-
-or
-
-<kbd>F12</kbd>
-
-- Linux:
-
-  <kbd>Ctrl</kbd>
-
-<kbd>Shift</kbd>
-
-<kbd>I</kbd>
-
-or
-
-<kbd>F12</kbd>
-
-- Windows:
-
-  <kbd>Ctrl</kbd>
-
-<kbd>Shift</kbd>
-
-<kbd>I</kbd>
-
-or
-
-<kbd>F12</kbd>
-
-_See [electron-debug](https://github.com/sindresorhus/electron-debug) for more information._
-
-### DevTools extension
-
-This boilerplate is included following DevTools extensions:
-
-- [Devtron](https://github.com/electron/devtron) - Install via [electron-debug](https://github.com/sindresorhus/electron-debug).
-- [React Developer Tools](https://github.com/facebook/react-devtools) - Install via [electron-devtools-installer](https://github.com/GPMDP/electron-devtools-installer).
-- [Redux DevTools](https://github.com/zalmoxisus/redux-devtools-extension) - Install via [electron-devtools-installer](https://github.com/GPMDP/electron-devtools-installer).
-
-You can find the tabs on Chrome DevTools.
-
-If you want to update extensions version, please set `UPGRADE_EXTENSIONS` env, just run:
-
-```bash
-$ UPGRADE_EXTENSIONS=1 npm run dev
-
-# For Windows
-$ set UPGRADE_EXTENSIONS=1 && npm run dev
-```
-
-## CSS Modules
-
-This boilerplate out of the box is configured to use [css-modules](https://github.com/css-modules/css-modules).
-
-All `.css` file extensions will use css-modules unless it has `.global.css`.
-
-If you need global styles, stylesheets with `.global.css` will not go through the css-modules loader. e.g. `app.global.css`
-
-If you want to import global css libraries (like `bootstrap`), you can just write the following code in `.global.css`:
-
-```css
-@import "~bootstrap/dist/css/bootstrap.css";
-```
 
 ## Packaging
 
@@ -198,22 +112,6 @@ This boilerplate uses a [two package.json structure](https://github.com/electron
 
 This project comes with Flow support out of the box! You can annotate your code with types, [get Flow errors as ESLint errors](https://github.com/amilajack/eslint-plugin-flowtype-errors), and get [type errors during runtime](https://github.com/gcanti/babel-plugin-tcomb-boilerplate) during development. Types are completely optional.
 
-## Native-like UI
-
-If you want to have native-like User Interface (OS X El Capitan and Windows 10), [react-desktop](https://github.com/gabrielbull/react-desktop) may perfect suit for you.
-
 ## Dispatching redux actions from main process
 
 see discusses in [#118](https://github.com/chentsulin/electron-react-boilerplate/issues/118) and [#108](https://github.com/chentsulin/electron-react-boilerplate/issues/108)
-
-# Todo
-
-- Scroll to right on click
-- User settings (show/hide hidden files)
-- Right click
-- Copy and paste file or folder
-- Favorite manager
-- Drag and Drop to add to favorite or move a folder
-- Favorite manager
-
-- Search (best would be to have a neDB for that)
