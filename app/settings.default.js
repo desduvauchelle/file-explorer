@@ -46,6 +46,7 @@ export default {
         pptx: 'fa fa-file-powerpoint-o fa-fw',
         zip: 'fa fa-file-archive-o fa-fw',
         dmg: 'fa fa-file-archive-o fa-fw',
+        csv: 'fa fa-file-excel-o fa-fw',
         // Code
         js: 'fa fa-file-code-o fa-fw',
         jsx: 'fa fa-file-code-o fa-fw',

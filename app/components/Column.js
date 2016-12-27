@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 import Path from 'path';
 import fs from 'fs';
