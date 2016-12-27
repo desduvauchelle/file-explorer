@@ -32,18 +32,19 @@ export default class HomePage extends Component {
     render( ) {
         const self = this;
         let { path, file } = this.props.location.query;
+        let rootPath = Path.parse( __dirname ).root; // Get the root of hard drive (in mac, it's \ whereas in windows it's C:\\)
         console.log( path, file );
-        let root = Path.parse( __dirname ).root; // Get the root of hard drive (in mac, it's \ whereas in windows it's C:\\)
+        path = path || rootPath;
         let columns = [ ];
         let list = [ ];
         if ( !path ) {
-            list.push({path: root, files: this._getDirectoryListing( root )})
+            list.push({path: rootPath, files: this._getDirectoryListing( rootPath )});
         } else {
             let directories = path.split( Path.sep );
             let currentPath = "";
             directories.map(directory => {
                 if ( directory === "" ) {
-                    currentPath = root
+                    currentPath = rootPath
                 } else {
                     currentPath = Path.join( currentPath, directory )
                 }
