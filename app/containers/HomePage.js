@@ -32,37 +32,27 @@ export default class HomePage extends Component {
     render( ) {
         const self = this;
         let { path, file } = this.props.location.query;
-
         console.log( path, file );
+        let root = Path.parse( __dirname ).root; // Get the root of hard drive (in mac, it's \ whereas in windows it's C:\\)
         let columns = [ ];
         let list = [ ];
         if ( !path ) {
-            let files = fs.readdirSync( '/' );
-            if ( !settings.view.showHidden ) {
-                files = files.filter( file => file.charAt( 0 ) !== '.' );
-            }
-            files.sort(( a, b ) => a.toLowerCase( ).localeCompare(b.toLowerCase( )));
-            list.push({ path: '/', files: files })
+            list.push({path: root, files: this._getDirectoryListing( root )})
         } else {
-            let directories = path.split( '/' );
+            let directories = path.split( Path.sep );
             let currentPath = "";
             directories.map(directory => {
                 if ( directory === "" ) {
-                    currentPath = '/';
+                    currentPath = root
                 } else {
-                    currentPath = currentPath + '/' + directory;
+                    currentPath = Path.join( currentPath, directory )
                 }
                 currentPath = Path.normalize( currentPath );
-                let files = fs.readdirSync( currentPath ) || [ ];
-                if ( !settings.view.showHidden ) {
-                    files = files.filter( file => file.charAt( 0 ) !== '.' );
-                }
-                files.sort(( a, b ) => a.toLowerCase( ).localeCompare(b.toLowerCase( )));
-                list.push({ path: currentPath, files: files });
+                list.push({path: currentPath, files: this._getDirectoryListing( currentPath )});
             })
         }
+        const hokeyHandlers = handlers( self, list, path, file );
 
-        // console.log( list );
         return (
             <div className="explorer">
                 <div className="explorer-header">
@@ -72,13 +62,12 @@ export default class HomePage extends Component {
                     <OverlayTrigger placement="bottom" overlay={< Tooltip id = "forward" > <strong>Forward</strong>( <i className="fa fa-arrow-right"/> ) < /Tooltip>}>
                         <a className="actions"><i className="fa fa-chevron-right fa-fw"/></a>
                     </OverlayTrigger>
-
-                    <div className="spacer-sm"/>
+                    <div className="spacer-md"/>
                     <OverlayTrigger placement="bottom" overlay={< Tooltip id = "trash" > <strong>Delete</strong>( cmd + delete ) < /Tooltip>}>
-                        <a className="actions"><i className="fa fa-trash-o fa-fw"/></a>
+                        <a className="actions" onClick={hokeyHandlers.delete}><i className="fa fa-trash-o fa-fw"/></a>
                     </OverlayTrigger>
                     <OverlayTrigger placement="bottom" overlay={< Tooltip id = "rename" > <strong>Rename</strong>( enter ) < /Tooltip>}>
-                        <a className="actions"><i className="fa fa-pencil-square-o fa-fw"/></a>
+                        <a className="actions" onClick={hokeyHandlers.rename}><i className="fa fa-pencil-square-o fa-fw"/></a>
                     </OverlayTrigger>
                     <OverlayTrigger placement="bottom" overlay={< Tooltip id = "favorites" > <strong>Add to favorites</strong> < /Tooltip>}>
                         <a className="actions"><i className="fa fa-star-o fa-fw"/></a>
@@ -93,7 +82,7 @@ export default class HomePage extends Component {
                 <div className="column favorites">
                     <Favorites currentPath={path} selectPath={this._selectPath} settings={settings}/>
                 </div>
-                <HotKeys keyMap={keyMap} handlers={handlers( self, list, path, file )}>
+                <HotKeys keyMap={keyMap} handlers={hokeyHandlers}>
                     <div className="columns-wrapper" ref="columns">
                         {list.map(( directory, i ) => {
                             return (
@@ -116,9 +105,15 @@ export default class HomePage extends Component {
         );
     }
 
-    _selectPath = ( path = '/', file ) => {
-        // console.log( `New path is  ${ path }` );
-        // console.log( this );
+    _getDirectoryListing( path ) {
+        let files = fs.readdirSync( path ) || [ ];
+        if ( !settings.view.showHidden ) {
+            files = files.filter( file => file.charAt( 0 ) !== '.' );
+        }
+        return files.sort(( a, b ) => a.toLowerCase( ).localeCompare(b.toLowerCase( )));
+    }
+
+    _selectPath = ( path = '/', file = null ) => {
         this.props.router.replace({
             pathname: '/',
             query: {
