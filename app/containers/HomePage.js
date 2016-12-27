@@ -104,13 +104,14 @@ export default class HomePage extends Component {
                                 </div>
                             )
                         })}
-                        <Preview previewModalIsOpen={this.state.previewModalIsOpen} handleClose={( ) => {
-                            this.setState({ previewModalIsOpen: false })
-                        }} path={path} file={file}/>
+
                     </div>
                 </HotKeys>
                 <div className="explorer-footer">{path}</div>
 
+                <Preview previewModalIsOpen={this.state.previewModalIsOpen} handleClose={( ) => {
+                    this.setState({ previewModalIsOpen: false })
+                }} path={path} file={file}/>
             </div>
         );
     }

@@ -227,4 +227,21 @@ a:hover {
 		width: 100%;
 		height: auto;
 	}
+
+	.video {
+		display: block;
+		width: 100%;
+		height: auto;
+
+		& > div {
+			width: 100% !important;
+			height: auto !important;
+			display: block;
+
+			video {
+				width: 100%;
+				height: auto !important;
+			}
+		}
+	}
 }

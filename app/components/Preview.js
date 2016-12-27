@@ -1,13 +1,8 @@
 import React, { Component } from 'react'
-import { HotKeys } from 'react-hotkeys'
 import Path from 'path'
 import { Modal } from 'react-bootstrap'
 import ReactPlayer from 'react-player'
 // import PSD from 'psd'
-
-import settings from '../settings.default.js';
-
-import { keyMap, handlers } from '../utils/keymapping'
 
 export default class Preview extends Component {
     constructor( props ) {
@@ -19,7 +14,11 @@ export default class Preview extends Component {
         let { path, file, previewModalIsOpen, handleClose } = this.props;
 
         return (
-            <Modal show={previewModalIsOpen} onHide={handleClose} bsSize="lg">
+            <Modal show={previewModalIsOpen} onHide={handleClose} bsSize="lg" onKeyPress={( e ) => {
+                if ( e.keyCode == 0 ) {
+                    handleClose( );
+                }
+            }}>
                 <Modal.Body>
                     <div className="preview">
                         {/* IMAGE */}
@@ -33,7 +32,9 @@ export default class Preview extends Component {
                             '.ogg',
                             '.m4r',
                             '.mkv'
-                        ].indexOf(Path.extname( file ).toLowerCase( )) !== -1 ) && ( <ReactPlayer url={Path.join( path, file )} playing={previewModalIsOpen} controls={true}/> )}
+                        ].indexOf(Path.extname( file ).toLowerCase( )) !== -1 ) && (
+                            <div className="video"><ReactPlayer url={Path.join( path, file )} playing={previewModalIsOpen} controls={true}/></div>
+                        )}
                         {/* PHOTOSHOP */}
                         {/* {( file && [ '.psd' ].indexOf(Path.extname( file ).toLowerCase( )) !== -1 ) && PSD.fromURL( "/path/to/file.psd" ).then( function ( psd ) {
                             return ( <img src={psd.image.toPng( )} className="image"/> )
