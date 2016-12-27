@@ -2,6 +2,10 @@
 
 The best file explorer for all platforms.
 
+## Screenshot
+
+![Screenshot](https://github.com/desduvauchelle/file-explorer/raw/master/instructions/assets/screenshot.png)
+
 ## Install
 
 - **Note: requires a node version >= 6 and an npm version >= 3.**

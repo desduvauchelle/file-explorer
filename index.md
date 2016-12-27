@@ -2,7 +2,7 @@
 
 The perfect file explorer for all operating system.
 
-![Image](src)
+![Screenshot](https://github.com/desduvauchelle/file-explorer/raw/master/instructions/assets/screenshot.png)
 
 ## What's a perfect file explorer
 
