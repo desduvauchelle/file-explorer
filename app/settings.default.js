@@ -6,6 +6,7 @@ export default {
             height: 728
         }
     },
+    state : {},
     icons : {
         folder: 'fa fa-folder fa-fw',
         file: 'fa fa-file fa-fw',

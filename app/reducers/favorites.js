@@ -1,7 +1,15 @@
 import { SECTION_ADD, SECTION_REMOVE, SECTION_EDIT, LINK_ADD, LINK_REMOVE } from '../actions/favorites';
 
 const initialState = {
-    favorites: [ ]
+    favorites: [
+        {
+            id: 'default',
+            order: 0,
+            name: "Favorites",
+            isOpen: true,
+            links: [ ]
+        }
+    ]
 }
 const initialStateFavorite = {
     id: '',
@@ -17,32 +25,40 @@ export default function counter(state = initialState, action = {}) {
             const newFavorite = Object.assign({}, initialStateFavorite, action.section, {
                 id: (Math.floor( Math.random( ) * 999999 ) + + new Date( )).toString( 36 )
             });
-            return Object.assign({}, initialState, state, {favorites: favorites.push( newFavorite )});
+
+            let favorites = state.favorites;
+            favorites.push( newFavorite );
+            console.log( newFavorite, favorites );
+            return Object.assign({}, initialState, state, { favorites: favorites });
 
         case SECTION_REMOVE:
             return Object.assign({}, initialState, state, {
-                favorites: favorites.filter( fav => fav.id === action.id )
+                favorites: state.favorites.filter( fav => fav.id === action.id )
             });
 
         case SECTION_EDIT:
             return Object.assign({}, initialState, state, {
-                favorites: favorites.map( fav => ( fav.id === action.id )
+                favorites: state.favorites.map( fav => ( fav.id === action.id )
                     ? Object.assign( {}, initialStateFavorite, fav, action.newAttributes )
                     : fav )
             });
 
         case LINK_ADD:
             return Object.assign({}, initialState, state, {
-                favorites: favorites.map( fav => ( fav.id === action.sectionId )
-                    ? Object.assign({}, initialStateFavorite, fav, {
-                        links: fav.links.push( action.link )
-                    })
-                    : fav )
+                favorites: state.favorites.map(fav => {
+                    if ( fav.id === action.sectionId ) {
+                        let links = fav.links;
+                        links.push( action.link );
+                        let newFav = Object.assign({}, initialStateFavorite, fav, { links: links });
+                        return newFav;
+                    }
+                    return fav;
+                })
             });
 
         case LINK_REMOVE:
             return Object.assign({}, initialState, state, {
-                favorites: favorites.map( fav => ( fav.id === action.sectionId )
+                favorites: state.favorites.map( fav => ( fav.id === action.sectionId )
                     ? Object.assign({}, initialStateFavorite, fav, {
                         links: fav.links.filter( link => link !== action.link )
                     })

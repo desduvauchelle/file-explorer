@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import fs from 'fs'
 // Plugins
 import { HotKeys } from 'react-hotkeys'
@@ -6,18 +6,20 @@ import Path from 'path'
 import { shell } from 'electron'
 import { Tooltip, OverlayTrigger } from 'react-bootstrap'
 // Components
-import Favorites from '../components/Favorites'
-import Column from '../components/Column'
-import Preview from '../components/Preview'
+import Favorites from './components/Favorites'
+import Column from './components/Column'
+import Preview from './components/Preview'
 // Settings
-import settings from '../settings.default.js';
-import { keyMap, handlers } from '../utils/keymapping'
+import settings from '../../../settings.default';
+import { keyMap, handlers } from '../../../utils/keymapping'
 
-export default class HomePage extends Component {
+export default class Columns extends Component {
     constructor( props ) {
         super( props );
     }
-
+    props : {
+        location: PropTypes.object.isRequired
+    }
     state = {
         previewModalIsOpen: false
     }
@@ -31,11 +33,13 @@ export default class HomePage extends Component {
 
     render( ) {
         const self = this;
+        let { sectionAdd, sectionRemove, sectionEdit, linkAdd, linkRemove } = this.props;
         let { path, file } = this.props.location.query;
-        let rootPath = Path.parse( __dirname ).root; // Get the root of hard drive (in mac, it's \ whereas in windows it's C:\\)
-        console.log( path, file );
+        // Get the root of hard drive (in mac, it's / whereas in windows it's C:\\)
+        let rootPath = Path.parse( __dirname ).root;
         path = path || rootPath;
-        let columns = [ ];
+        console.log( path, file );
+
         let list = [ ];
         if ( !path ) {
             list.push({path: rootPath, files: this._getDirectoryListing( rootPath )});
@@ -71,7 +75,12 @@ export default class HomePage extends Component {
                         <a className="actions" onClick={hokeyHandlers.rename}><i className="fa fa-pencil-square-o fa-fw"/></a>
                     </OverlayTrigger>
                     <OverlayTrigger placement="bottom" overlay={< Tooltip id = "favorites" > <strong>Add to favorites</strong> < /Tooltip>}>
-                        <a className="actions"><i className="fa fa-star-o fa-fw"/></a>
+                        <a className="actions" onClick={( e ) => {
+                            e.preventDefault( );
+                            linkAdd( 'default', file
+                                ? Path.join( path, file )
+                                : path );
+                        }}><i className="fa fa-star-o fa-fw"/></a>
                     </OverlayTrigger>
                     <OverlayTrigger placement="bottom" overlay={< Tooltip id = "preview" > <strong>Preview</strong>( space ) < /Tooltip>}>
                         <a className="actions" onClick={( e ) => {
@@ -81,7 +90,7 @@ export default class HomePage extends Component {
                     </OverlayTrigger>
                 </div>
                 <div className="column favorites">
-                    <Favorites currentPath={path} selectPath={this._selectPath} settings={settings}/>
+                    <Favorites selectPath={this._selectPath} {...this.props}/>
                 </div>
                 <HotKeys keyMap={keyMap} handlers={hokeyHandlers}>
                     <div className="columns-wrapper" ref="columns">
