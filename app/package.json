@@ -1,0 +1,16 @@
+{
+    "name": "file-eplorer",
+    "productName": "file-eplorer",
+    "version": "1.0.0",
+    "description": "Cross OS file explorer",
+    "main": "./main.js",
+    "author": {
+        "name": "Denis Duvauchelle",
+        "email": "denis@hashup.io",
+        "url": "http://www.hashup.io"
+    },
+    "license": "MIT",
+    "dependencies": {
+
+    }
+}
