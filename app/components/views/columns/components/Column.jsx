@@ -34,7 +34,14 @@ export default class Column extends Component {
                     <p>No files</p>
                 )}
                 {directory.files.map( (file, i) => 
-                    <FileItem key={i} path={directory.path} file={file} currentPath={currentPath} selectPath={selectPath} selected={selected === file}/>
+                    <FileItem 
+                        key={i} 
+                        directory={directory}
+                        path={directory.path} 
+                        file={file} 
+                        currentPath={currentPath} 
+                        selectPath={selectPath} 
+                        selected={selected} />
                 )}
             </section>
         );

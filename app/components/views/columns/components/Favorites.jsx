@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import path from 'path'
-import { Modal } from 'react-bootstrap'
 
 export default class Favorites extends Component {
     static propTypes = {
@@ -10,11 +9,6 @@ export default class Favorites extends Component {
 
     constructor( props ) {
         super( props );
-
-        this.state = {
-            newGroupModalIsOpen: false,
-            newGroupName: ''
-        }
     }
 
     render( ) {
@@ -39,35 +33,7 @@ export default class Favorites extends Component {
                             </section>
                         </div>
                     )
-                })}
-                <a onClick={( e ) => {
-                    e.preventDefault( );
-                    this.setState({ newGroupModalIsOpen: true })
-                }}><i className="fa fa-plus fa-fw"/>Add group</a>
-
-                <Modal show={this.state.newGroupModalIsOpen} onHide={( ) => {
-                    this.setState({ newGroupModalIsOpen: false })
-                }} bsSize="sm">
-                    <form onSubmit={( e ) => {
-                        e.preventDefault( );
-                        this.props.sectionAdd({ name: this.state.newGroupName });
-                        this.setState({ newGroupModalIsOpen: false, newGroupName: '' });
-                    }}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>New group</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <div>
-                                <input type="text" ref="newGroupName" placeholder="Enter new group name..." className="form-control" value={this.props.newGroupName} onChange={( ) => {
-                                    this.setState({ newGroupName: this.refs.newGroupName.value })
-                                }}/>
-                            </div>
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <button type="submit" className="btn btn-primary btn-block">Create</button>
-                        </Modal.Footer>
-                    </form>
-                </Modal>
+                })}                
             </div>
         );
     }

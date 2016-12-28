@@ -3,7 +3,7 @@ import fs from 'fs'
 // Plugins
 import { HotKeys } from 'react-hotkeys'
 import Path from 'path'
-import { Tooltip, OverlayTrigger } from 'react-bootstrap'
+import { Tooltip, OverlayTrigger, Modal } from 'react-bootstrap'
 // Components
 import Favorites from './components/Favorites'
 import Column from './components/Column'
@@ -15,14 +15,21 @@ import { keyMap, handlers } from '../../../utils/keymapping'
 export default class Columns extends Component {
     static propTypes = {
         location: PropTypes.object.isRequired,
-        router: PropTypes.object.isRequired
+        router: PropTypes.object.isRequired,
+        sectionAdd: PropTypes.func.isRequired,
+        sectionRemove: PropTypes.func.isRequired,
+        sectionEdit: PropTypes.func.isRequired,
+        linkAdd: PropTypes.func.isRequired,
+        linkRemove: PropTypes.func.isRequired
     }
 
     constructor( props ) {
         super( props );
         
         this.state = {
-            previewModalIsOpen: false
+            previewModalIsOpen: false,
+            newGroupModalIsOpen: false,
+            newGroupName: ''
         }
     }
 
@@ -37,15 +44,14 @@ export default class Columns extends Component {
         let { sectionAdd, sectionRemove, sectionEdit, linkAdd, linkRemove } = this.props;
         let { path, selected } = this.props.location.query;
         // Get the root of hard drive (in mac, it's / whereas in windows it's C:\\)
-        let rootPath = Path.parse( __dirname ).root;
-        path = path || rootPath;
-        console.log( path, selected );
+        this.rootPath = Path.parse( __dirname ).root;
+        path = path || this.rootPath;
         // Get list of the directories and it's children
         let list = [ ];
         if ( !path ) {
-            let dirListing = this._getDirectoryListing( rootPath );
+            let dirListing = this._getDirectoryListing( this.rootPath );
             list.push({
-                path: rootPath, 
+                path: this.rootPath, 
                 files: dirListing.files, 
                 error: dirListing.error, 
                 isCurrent: true
@@ -55,7 +61,7 @@ export default class Columns extends Component {
             let currentPath = "";
             directories.map(directory => {
                 if ( directory === "" ) {
-                    currentPath = rootPath
+                    currentPath = this.rootPath
                 } else {
                     currentPath = Path.join( currentPath, directory )
                 }
@@ -71,6 +77,23 @@ export default class Columns extends Component {
                 });
             })
         }
+        if(selected){
+            const filePath = Path.join(path,selected);
+            try {
+            const isDirectory = fs.statSync( filePath ).isDirectory( );
+            if ( isDirectory ) {   
+                let dirListing = this._getDirectoryListing(filePath);             
+                list.push({
+                    path: filePath, 
+                    files: dirListing.files, 
+                    error: dirListing.error,
+                    isCurrent: false
+                });
+            }
+        } catch ( ex ) {
+            console.log( `Failed to analyze: ${ filePath }, Caused by: ${ ex }` );
+        }
+        }
         
 
         // For key mapping
@@ -82,7 +105,10 @@ export default class Columns extends Component {
                     <div className="favorite">
                         <a className="logo"><img src={require('../../../../resources/icons/256x256.png')} /></a>
                         <OverlayTrigger placement="bottom" overlay={<Tooltip id="newGroup"><strong>New group</strong></Tooltip>}>
-                            <a className="actions"><i className="fa fa-plus fa-fw"/></a>
+                            <a className="actions" onClick={(e)=>{
+                                e.preventDefault();
+                                this.setState({ newGroupModalIsOpen: true, newGroupName: '' });
+                            }}><i className="fa fa-plus fa-fw"/></a>
                         </OverlayTrigger>
                     </div>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id="back"><strong>Back</strong>( <i className="fa fa-arrow-left"/> ) </Tooltip>}>
@@ -131,7 +157,7 @@ export default class Columns extends Component {
 
                     </div>
                 </HotKeys>
-                <div className="explorer-footer">{path}</div>
+                <div className="explorer-footer">{path} {selected ? `(${selected})`:''}</div>
 
                 <Preview 
                     previewModalIsOpen={this.state.previewModalIsOpen} 
@@ -140,6 +166,30 @@ export default class Columns extends Component {
                     }} 
                     path={path} 
                     selected={selected}/>
+
+                <Modal show={this.state.newGroupModalIsOpen} onHide={( ) => {
+                    this.setState({ newGroupModalIsOpen: false })
+                }} bsSize="sm">
+                    <form onSubmit={( e ) => {
+                        e.preventDefault( );
+                        sectionAdd({ name: this.state.newGroupName });
+                        this.setState({ newGroupModalIsOpen: false, newGroupName: '' });
+                    }}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>New group</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div>
+                                <input type="text" ref="newGroupName" placeholder="Enter new group name..." className="form-control" value={this.props.newGroupName} onChange={( ) => {
+                                    this.setState({ newGroupName: this.refs.newGroupName.value })
+                                }}/>
+                            </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <button type="submit" className="btn btn-primary btn-block">Create</button>
+                        </Modal.Footer>
+                    </form>
+                </Modal>
             </div>
         );
     }
@@ -163,15 +213,14 @@ export default class Columns extends Component {
     }
 
     _selectPath = ( path = '/', selected = null ) => {
-        // If no selected, select the first
+        // If no selected, select the first if it's a directory
         if(!selected){
-            const directoryFiles = this._getDirectoryListing(path);
-            directoryFiles.files.map(directory => {
-                if(directory.isCurrent && directory.files.length > 0){
-                    selected = directory.files[0];
-                }
-            })
+            const currentDirectory = this._getDirectoryListing(path);
+            if(currentDirectory.files.length > 0){
+                    selected = currentDirectory.files[0];
+            }
         }
+        
         this.props.router.replace({
             pathname: '/',
             query: {

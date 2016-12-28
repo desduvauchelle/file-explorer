@@ -25,7 +25,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     })
     : compose;
 /* eslint-enable no-underscore-dangle */
-const enhancer = composeEnhancers(applyMiddleware( thunk, router, logger ));
+const enhancer = composeEnhancers(applyMiddleware( thunk, router )); // , logger 
 
 export default function configureStore( initialState : Object | void ) {
     const store = createStore( rootReducer, initialState, enhancer );

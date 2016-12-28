@@ -1,6 +1,7 @@
-import Path from 'path';
-import swal from 'sweetalert2';
+import Path from 'path'
+import swal from 'sweetalert2'
 import { shell } from 'electron'
+import fs from 'fs'
 
 export default {
     keyMap : {
@@ -85,30 +86,49 @@ export default {
             moveLeft: ( e ) => {
                 e.preventDefault( );
                 console.log( "Move left" );            
-                if ( path === '' || path === '/' ) {
+                if ( path === self.rootPath ) {
                     return;
                 }
-                if ( selected ) {
-                    self._selectPath( path );
-                    return;
-                }
-                self._selectPath(Path.join( path, '..' ));
+                let directoryList = path.split(Path.sep);
+                self._selectPath(Path.join( path, '..' ), directoryList[directoryList.length -1]);
             },
             moveRight: ( e ) => {
                 e.preventDefault( );
                 console.log( "Move right" );
-                if ( selected ) {
-                    shell.openItem(Path.join( path, selected ));
+                if(!selected){
                     return;
                 }
+                const filePath = Path.join(path,selected);
+                let isDirectory = false;
+                try {
+                    isDirectory = fs.statSync( filePath ).isDirectory( );                
+                } catch ( ex ) {
+                    console.log( `Failed to analyze: ${ filePath }, Caused by: ${ ex }` );
+                }
+
+                if ( !isDirectory ) {
+                    shell.openItem(filePath);
+                    return;
+                }
+                self._selectPath(filePath);
             },
             moveDown: ( e ) => {
                 e.preventDefault( );
-                console.log( "Move down" );
+                const directory = list.filter(directory => directory.path === path)[0];
+                const currentIndex = directory.files.indexOf(selected);
+                if(currentIndex === directory.files.length - 1){
+                    return;
+                }
+                self._selectPath(path, directory.files[currentIndex+1]);
             },
             moveUp: ( e ) => {
                 e.preventDefault( );
-                console.log( "Move up" );
+                const directory = list.filter(directory => directory.path === path)[0];
+                const currentIndex = directory.files.indexOf(selected);
+                if(currentIndex === 0){
+                    return;
+                }
+                self._selectPath(path, directory.files[currentIndex-1]);
             }
         };
     }

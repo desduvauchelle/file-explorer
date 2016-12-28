@@ -5,10 +5,11 @@ import { shell } from 'electron';
 
 class FileItem extends Component {
     static propTypes = {
+        directory: PropTypes.object,
         path: PropTypes.string.isRequired,
         file: PropTypes.string.isRequired,
         currentPath: PropTypes.string.isRequired,
-        selected: PropTypes.bool.isRequired,
+        selected: PropTypes.string.isRequired,
         selectPath: PropTypes.func.isRequired
     };
 
@@ -26,7 +27,7 @@ class FileItem extends Component {
 
     handleClick(e){
         e.preventDefault();
-        this.props.selectPath(this.filePath);
+        this.props.selectPath(this.props.path, this.props.file);
     }
 
     handleDoubleClickFile(e){
@@ -44,11 +45,16 @@ class FileItem extends Component {
     }
 
     render( ) {
-        let { file, currentPath, selected } = this.props;
+        let { file, currentPath, selected, directory } = this.props;
+        let isSelected = false;
+        if(directory.isCurrent){
+            isSelected = (selected && selected === file);
+        } else {
+            isSelected = currentPath && currentPath.indexOf( this.filePath ) !== -1;
+        }
         try {
             const isDirectory = fs.statSync( this.filePath ).isDirectory( );
-            if ( isDirectory ) {
-                const isSelected = currentPath && currentPath.indexOf( this.filePath ) !== -1;
+            if ( isDirectory ) {                
                 return (
                     <a onClick={this.handleClick.bind(this)} onDoubleClick={this.handleDoubleClickFolder.bind(this)} className={isSelected? 'selected': ''}>
                         <i className={`icon-file-directory ${ isSelected? 'open': '' } left`} data-name={file}/>
@@ -60,7 +66,7 @@ class FileItem extends Component {
             console.log( `Failed to analyze: ${ this.filePath }, Caused by: ${ ex }` );
         }
         return (
-            <a onClick={this.handleClick.bind(this)} onDoubleClick={this.handleDoubleClickFile.bind(this)} className={selected? 'selected': ''}>
+            <a onClick={this.handleClick.bind(this)} onDoubleClick={this.handleDoubleClickFile.bind(this)} className={isSelected? 'selected': ''}>
                 <i className="icon-file left" data-name={file}/>{file}
             </a>
         );
