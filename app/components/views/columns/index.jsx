@@ -146,8 +146,7 @@ export default class Columns extends Component {
         })
     }
 
-    _openPreviewModal = ( ) => {
+    _openPreviewModal = () => {
         this.setState({ previewModalIsOpen: true })
     }
-
 }
