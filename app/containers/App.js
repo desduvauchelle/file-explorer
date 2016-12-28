@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+const { remote } = require( 'electron' )
 
 export default class App extends Component {
-    static propTypes = {
+    props : {
         children: HTMLElement
     };
 

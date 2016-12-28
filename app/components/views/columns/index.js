@@ -43,7 +43,8 @@ export default class Columns extends Component {
 
         let list = [ ];
         if ( !path ) {
-            list.push({path: rootPath, files: this._getDirectoryListing( rootPath )});
+            let dirListing = this._getDirectoryListing( rootPath );
+            list.push({path: rootPath, files: dirListing.files, error: dirListing.error});
         } else {
             let directories = path.split( Path.sep );
             let currentPath = "";
@@ -54,7 +55,8 @@ export default class Columns extends Component {
                     currentPath = Path.join( currentPath, directory )
                 }
                 currentPath = Path.normalize( currentPath );
-                list.push({path: currentPath, files: this._getDirectoryListing( currentPath )});
+                let dirListing = this._getDirectoryListing( currentPath );
+                list.push({path: currentPath, files: dirListing.files, error: dirListing.error});
             })
         }
         const hokeyHandlers = handlers( this, list, path, file );
@@ -122,10 +124,15 @@ export default class Columns extends Component {
             if ( !settings.view.showHidden ) {
                 files = files.filter( file => file.charAt( 0 ) !== '.' );
             }
-            return files.sort(( a, b ) => a.toLowerCase( ).localeCompare(b.toLowerCase( )));
+            return {
+                files: files.sort(( a, b ) => a.toLowerCase().localeCompare(b.toLowerCase()))
+            };
         }catch(ex){
             console.log(`Failed to list directory files. path=${path}, caused by: ${ex}`);
-            return [];
+            return {
+                files: [],
+                error: "Permission denied"
+            };
         }
     }
 
