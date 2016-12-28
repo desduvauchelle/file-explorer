@@ -21,7 +21,7 @@ const initialStateFavorite = {
 
 export default function counter(state = initialState, action = {}) {
     switch ( action.type ) {
-        case SECTION_ADD:
+        case SECTION_ADD:{
             const newFavorite = Object.assign({}, initialStateFavorite, action.section, {
                 id: (Math.floor( Math.random( ) * 999999 ) + + new Date( )).toString( 36 )
             });
@@ -30,20 +30,20 @@ export default function counter(state = initialState, action = {}) {
             favorites.push( newFavorite );
             console.log( newFavorite, favorites );
             return Object.assign({}, initialState, state, { favorites: favorites });
-
-        case SECTION_REMOVE:
+        }
+        case SECTION_REMOVE:{
             return Object.assign({}, initialState, state, {
                 favorites: state.favorites.filter( fav => fav.id === action.id )
             });
-
-        case SECTION_EDIT:
+        }
+        case SECTION_EDIT:{
             return Object.assign({}, initialState, state, {
                 favorites: state.favorites.map( fav => ( fav.id === action.id )
                     ? Object.assign( {}, initialStateFavorite, fav, action.newAttributes )
                     : fav )
             });
-
-        case LINK_ADD:
+        }
+        case LINK_ADD:{
             return Object.assign({}, initialState, state, {
                 favorites: state.favorites.map(fav => {
                     if ( fav.id === action.sectionId ) {
@@ -55,8 +55,8 @@ export default function counter(state = initialState, action = {}) {
                     return fav;
                 })
             });
-
-        case LINK_REMOVE:
+        }
+        case LINK_REMOVE:{
             return Object.assign({}, initialState, state, {
                 favorites: state.favorites.map( fav => ( fav.id === action.sectionId )
                     ? Object.assign({}, initialStateFavorite, fav, {
@@ -64,7 +64,7 @@ export default function counter(state = initialState, action = {}) {
                     })
                     : fav )
             });
-
+        }
         default:
             return state;
     }
