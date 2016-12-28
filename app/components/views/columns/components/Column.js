@@ -46,18 +46,8 @@ export default class Column extends Component {
                                 shell.showItemInFolder( filePath );
                             }} className={currentPath && currentPath.indexOf( filePath ) !== -1
                                 ? 'selected'
-                                : ''}><i className={`${ settings.icons['folder'] } left`}/>{file}</a>
+                                : ''}><i className={`icon-file-directory left`} data-name={file}/>{file}</a>
                         );
-                    }
-
-                    let extensionName = Path.extname( file );
-                    if ( extensionName.charAt( 0 ) === '.' ) {
-                        extensionName = extensionName.substr( 1 )
-                    }
-                    let icon = `${ settings.icons['file'] } left`;
-                    // console.log(extensionName, settings.icons[extensionName])
-                    if (settings.icons[extensionName]) {
-                        icon = `${ settings.icons[extensionName] } left`;
                     }
 
                     return (
@@ -69,7 +59,7 @@ export default class Column extends Component {
                             shell.openItem( filePath );
                         }} className={selectedFile === file
                             ? 'selected'
-                            : ''}><i className={icon}/>{file}</a>
+                            : ''}><i className="icon-file left" data-name={file}/>{file}</a>
                     );
                 })}
             </section>
