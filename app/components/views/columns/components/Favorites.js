@@ -1,8 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import path from 'path'
 import { Modal } from 'react-bootstrap'
 
 export default class Favorites extends Component {
+    static propTypes = {
+        selectPath: PropTypes.func.isRequired,
+        favorites: PropTypes.object.isRequired
+    }
+
     constructor( props ) {
         super( props );
 
@@ -13,9 +18,7 @@ export default class Favorites extends Component {
     }
 
     render( ) {
-        console.log( this.props );
         const { selectPath, favorites } = this.props;
-
         return (
             <div>
                 {favorites.favorites.map(( favorite, i ) => {

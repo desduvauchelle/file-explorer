@@ -35,9 +35,8 @@ class FileItem extends Component {
                     }} onDoubleClick={ e => {
                         e.preventDefault();
                         shell.showItemInFolder( filePath );
-                    }} className={currentPath && currentPath.indexOf( filePath ) !== -1
-                        ? 'selected'
-                        : ''}><i className={`icon-file-directory left`} data-name={file}/>{file}</a>
+                    }} className={currentPath && currentPath.endsWith( filePath ) ? 'selected' : ''}>
+                    <i className={`icon-file-directory left`} data-name={file}/>{file}</a>
                 );
             }
         }catch(ex){

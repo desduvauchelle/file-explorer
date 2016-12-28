@@ -1,7 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import Path from 'path';
-import fs from 'fs';
-import { shell } from 'electron';
 import FileItem from './FileItem.jsx';
 
 export default class Column extends Component {
@@ -9,7 +6,9 @@ export default class Column extends Component {
         directory: PropTypes.object,
         selectPath: PropTypes.func,
         settings: PropTypes.object,
-        isLast: PropTypes.bool
+        isLast: PropTypes.bool,
+        currentPath: PropTypes.string.isRequired,
+        selectedFile: PropTypes.string
     }
 
     constructor( props ) {
@@ -22,7 +21,6 @@ export default class Column extends Component {
         const {
             directory,
             selectPath,
-            settings,
             currentPath,
             isLast,
             selectedFile
