@@ -30,7 +30,7 @@ class FileItem extends Component {
                 return (
                     <a onClick={e => {
                         e.preventDefault( );
-                        selectPath( filePath );
+                        selectPath( path, file );
                     }} onDoubleClick={e => {
                         e.preventDefault( );
                         if(isMacApp){

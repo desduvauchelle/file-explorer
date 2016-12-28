@@ -40,7 +40,7 @@ export default class Columns extends Component {
         let rootPath = Path.parse( __dirname ).root;
         path = path || rootPath;
         console.log( path, selected );
-
+        // Get list of the directories and it's children
         let list = [ ];
         if ( !path ) {
             let dirListing = this._getDirectoryListing( rootPath );
@@ -71,13 +71,19 @@ export default class Columns extends Component {
                 });
             })
         }
+        
+
+        // For key mapping
         const hokeyHandlers = handlers( this, list, path, selected );
 
         return (
             <div className="explorer">
                 <div className="explorer-header">
                     <div className="favorite">
-                        
+                        <a className="logo"><img src={require('../../../../resources/icons/256x256.png')} /></a>
+                        <OverlayTrigger placement="bottom" overlay={<Tooltip id="newGroup"><strong>New group</strong></Tooltip>}>
+                            <a className="actions"><i className="fa fa-plus fa-fw"/></a>
+                        </OverlayTrigger>
                     </div>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id="back"><strong>Back</strong>( <i className="fa fa-arrow-left"/> ) </Tooltip>}>
                         <a className="actions"><i className="fa fa-chevron-left fa-fw"/></a>
@@ -157,6 +163,15 @@ export default class Columns extends Component {
     }
 
     _selectPath = ( path = '/', selected = null ) => {
+        // If no selected, select the first
+        if(!selected){
+            const directoryFiles = this._getDirectoryListing(path);
+            directoryFiles.files.map(directory => {
+                if(directory.isCurrent && directory.files.length > 0){
+                    selected = directory.files[0];
+                }
+            })
+        }
         this.props.router.replace({
             pathname: '/',
             query: {
