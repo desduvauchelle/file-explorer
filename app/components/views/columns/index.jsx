@@ -35,11 +35,11 @@ export default class Columns extends Component {
 
     render( ) {
         let { sectionAdd, sectionRemove, sectionEdit, linkAdd, linkRemove } = this.props;
-        let { path, file } = this.props.location.query;
+        let { path, selected } = this.props.location.query;
         // Get the root of hard drive (in mac, it's / whereas in windows it's C:\\)
         let rootPath = Path.parse( __dirname ).root;
         path = path || rootPath;
-        console.log( path, file );
+        console.log( path, selected );
 
         let list = [ ];
         if ( !path ) {
@@ -59,7 +59,7 @@ export default class Columns extends Component {
                 list.push({path: currentPath, files: dirListing.files, error: dirListing.error});
             })
         }
-        const hokeyHandlers = handlers( this, list, path, file );
+        const hokeyHandlers = handlers( this, list, path, selected );
 
         return (
             <div className="explorer">
@@ -80,8 +80,8 @@ export default class Columns extends Component {
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id="favorites"><strong>Add to favorites</strong> </Tooltip>}>
                         <a className="actions" onClick={( e ) => {
                             e.preventDefault( );
-                            linkAdd( 'default', file
-                                ? Path.join( path, file )
+                            linkAdd( 'default', selected
+                                ? Path.join( path, selected )
                                 : path );
                         }}><i className="fa fa-star-o fa-fw"/></a>
                     </OverlayTrigger>
@@ -99,10 +99,10 @@ export default class Columns extends Component {
                     <div className="columns-wrapper" ref="columns">
                         {list.map(( directory, i ) => {
                             return (
-                                <div className={(( file && path === directory.path ) || ( !file && Path.join( path, '..' ) === directory.path ))
+                                <div className={(( selected && path === directory.path ) || ( !selected && Path.join( path, '..' ) === directory.path ))
                                     ? 'column active'
                                     : 'column'} key={i}>
-                                    <Column directory={directory} currentPath={path} selectPath={this._selectPath} settings={settings} isLast={i === list.length - 1} selectedFile={file}/>
+                                    <Column directory={directory} currentPath={path} selectPath={this._selectPath} settings={settings} isLast={i === list.length - 1} selectedFile={selected}/>
                                 </div>
                             )
                         })}
@@ -113,7 +113,7 @@ export default class Columns extends Component {
 
                 <Preview previewModalIsOpen={this.state.previewModalIsOpen} handleClose={( ) => {
                     this.setState({ previewModalIsOpen: false })
-                }} path={path} file={file}/>
+                }} path={path} selected={selected}/>
             </div>
         );
     }
@@ -136,12 +136,12 @@ export default class Columns extends Component {
         }
     }
 
-    _selectPath = ( path = '/', file = null ) => {
+    _selectPath = ( path = '/', selected = null ) => {
         this.props.router.replace({
             pathname: '/',
             query: {
                 path: Path.normalize( path ),
-                file: file
+                selected: selected
             }
         })
     }

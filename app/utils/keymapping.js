@@ -67,7 +67,7 @@ export default {
                     if ( inputValue === "" ) {
                         swal.showInputError( "You need to write something!" );
                         return false
-                    }
+                    } 
                     swal( "Nice!", "You wrote: " + inputValue, "success" );
                     // fs.rename(oldPath, newPath, callback);
                 });
