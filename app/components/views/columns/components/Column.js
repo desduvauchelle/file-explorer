@@ -37,7 +37,6 @@ export default class Column extends Component {
                     let filePath = Path.join( path, file );
                     try{
                         const isDirectory = fs.statSync( filePath ).isDirectory( );
-
                         if ( isDirectory ) {
                             return (
                                 <a key={i} onClick={ e => {
@@ -48,7 +47,7 @@ export default class Column extends Component {
                                     shell.showItemInFolder( filePath );
                                 }} className={currentPath && currentPath.indexOf( filePath ) !== -1
                                     ? 'selected'
-                                    : ''}><i className={`${ settings.icons['folder'] } left`}/>{file}</a>
+                                    : ''}><i className={`icon-file-directory left`} data-name={file}/>{file}</a>
                             );
                         }
                     }catch(ex){
@@ -63,7 +62,6 @@ export default class Column extends Component {
                         extensionName = 'file';
                     }
                     const icon = `${settings.icons[extensionName]} left`;
-
                     return (
                         <a key={i} onClick={( e ) => {
                             e.preventDefault( );
@@ -73,7 +71,7 @@ export default class Column extends Component {
                             shell.openItem( filePath );
                         }} className={selectedFile === file
                             ? 'selected'
-                            : ''}><i className={icon}/>{file}</a>
+                            : ''}><i className="icon-file left" data-name={file}/>{file}</a>
                     );
                 })}
             </section>
