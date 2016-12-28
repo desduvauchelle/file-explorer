@@ -25,6 +25,11 @@
     &.open:before {
         .directory-open-icon;
     }
+    // Mac app 
+    &[data-name$=".app"]:before {
+        .app-icon;
+        top: 0px;
+    }
     // Atom
     &[data-name=".atom"]:before {
         .atom-icon;

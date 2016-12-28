@@ -8,7 +8,7 @@ export default class Column extends Component {
         settings: PropTypes.object,
         isLast: PropTypes.bool,
         currentPath: PropTypes.string.isRequired,
-        selectedFile: PropTypes.string
+        selected: PropTypes.string
     }
 
     constructor( props ) {
@@ -22,8 +22,7 @@ export default class Column extends Component {
             directory,
             selectPath,
             currentPath,
-            isLast,
-            selectedFile
+            selected
         } = this.props;
 
         return (
@@ -35,7 +34,7 @@ export default class Column extends Component {
                     <p>No files</p>
                 )}
                 {directory.files.map( (file, i) => 
-                    <FileItem key={i} path={directory.path} file={file} currentPath={currentPath} selectPath={selectPath} selected={selectedFile === file}/>
+                    <FileItem key={i} path={directory.path} file={file} currentPath={currentPath} selectPath={selectPath} selected={selected === file}/>
                 )}
             </section>
         );

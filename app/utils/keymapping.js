@@ -9,19 +9,13 @@ export default {
         'moveDown': 'down',
         'moveLeft': 'left',
         'moveRight': 'right',
-        'copy': [
-            'command+c', 'ctrl+c'
-        ],
-        'paste': [
-            'command+v', 'ctrl+v'
-        ],
+        'copy': ['command+c', 'ctrl+c'],
+        'paste': ['command+v', 'ctrl+v'],
         'open': 'enter',
-        'rename': [
-            'command+down', 'ctrl+down'
-        ],
+        'rename': ['command+down', 'ctrl+down'],
         'preview': [ 'space' ]
     },
-    handlers : ( self, list, path, file ) => {
+    handlers : ( self, list, path, selected ) => {
         return {
             delete: ( e ) => {
                 e.preventDefault( );
@@ -33,23 +27,25 @@ export default {
                     confirmButtonColor: "#DD6B55",
                     confirmButtonText: "Yes, delete it!"
                 }).then( function ( ) {
-                    let fullPath = file
-                        ? Path.join( path, file )
-                        : path;
+                    let fullPath = selected? Path.join( path, selected ): path;
 
                     shell.moveItemToTrash( fullPath );
-                    self._selectPath(file
-                        ? path
-                        : Path.join( path, '..' ));
-                    swal({ title: "File deleted", text: "Your file has been deleted", timer: 1000, showConfirmButton: true, type: 'success' });
+                    self._selectPath(selected? path: Path.join( path, '..' ));
+                    swal({ 
+                        title: "File deleted", 
+                        text: "Your file has been deleted", 
+                        timer: 1000, 
+                        showConfirmButton: true, 
+                        type: 'success' 
+                    });
                 });
 
             },
             rename: ( e ) => {
                 e.preventDefault( );
                 let fileName = "";
-                if ( file ) {
-                    fileName = file;
+                if ( selected ) {
+                    fileName = selected;
                 } else {
                     let pathList = path.split( '/' );
                     fileName = pathList[pathList - 1];
@@ -74,8 +70,8 @@ export default {
             },
             open: ( e ) => {
                 e.preventDefault( );
-                if ( file ) {
-                    shell.openItem(Path.join( path, file ));
+                if ( selected ) {
+                    shell.openItem(Path.join( path, selected ));
                     return;
                 }
                 shell.showItemInFolder( path );
@@ -88,13 +84,11 @@ export default {
             },
             moveLeft: ( e ) => {
                 e.preventDefault( );
-                console.log( "Move left" );
-                console.log( "Path", path );
-                console.log("New path", Path.join( path, '..' ));
+                console.log( "Move left" );            
                 if ( path === '' || path === '/' ) {
                     return;
                 }
-                if ( file ) {
+                if ( selected ) {
                     self._selectPath( path );
                     return;
                 }
@@ -103,8 +97,8 @@ export default {
             moveRight: ( e ) => {
                 e.preventDefault( );
                 console.log( "Move right" );
-                if ( file ) {
-                    shell.openItem(Path.join( path, file ));
+                if ( selected ) {
+                    shell.openItem(Path.join( path, selected ));
                     return;
                 }
             },

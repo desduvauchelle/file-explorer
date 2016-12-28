@@ -44,7 +44,12 @@ export default class Columns extends Component {
         let list = [ ];
         if ( !path ) {
             let dirListing = this._getDirectoryListing( rootPath );
-            list.push({path: rootPath, files: dirListing.files, error: dirListing.error});
+            list.push({
+                path: rootPath, 
+                files: dirListing.files, 
+                error: dirListing.error, 
+                isCurrent: true
+            });
         } else {
             let directories = path.split( Path.sep );
             let currentPath = "";
@@ -56,7 +61,14 @@ export default class Columns extends Component {
                 }
                 currentPath = Path.normalize( currentPath );
                 let dirListing = this._getDirectoryListing( currentPath );
-                list.push({path: currentPath, files: dirListing.files, error: dirListing.error});
+                let isCurrent = ( selected && path === currentPath ) || ( !selected && Path.join( path, '..' ) === currentPath );
+                
+                list.push({
+                    path: currentPath, 
+                    files: dirListing.files, 
+                    error: dirListing.error,
+                    isCurrent: isCurrent
+                });
             })
         }
         const hokeyHandlers = handlers( this, list, path, selected );
@@ -64,6 +76,9 @@ export default class Columns extends Component {
         return (
             <div className="explorer">
                 <div className="explorer-header">
+                    <div className="favorite">
+                        
+                    </div>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id="back"><strong>Back</strong>( <i className="fa fa-arrow-left"/> ) </Tooltip>}>
                         <a className="actions"><i className="fa fa-chevron-left fa-fw"/></a>
                     </OverlayTrigger>
@@ -80,9 +95,7 @@ export default class Columns extends Component {
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id="favorites"><strong>Add to favorites</strong> </Tooltip>}>
                         <a className="actions" onClick={( e ) => {
                             e.preventDefault( );
-                            linkAdd( 'default', selected
-                                ? Path.join( path, selected )
-                                : path );
+                            linkAdd( 'default', selected? Path.join( path, selected ): path );
                         }}><i className="fa fa-star-o fa-fw"/></a>
                     </OverlayTrigger>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id="preview" > <strong>Preview</strong>( space ) </Tooltip>}>
@@ -99,10 +112,13 @@ export default class Columns extends Component {
                     <div className="columns-wrapper" ref="columns">
                         {list.map(( directory, i ) => {
                             return (
-                                <div className={(( selected && path === directory.path ) || ( !selected && Path.join( path, '..' ) === directory.path ))
-                                    ? 'column active'
-                                    : 'column'} key={i}>
-                                    <Column directory={directory} currentPath={path} selectPath={this._selectPath} settings={settings} isLast={i === list.length - 1} selectedFile={selected}/>
+                                <div className={directory.isCurrent? 'column active': 'column'} key={i}>
+                                    <Column 
+                                        directory={directory} 
+                                        currentPath={path} 
+                                        selectPath={this._selectPath} 
+                                        settings={settings} 
+                                        selected={selected} />
                                 </div>
                             )
                         })}
@@ -111,9 +127,13 @@ export default class Columns extends Component {
                 </HotKeys>
                 <div className="explorer-footer">{path}</div>
 
-                <Preview previewModalIsOpen={this.state.previewModalIsOpen} handleClose={( ) => {
-                    this.setState({ previewModalIsOpen: false })
-                }} path={path} selected={selected}/>
+                <Preview 
+                    previewModalIsOpen={this.state.previewModalIsOpen} 
+                    handleClose={( ) => {
+                        this.setState({ previewModalIsOpen: false })
+                    }} 
+                    path={path} 
+                    selected={selected}/>
             </div>
         );
     }
