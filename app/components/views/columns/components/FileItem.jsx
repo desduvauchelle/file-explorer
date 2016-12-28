@@ -12,50 +12,55 @@ class FileItem extends Component {
         selectPath: PropTypes.func.isRequired
     };
 
-    render( ) {
-        let { path, file, currentPath, selected, selectPath } = this.props;
-        let filePath = Path.join( path, file );
+    constructor(props){
+        super(props);
+        this.filePath = Path.join(props.path, props.file); 
+        // For mac, if it has the .app extension, it's an application and should be treated differently
+        this.displayName = props.file;
+        this.isMacApp = false;
+        if (this.displayName.endsWith( '.app' )) {
+            this.displayName = this.displayName.replace( '.app', '' );
+            this.isMacApp = true;
+        }
+    }
 
+    handleClick(e){
+        e.preventDefault();
+        this.props.selectPath(this.filePath);
+    }
+
+    handleDoubleClickFile(e){
+        e.preventDefault();
+        shell.openItem(this.filePath);
+    }
+
+    handleDoubleClickFolder(e){
+        e.preventDefault( );
+        if(this.isMacApp){
+            shell.openItem( this.filePath );
+            return;
+        }
+        shell.showItemInFolder( this.filePath );
+    }
+
+    render( ) {
+        let { file, currentPath, selected } = this.props;
         try {
-            const isDirectory = fs.statSync( filePath ).isDirectory( );
+            const isDirectory = fs.statSync( this.filePath ).isDirectory( );
             if ( isDirectory ) {
-                const isSelected = currentPath && currentPath.indexOf( filePath ) !== -1;
-                // For mac, if it has the .app extension, it's an application and should be treated differently
-                let displayName = file;
-                let isMacApp = false;
-                if (displayName.endsWith( '.app' )) {
-                    displayName = displayName.replace( '.app', '' );
-                    isMacApp = true;
-                }
+                const isSelected = currentPath && currentPath.indexOf( this.filePath ) !== -1;
                 return (
-                    <a onClick={e => {
-                        e.preventDefault( );
-                        selectPath( filePath );
-                    }} onDoubleClick={e => {
-                        e.preventDefault( );
-                        if(isMacApp){
-                            shell.openItem( filePath );
-                            return;
-                        }
-                        shell.showItemInFolder( filePath );
-                    }} className={isSelected? 'selected': ''}>
+                    <a onClick={this.handleClick.bind(this)} onDoubleClick={this.handleDoubleClickFolder.bind(this)} className={isSelected? 'selected': ''}>
                         <i className={`icon-file-directory ${ isSelected? 'open': '' } left`} data-name={file}/>
-                        {displayName}{!isMacApp && (<i className="fa fa-caret-right right"/>)}
+                        {this.displayName}{!this.isMacApp && (<i className="fa fa-caret-right right"/>)}
                     </a>
                 );
             }
         } catch ( ex ) {
-            console.log( `Failed to analyze: ${ filePath }, Caused by: ${ ex }` );
+            console.log( `Failed to analyze: ${ this.filePath }, Caused by: ${ ex }` );
         }
-        
         return (
-            <a onClick={( e ) => {
-                e.preventDefault( );
-                selectPath( path, file );
-            }} onDoubleClick={( e ) => {
-                e.preventDefault( );
-                shell.openItem( filePath );
-            }} className={selected? 'selected': ''}>
+            <a onClick={this.handleClick.bind(this)} onDoubleClick={this.handleDoubleClickFile.bind(this)} className={selected? 'selected': ''}>
                 <i className="icon-file left" data-name={file}/>{file}
             </a>
         );
