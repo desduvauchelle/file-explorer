@@ -1,19 +1,20 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import Path from 'path';
 import fs from 'fs';
 import { shell } from 'electron';
 
 export default class Column extends Component {
     static propTypes = {
-        directory: React.PropTypes.object,
-        selectPath: React.PropTypes.func,
-        settings: React.PropTypes.object,
-        isLast: React.PropTypes.bool
+        directory: PropTypes.object,
+        selectPath: PropTypes.func,
+        settings: PropTypes.object,
+        isLast: PropTypes.bool
     }
-    state = {}
 
     constructor( props ) {
         super( props );
+
+        this.state = {}
     }
 
     render( ) {
@@ -34,31 +35,34 @@ export default class Column extends Component {
                 )}
                 {files.map(( file, i ) => {
                     let filePath = Path.join( path, file );
-                    const isDirectory = fs.statSync( filePath ).isDirectory( );
+                    try{
+                        const isDirectory = fs.statSync( filePath ).isDirectory( );
 
-                    if ( isDirectory ) {
-                        return (
-                            <a key={i} onClick={( e ) => {
-                                e.preventDefault( );
-                                selectPath( filePath );
-                            }} onDoubleClick={( e ) => {
-                                e.preventDefault( );
-                                shell.showItemInFolder( filePath );
-                            }} className={currentPath && currentPath.indexOf( filePath ) !== -1
-                                ? 'selected'
-                                : ''}><i className={`${ settings.icons['folder'] } left`}/>{file}</a>
-                        );
+                        if ( isDirectory ) {
+                            return (
+                                <a key={i} onClick={ e => {
+                                    e.preventDefault();
+                                    selectPath( filePath );
+                                }} onDoubleClick={ e => {
+                                    e.preventDefault();
+                                    shell.showItemInFolder( filePath );
+                                }} className={currentPath && currentPath.indexOf( filePath ) !== -1
+                                    ? 'selected'
+                                    : ''}><i className={`${ settings.icons['folder'] } left`}/>{file}</a>
+                            );
+                        }
+                    }catch(ex){
+                        console.log(`Failed to analyze: ${filePath}, Caused by: ${ex}`);
                     }
 
                     let extensionName = Path.extname( file );
                     if ( extensionName.charAt( 0 ) === '.' ) {
                         extensionName = extensionName.substr( 1 )
                     }
-                    let icon = `${ settings.icons['file'] } left`;
-                    // console.log(extensionName, settings.icons[extensionName])
-                    if (settings.icons[extensionName]) {
-                        icon = `${ settings.icons[extensionName] } left`;
+                    if (!settings.icons[extensionName]) {
+                        extensionName = 'file';
                     }
+                    const icon = `${settings.icons[extensionName]} left`;
 
                     return (
                         <a key={i} onClick={( e ) => {

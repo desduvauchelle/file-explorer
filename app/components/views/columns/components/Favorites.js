@@ -5,11 +5,11 @@ import { Modal } from 'react-bootstrap'
 export default class Favorites extends Component {
     constructor( props ) {
         super( props );
-    }
 
-    state = {
-        newGroupModalIsOpen: false,
-        newGroupName: ''
+        this.state = {
+            newGroupModalIsOpen: false,
+            newGroupName: ''
+        }
     }
 
     render( ) {

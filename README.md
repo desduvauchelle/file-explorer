@@ -13,13 +13,13 @@ The best file explorer for all platforms.
 First, clone the repo via git:
 
 ```bash
-git clone https://github.com/desduvauchelle/file-explorer.git your-project-name
+git clone https://github.com/desduvauchelle/file-explorer.git`
 ```
 
 And then install dependencies.
 
 ```bash
-$ cd your-project-name && npm install
+$ npm install
 ```
 
 ## Run
