@@ -1,5 +1,5 @@
-import Path from 'path'
-import swal from 'sweetalert2'
+import Path from 'path';
+import swal from 'sweetalert2';
 import { shell } from 'electron'
 
 export default {

@@ -1,21 +1,24 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import path from 'path'
 import { Modal } from 'react-bootstrap'
 
 export default class Favorites extends Component {
-    constructor( props ) {
-        super( props );
+    static propTypes = {
+        selectPath: PropTypes.func.isRequired,
+        favorites: PropTypes.object.isRequired
     }
 
-    state = {
-        newGroupModalIsOpen: false,
-        newGroupName: ''
+    constructor( props ) {
+        super( props );
+
+        this.state = {
+            newGroupModalIsOpen: false,
+            newGroupName: ''
+        }
     }
 
     render( ) {
-        console.log( this.props );
         const { selectPath, favorites } = this.props;
-
         return (
             <div>
                 {favorites.favorites.map(( favorite, i ) => {

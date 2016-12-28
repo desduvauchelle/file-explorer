@@ -3,7 +3,6 @@ import fs from 'fs'
 // Plugins
 import { HotKeys } from 'react-hotkeys'
 import Path from 'path'
-import { shell } from 'electron'
 import { Tooltip, OverlayTrigger } from 'react-bootstrap'
 // Components
 import Favorites from './components/Favorites'
@@ -14,14 +13,17 @@ import settings from '../../../settings.default';
 import { keyMap, handlers } from '../../../utils/keymapping'
 
 export default class Columns extends Component {
+    static propTypes = {
+        location: PropTypes.object.isRequired,
+        router: PropTypes.object.isRequired
+    }
+
     constructor( props ) {
         super( props );
-    }
-    props : {
-        location: PropTypes.object.isRequired
-    }
-    state = {
-        previewModalIsOpen: false
+        
+        this.state = {
+            previewModalIsOpen: false
+        }
     }
 
     componentDidUpdate( ) {
@@ -32,7 +34,6 @@ export default class Columns extends Component {
     }
 
     render( ) {
-        const self = this;
         let { sectionAdd, sectionRemove, sectionEdit, linkAdd, linkRemove } = this.props;
         let { path, file } = this.props.location.query;
         // Get the root of hard drive (in mac, it's / whereas in windows it's C:\\)
@@ -42,7 +43,8 @@ export default class Columns extends Component {
 
         let list = [ ];
         if ( !path ) {
-            list.push({path: rootPath, files: this._getDirectoryListing( rootPath )});
+            let dirListing = this._getDirectoryListing( rootPath );
+            list.push({path: rootPath, files: dirListing.files, error: dirListing.error});
         } else {
             let directories = path.split( Path.sep );
             let currentPath = "";
@@ -53,28 +55,29 @@ export default class Columns extends Component {
                     currentPath = Path.join( currentPath, directory )
                 }
                 currentPath = Path.normalize( currentPath );
-                list.push({path: currentPath, files: this._getDirectoryListing( currentPath )});
+                let dirListing = this._getDirectoryListing( currentPath );
+                list.push({path: currentPath, files: dirListing.files, error: dirListing.error});
             })
         }
-        const hokeyHandlers = handlers( self, list, path, file );
+        const hokeyHandlers = handlers( this, list, path, file );
 
         return (
             <div className="explorer">
                 <div className="explorer-header">
-                    <OverlayTrigger placement="bottom" overlay={< Tooltip id = "back" > <strong>Back</strong>( <i className="fa fa-arrow-left"/> ) < /Tooltip>}>
+                    <OverlayTrigger placement="bottom" overlay={<Tooltip id="back"><strong>Back</strong>( <i className="fa fa-arrow-left"/> ) </Tooltip>}>
                         <a className="actions"><i className="fa fa-chevron-left fa-fw"/></a>
                     </OverlayTrigger>
-                    <OverlayTrigger placement="bottom" overlay={< Tooltip id = "forward" > <strong>Forward</strong>( <i className="fa fa-arrow-right"/> ) < /Tooltip>}>
+                    <OverlayTrigger placement="bottom" overlay={<Tooltip id="forward"><strong>Forward</strong>( <i className="fa fa-arrow-right"/> ) </Tooltip>}>
                         <a className="actions"><i className="fa fa-chevron-right fa-fw"/></a>
                     </OverlayTrigger>
                     <div className="spacer-md"/>
-                    <OverlayTrigger placement="bottom" overlay={< Tooltip id = "trash" > <strong>Delete</strong>( cmd + delete ) < /Tooltip>}>
+                    <OverlayTrigger placement="bottom" overlay={<Tooltip id="trash"><strong>Delete</strong>( cmd + delete ) </Tooltip>}>
                         <a className="actions" onClick={hokeyHandlers.delete}><i className="fa fa-trash-o fa-fw"/></a>
                     </OverlayTrigger>
-                    <OverlayTrigger placement="bottom" overlay={< Tooltip id = "rename" > <strong>Rename</strong>( enter ) < /Tooltip>}>
+                    <OverlayTrigger placement="bottom" overlay={<Tooltip id="rename"><strong>Rename</strong>( enter ) </Tooltip>}>
                         <a className="actions" onClick={hokeyHandlers.rename}><i className="fa fa-pencil-square-o fa-fw"/></a>
                     </OverlayTrigger>
-                    <OverlayTrigger placement="bottom" overlay={< Tooltip id = "favorites" > <strong>Add to favorites</strong> < /Tooltip>}>
+                    <OverlayTrigger placement="bottom" overlay={<Tooltip id="favorites"><strong>Add to favorites</strong> </Tooltip>}>
                         <a className="actions" onClick={( e ) => {
                             e.preventDefault( );
                             linkAdd( 'default', file
@@ -82,7 +85,7 @@ export default class Columns extends Component {
                                 : path );
                         }}><i className="fa fa-star-o fa-fw"/></a>
                     </OverlayTrigger>
-                    <OverlayTrigger placement="bottom" overlay={< Tooltip id = "preview" > <strong>Preview</strong>( space ) < /Tooltip>}>
+                    <OverlayTrigger placement="bottom" overlay={<Tooltip id="preview" > <strong>Preview</strong>( space ) </Tooltip>}>
                         <a className="actions" onClick={( e ) => {
                             e.preventDefault( );
                             this.setState({ previewModalIsOpen: true })
@@ -116,11 +119,21 @@ export default class Columns extends Component {
     }
 
     _getDirectoryListing( path ) {
-        let files = fs.readdirSync( path ) || [ ];
-        if ( !settings.view.showHidden ) {
-            files = files.filter( file => file.charAt( 0 ) !== '.' );
+        try{
+            let files = fs.readdirSync( path ) || [ ];
+            if ( !settings.view.showHidden ) {
+                files = files.filter( file => file.charAt( 0 ) !== '.' );
+            }
+            return {
+                files: files.sort(( a, b ) => a.toLowerCase().localeCompare(b.toLowerCase()))
+            };
+        }catch(ex){
+            console.log(`Failed to list directory files. path=${path}, caused by: ${ex}`);
+            return {
+                files: [],
+                error: "Permission denied"
+            };
         }
-        return files.sort(( a, b ) => a.toLowerCase( ).localeCompare(b.toLowerCase( )));
     }
 
     _selectPath = ( path = '/', file = null ) => {

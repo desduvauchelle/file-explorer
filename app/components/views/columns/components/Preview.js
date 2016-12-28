@@ -10,7 +10,6 @@ export default class Preview extends Component {
     }
 
     render( ) {
-        const self = this;
         let { path, file, previewModalIsOpen, handleClose } = this.props;
 
         return (

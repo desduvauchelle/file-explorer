@@ -1,67 +1,42 @@
-import React, { Component } from 'react';
-import Path from 'path';
-import fs from 'fs';
-import { shell } from 'electron';
+import React, { Component, PropTypes } from 'react';
+import FileItem from './FileItem.jsx';
 
 export default class Column extends Component {
     static propTypes = {
-        directory: React.PropTypes.object,
-        selectPath: React.PropTypes.func,
-        settings: React.PropTypes.object,
-        isLast: React.PropTypes.bool
+        directory: PropTypes.object,
+        selectPath: PropTypes.func,
+        settings: PropTypes.object,
+        isLast: PropTypes.bool,
+        currentPath: PropTypes.string.isRequired,
+        selectedFile: PropTypes.string
     }
-    state = {}
 
     constructor( props ) {
         super( props );
+
+        this.state = {}
     }
 
     render( ) {
         const {
             directory,
             selectPath,
-            settings,
             currentPath,
             isLast,
             selectedFile
         } = this.props;
-        let { path, files } = directory;
 
         return (
             <section>
-                {files.length === 0 && (
+                {directory.error && (
+                    <p className="error">{directory.error}</p>
+                )}
+                {directory.files.length === 0 && !directory.error && (
                     <p>No files</p>
                 )}
-                {files.map(( file, i ) => {
-                    let filePath = Path.join( path, file );
-                    const isDirectory = fs.statSync( filePath ).isDirectory( );
-
-                    if ( isDirectory ) {
-                        return (
-                            <a key={i} onClick={( e ) => {
-                                e.preventDefault( );
-                                selectPath( filePath );
-                            }} onDoubleClick={( e ) => {
-                                e.preventDefault( );
-                                shell.showItemInFolder( filePath );
-                            }} className={currentPath && currentPath.indexOf( filePath ) !== -1
-                                ? 'selected'
-                                : ''}><i className={`icon-file-directory left`} data-name={file}/>{file}</a>
-                        );
-                    }
-
-                    return (
-                        <a key={i} onClick={( e ) => {
-                            e.preventDefault( );
-                            selectPath( path, file );
-                        }} onDoubleClick={( e ) => {
-                            e.preventDefault( );
-                            shell.openItem( filePath );
-                        }} className={selectedFile === file
-                            ? 'selected'
-                            : ''}><i className="icon-file left" data-name={file}/>{file}</a>
-                    );
-                })}
+                {directory.files.map( (file, i) => 
+                    <FileItem key={i} path={directory.path} file={file} currentPath={currentPath} selectPath={selectPath} selected={selectedFile === file}/>
+                )}
             </section>
         );
     }
