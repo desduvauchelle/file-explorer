@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, { Component, PropTypes } from 'react';
 import fs from 'fs';
 import Path from 'path';
 import { shell } from 'electron';
@@ -13,43 +13,46 @@ class FileItem extends Component {
         selectPath: PropTypes.func.isRequired
     };
 
-    render() {
-        let { path, file, currentPath, selected, selectPath} = this.props;
+    render( ) {
+        let { path, file, currentPath, selected, selectPath } = this.props;
         let filePath = Path.join( path, file );
-        let extensionName = Path.extname( file );
-        if ( extensionName.charAt( 0 ) === '.' ) {
-            extensionName = extensionName.substr( 1 )
-        }
-        if (!settings.icons[extensionName]) {
-            extensionName = 'file';
-        }
-        const icon = `${settings.icons[extensionName]} left`;
-        
-        try{
+
+        try {
             const isDirectory = fs.statSync( filePath ).isDirectory( );
             if ( isDirectory ) {
+                const isSelected = currentPath && currentPath.indexOf( filePath ) !== -1;
                 return (
-                    <a onClick={ e => {
-                        e.preventDefault();
+                    <a onClick={e => {
+                        e.preventDefault( );
                         selectPath( filePath );
-                    }} onDoubleClick={ e => {
-                        e.preventDefault();
+                    }} onDoubleClick={e => {
+                        e.preventDefault( );
                         shell.showItemInFolder( filePath );
-                    }} className={currentPath && currentPath.endsWith( filePath ) ? 'selected' : ''}>
-                    <i className={`icon-file-directory left`} data-name={file}/>{file}</a>
+                    }} className={isSelected
+                        ? 'selected'
+                        : ''}>
+                        <i className={`icon-file-directory ${ isSelected
+                            ? 'open'
+                            : '' } left`} data-name={file}/>{file}<i className="fa fa-caret-right right"/></a>
                 );
             }
-        }catch(ex){
-            console.log(`Failed to analyze: ${filePath}, Caused by: ${ex}`);
+        } catch ( ex ) {
+            console.log( `Failed to analyze: ${ filePath }, Caused by: ${ ex }` );
         }
-        return (       
+        // For mac, if it has the .app extension, it's an application and should be treated differently
+        if (file.endsWith( '.app' )) {
+            file = file.replace( '.app', '' );
+        }
+        return (
             <a onClick={( e ) => {
                 e.preventDefault( );
                 selectPath( path, file );
             }} onDoubleClick={( e ) => {
                 e.preventDefault( );
                 shell.openItem( filePath );
-            }} className={selected? 'selected':''}><i className={icon} data-name={file}/>{file}</a>
+            }} className={selected
+                ? 'selected'
+                : ''}><i className="icon-file left" data-name={file}/>{file}</a>
         );
     }
 }

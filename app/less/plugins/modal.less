@@ -1,13 +1,27 @@
 .modal-backdrop {
-	background: #fff;
+    background: #fff;
+}
+
+.modal-backdrop.in {
+    opacity: 0.9;
+}
+
+.modal.fade .modal-dialog {
+    transform: none;
+}
+
+.modal.fade {
+    transform: scale(0.2);
+    transition: opacity 0.15s linear, transform 0.15s;
+}
+
+.modal.fade.in {
+    transform: scale(1);
+    opacity: 1;
 }
 
 .modal-content {
-	background: #000;
-	border: none;
-	border-radius: 0;
-}
-
-.modal-body {
-	padding: 3px;
+    border: none;
+    border-radius: 0;
+    box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
 }

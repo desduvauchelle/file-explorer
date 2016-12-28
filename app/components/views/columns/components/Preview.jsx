@@ -13,7 +13,7 @@ export default class Preview extends Component {
         let { path, file, previewModalIsOpen, handleClose } = this.props;
 
         return (
-            <Modal show={previewModalIsOpen} onHide={handleClose} bsSize="lg" onKeyPress={( e ) => {
+            <Modal show={previewModalIsOpen} onHide={handleClose} bsClass="modal-preview modal" bsSize="lg" onKeyPress={( e ) => {
                 if ( e.keyCode == 0 ) {
                     handleClose( );
                 }

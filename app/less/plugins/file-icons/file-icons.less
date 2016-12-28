@@ -21,6 +21,10 @@
         .directory-icon;
         top: 0;
     }
+
+    &.open:before {
+        .directory-open-icon;
+    }
     // Atom
     &[data-name=".atom"]:before {
         .atom-icon;
@@ -75,6 +79,10 @@
         position: relative;
         .file-icon;
         top: 0;
+    }
+
+    &[data-name$=".plist"]:before {
+        .text-icon;
     }
     // Books
     &[data-name=".pdf"]:before {

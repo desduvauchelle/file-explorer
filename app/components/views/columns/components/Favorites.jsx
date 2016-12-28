@@ -58,14 +58,13 @@ export default class Favorites extends Component {
                         </Modal.Header>
                         <Modal.Body>
                             <div>
-                                <p>Enter a new group name</p>
-                                <input type="text" ref="newGroupName" className="form-control" value={this.props.newGroupName} onChange={( ) => {
+                                <input type="text" ref="newGroupName" placeholder="Enter new group name..." className="form-control" value={this.props.newGroupName} onChange={( ) => {
                                     this.setState({ newGroupName: this.refs.newGroupName.value })
                                 }}/>
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
-                            <button type="submit" className="btn btn-primary">Create</button>
+                            <button type="submit" className="btn btn-primary btn-block">Create</button>
                         </Modal.Footer>
                     </form>
                 </Modal>
