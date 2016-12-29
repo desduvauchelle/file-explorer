@@ -11,40 +11,37 @@ export default class Column extends Component {
         selected: PropTypes.string
     }
 
-    constructor( props ) {
-        super( props );
+    constructor(props) {
+        super(props);
 
         this.state = {}
     }
 
-    render( ) {
-        const {
-            directory,
-            selectPath,
-            currentPath,
-            selected
-        } = this.props;
+    render() {
+        const {directory, selectPath, currentPath, selected} = this.props;
 
         return (
             <section>
-                {directory.error && (
-                    <p className="error">{directory.error}</p>
-                )}
-                {directory.files.length === 0 && !directory.error && (
-                    <p>No files</p>
-                )}
-                {directory.files.map( (file, i) => 
-                    <FileItem 
-                        key={i} 
-                        directory={directory}
-                        path={directory.path} 
-                        file={file} 
-                        currentPath={currentPath} 
-                        selectPath={selectPath} 
-                        selected={selected} />
-                )}
+              { directory.error && (
+                <p className="error">
+                  { directory.error }
+                </p>
+                ) }
+              { directory.files.length === 0 && !directory.error && (
+                <p>
+                  No files
+                </p>
+                ) }
+              { directory.files.map((file) => <FileItem key={ file }
+                                                directory={ directory }
+                                                path={ directory.path }
+                                                file={ file }
+                                                currentPath={ currentPath }
+                                                selectPath={ selectPath }
+                                                selected={ selected } />
+                ) }
             </section>
-        );
+            );
     }
 
 }

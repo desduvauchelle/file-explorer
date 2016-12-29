@@ -57,10 +57,9 @@ class FileItem extends Component {
             const isDirectory = fs.statSync(this.filePath).isDirectory();
             if (isDirectory) {
                 return (
-                    <a onClick={this.handleClick.bind(this)}
-                    onDoubleClick={this.bind(this)}
-                    className={isSelected ? 'selected' : ''}>
-                        <i className={`icon-file-directory ${isSelected ? 'open' : ''} left`} data-name={file}/> {this.displayName}{!this.isMacApp && (<i className="fa fa-caret-right right"/>)}
+                    <a onClick={ this.handleClick.bind(this) } onDoubleClick={ this.handleDoubleClickFolder.bind(this) } className={ isSelected ? 'selected' : '' }><i className={ `icon-file-directory ${isSelected ? 'open' : ''} left` } data-name={ file } />
+                      { this.displayName }
+                      { !this.isMacApp && (<i className="fa fa-caret-right right" />) }
                     </a>
                     );
             }
@@ -68,10 +67,8 @@ class FileItem extends Component {
             console.log(`Failed to analyze: ${this.filePath}, Caused by: ${ex}`);
         }
         return (
-            <a onClick={this.handleClick.bind(this)}
-            onDoubleClick={this.handleDoubleClickFile.bind(this)}
-            className={isSelected ? 'selected' : ''}>
-                <i className="icon-file left" data-name={file}/>{file}
+            <a onClick={ this.handleClick.bind(this) } onDoubleClick={ this.handleDoubleClickFile.bind(this) } className={ isSelected ? 'selected' : '' }><i className="icon-file left" data-name={ file } />
+              { file }
             </a>
             );
     }

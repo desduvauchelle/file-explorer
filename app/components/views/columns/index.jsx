@@ -1,9 +1,9 @@
-import React, {Component, PropTypes} from 'react'
+import React, { Component, PropTypes } from 'react'
 import fs from 'fs'
 // Plugins
-import {HotKeys} from 'react-hotkeys'
+import { HotKeys } from 'react-hotkeys'
 import Path from 'path'
-import {Tooltip, OverlayTrigger, Modal} from 'react-bootstrap'
+import { Tooltip, OverlayTrigger, Modal } from 'react-bootstrap'
 // Components
 import Header from './components/Header'
 import Favorites from './components/Favorites'
@@ -11,18 +11,13 @@ import Column from './components/Column'
 import Preview from './components/Preview'
 // Settings
 import settings from '../../../settings.default';
-import {keyMap, handlers} from '../../../utils/keymapping'
+import { keyMap, handlers } from '../../../utils/keymapping'
 
 export default class Columns extends Component {
 
     static propTypes = {
         location: PropTypes.object.isRequired,
-        router: PropTypes.object.isRequired,
-        sectionAdd: PropTypes.func.isRequired,
-        sectionRemove: PropTypes.func.isRequired,
-        sectionEdit: PropTypes.func.isRequired,
-        linkAdd: PropTypes.func.isRequired,
-        linkRemove: PropTypes.func.isRequired
+        router: PropTypes.object.isRequired
     }
 
     constructor(props) {
@@ -41,7 +36,6 @@ export default class Columns extends Component {
     }
 
     render() {
-        let {sectionAdd, linkAdd} = this.props;
         let {path, selected} = this.props.location.query;
         // Get the root of hard drive (in mac, it's / whereas in windows it's C:\\)
         this.rootPath = Path
@@ -52,7 +46,12 @@ export default class Columns extends Component {
         let list = [];
         if (!path || path == this.rootPath) {
             let dirListing = this._getDirectoryListing(this.rootPath);
-            list.push({path: this.rootPath, files: dirListing.files, error: dirListing.error, isCurrent: true});
+            list.push({
+                path: this.rootPath,
+                files: dirListing.files,
+                error: dirListing.error,
+                isCurrent: true
+            });
         } else {
             let directories = path.split(Path.sep);
             let currentPath = "";
@@ -66,7 +65,12 @@ export default class Columns extends Component {
                 let dirListing = this._getDirectoryListing(currentPath);
                 let isCurrent = (selected && path === currentPath) || (!selected && Path.join(path, '..') === currentPath);
 
-                list.push({path: currentPath, files: dirListing.files, error: dirListing.error, isCurrent: isCurrent});
+                list.push({
+                    path: currentPath,
+                    files: dirListing.files,
+                    error: dirListing.error,
+                    isCurrent: isCurrent
+                });
             })
         }
         let showFileInfo = false;
@@ -78,7 +82,12 @@ export default class Columns extends Component {
                     .isDirectory();
                 if (isDirectory) {
                     let dirListing = this._getDirectoryListing(filePath);
-                    list.push({path: filePath, files: dirListing.files, error: dirListing.error, isCurrent: false});
+                    list.push({
+                        path: filePath,
+                        files: dirListing.files,
+                        error: dirListing.error,
+                        isCurrent: false
+                    });
                 } else {
                     showFileInfo = true;
                 }
@@ -91,68 +100,61 @@ export default class Columns extends Component {
         const hokeyHandlers = handlers(this, list, path, selected);
 
         return (
-            <div className="explorer">
+            <HotKeys keyMap={ keyMap } handlers={ hokeyHandlers }>
+              <div className="explorer">
                 <div className="explorer-header">
-                    <Header path={path} selected={selected} hokeyHandlers={hokeyHandlers}/>
+                  <Header path={ path } selected={ selected } hokeyHandlers={ hokeyHandlers } />
                 </div>
                 <div className="column favorites">
-                    <Favorites selectPath={this._selectPath} {...this.props}/>
+                  <Favorites selectPath={ this._selectPath } {...this.props}/>
                 </div>
-                <HotKeys keyMap={keyMap} handlers={hokeyHandlers}>
-                    <div className="columns-wrapper" ref="columns">
-                        {list.map((directory, i) => {
-                            return (
-                                <div
-                                    className={directory.isCurrent
-                                    ? 'column active'
-                                    : 'column'}
-                                    key={i}>
-                                    <Column
-                                        directory={directory}
-                                        currentPath={path}
-                                        selectPath={this._selectPath}
-                                        settings={settings}
-                                        selected={selected}/>
-                                </div>
-                            )
-                        })}
-                        {showFileInfo && (
-                            <div className="column column-preview">
-                                <Preview
-                                    path={path}
-                                    selected={selected}
-                                    previewModalIsOpen={this.state.previewModalIsOpen}/>
-                                <h3>{selected}</h3>
+                <div className="columns-wrapper" ref="columns">
+                  { list.map((directory, i) => {
+                        return (
+                            <div className={ directory.isCurrent
+                                     ? 'column active'
+                                     : 'column' } key={ i }>
+                              <Column directory={ directory }
+                                currentPath={ path }
+                                selectPath={ this._selectPath }
+                                settings={ settings }
+                                selected={ selected } />
                             </div>
-                        )}
+                        )
+                    }) }
+                  { showFileInfo && (
+                    <div className="column column-preview">
+                      <Preview path={ path } selected={ selected } previewModalIsOpen={ this.state.previewModalIsOpen } />
+                      <h3>{ selected }</h3>
                     </div>
-                </HotKeys>
-                <div className="explorer-footer">{path} {selected
-                        ? `(${selected})`
-                        : ''}</div>
-
-                <Modal
-                    show={this.state.previewModalIsOpen}
-                    onHide={() => {
-                    this.setState({previewModalIsOpen: false})
-                }}
-                    bsClass="modal-preview modal"
-                    bsSize="lg"
-                    onKeyPress={(e) => {
-                    if (e.keyCode == 0) {
-                        this.setState({previewModalIsOpen: false})
-                    }
-                }}>
-                    <Modal.Body>
-                        <Preview
-                            path={path}
-                            selected={selected}
-                            previewModalIsOpen={this.state.previewModalIsOpen}/>
-                    </Modal.Body>
+                    ) }
+                </div>
+                <div className="explorer-footer">
+                  { path }
+                  { selected ? `(${selected})` : '' }
+                </div>
+                <Modal show={ this.state.previewModalIsOpen }
+                  onHide={ () => {
+                               this.setState({
+                                   previewModalIsOpen: false
+                               })
+                           } }
+                  bsClass="modal-preview modal"
+                  bsSize="lg"
+                  onKeyPress={ (e) => {
+                                   if (e.keyCode == 0) {
+                                       this.setState({
+                                           previewModalIsOpen: false
+                                       })
+                                   }
+                               } }>
+                  <Modal.Body>
+                    <Preview path={ path } selected={ selected } previewModalIsOpen={ this.state.previewModalIsOpen } />
+                  </Modal.Body>
                 </Modal>
-
-            </div>
-        );
+              </div>
+            </HotKeys>
+            );
     }
 
     _getDirectoryListing(path) {
@@ -166,7 +168,10 @@ export default class Columns extends Component {
             };
         } catch (ex) {
             console.log(`Failed to list directory files. path=${path}, caused by: ${ex}`);
-            return {files: [], error: "Permission denied"};
+            return {
+                files: [],
+                error: "Permission denied"
+            };
         }
     }
 
@@ -192,6 +197,8 @@ export default class Columns extends Component {
     }
 
     _openPreviewModal = () => {
-        this.setState({previewModalIsOpen: true})
+        this.setState({
+            previewModalIsOpen: true
+        })
     }
 }
