@@ -1,13 +1,43 @@
-import React, { Component, PropTypes } from 'react'
+import React, {Component, PropTypes} from 'react'
 import Path from 'path'
 import ReactPlayer from 'react-player'
 import fs from 'fs'
 // import PSD from 'psd'
 
 const previewTypes = {
-    image: ['png', 'jpeg', 'jpg', 'gif','tiff','bmp'],
-    audioVisual: ['wav','mp3','aac','mp4','ogg','m4r','mkv','wmv','mov','aiff','m4a','wma'],
-    text: ['js','html','css','jsx','txt','md','yml','json']
+    image: [
+        'png',
+        'jpeg',
+        'jpg',
+        'gif',
+        'tiff',
+        'bmp'
+    ],
+    audioVisual: [
+        'wav',
+        'mp3',
+        'aac',
+        'mp4',
+        'ogg',
+        'm4r',
+        'mkv',
+        'wmv',
+        'mov',
+        'aiff',
+        'm4a',
+        'wma',
+        'avi'
+    ],
+    text: [
+        'js',
+        'html',
+        'css',
+        'jsx',
+        'txt',
+        'md',
+        'yml',
+        'json'
+    ]
 }
 
 export default class Preview extends Component {
@@ -17,34 +47,40 @@ export default class Preview extends Component {
         previewModalIsOpen: PropTypes.bool.isRequired
     }
 
-    constructor( props ) {
-        super( props );
+    constructor(props) {
+        super(props);
     }
 
-    render( ) {
-        let { path, selected, previewModalIsOpen } = this.props;
+    render() {
+        let {path, selected, previewModalIsOpen} = this.props;
 
         let type = 'unknown';
-        if(selected){
-             const extension = Path.extname( selected ).toLowerCase( ).substr(1);        
-            for(var k in previewTypes){
-                if(previewTypes[k].indexOf(extension) !== -1){
+        if (selected) {
+            const extension = Path
+                .extname(selected)
+                .toLowerCase()
+                .substr(1);
+            for (var k in previewTypes) {
+                if (previewTypes[k].indexOf(extension) !== -1) {
                     type = k;
                 }
             }
         }
 
-        return (            
+        return (
             <div className="preview">
-                {type === 'unknown' && (<Unknown path={path} selected={selected} />)}
-                {type === 'image' && (<Image path={path} selected={selected} />)}
-                {type === 'text' && (<Text path={path} selected={selected} />)}
-                {type === 'audioVisual' && (<AudioVisual path={path} selected={selected} previewModalIsOpen={previewModalIsOpen} />)}
+                {type === 'unknown' && (<Unknown path={path} selected={selected}/>)}
+                {type === 'image' && (<Image path={path} selected={selected}/>)}
+                {type === 'text' && (<Text path={path} selected={selected}/>)}
+                {type === 'audioVisual' && (<AudioVisual
+                    path={path}
+                    selected={selected}
+                    previewModalIsOpen={previewModalIsOpen}/>)}
                 {/* PHOTOSHOP */}
                 {/* {( file && [ '.psd' ].indexOf(Path.extname( file ).toLowerCase( )) !== -1 ) && PSD.fromURL( "/path/to/file.psd" ).then( function ( psd ) {
                     return ( <img src={psd.image.toPng( )} className="image"/> )
                 })} */}
-            </div>                
+            </div>
         );
     }
 }
@@ -54,40 +90,40 @@ class Unknown extends Component {
         path: PropTypes.string.isRequired,
         selected: PropTypes.string.isRequired
     }
-    constructor(props){
+    constructor(props) {
         super(props)
     }
 
-    render(){
-        const { path, selected} = this.props;
+    render() {
+        const {selected} = this.props;
 
         return (
             <div className="unknown">
-                <i className="icon-file" data-name={selected} />
+                <i className="icon-file" data-name={selected}/>
             </div>
         );
     }
 }
-
 
 class Text extends Component {
     static propTypes = {
         path: PropTypes.string.isRequired,
         selected: PropTypes.string.isRequired
     }
-    constructor(props){
+    constructor(props) {
         super(props)
     }
 
-    render(){
-        const { path, selected} = this.props;
-        const filePath = Path.join(path,selected);
+    render() {
+        const {path, selected} = this.props;
+        const filePath = Path.join(path, selected);
         let text = "";
         try
         {
-            text = fs.readFileSync(filePath).toString();
-        } catch(ex)
-        {
+            text = fs
+                .readFileSync(filePath)
+                .toString();
+        } catch (ex) {
             console.log(`Error loading preview for ${filePath}, reason ${ex}`);
         }
 
@@ -104,14 +140,14 @@ class Image extends Component {
         path: PropTypes.string.isRequired,
         selected: PropTypes.string.isRequired
     }
-    constructor(props){
+    constructor(props) {
         super(props)
     }
 
-    render(){
-        const { path, selected} = this.props;
+    render() {
+        const {path, selected} = this.props;
 
-        return (<img src={Path.join( path, selected )} className="image"/>);
+        return (<img src={Path.join(path, selected)} className="image"/>);
     }
 }
 
@@ -121,16 +157,19 @@ class AudioVisual extends Component {
         selected: PropTypes.string.isRequired,
         previewModalIsOpen: PropTypes.bool.isRequired
     }
-    constructor(props){
+    constructor(props) {
         super(props)
     }
 
-    render(){
-        const { path, selected, previewModalIsOpen} = this.props;
+    render() {
+        const {path, selected, previewModalIsOpen} = this.props;
 
         return (
             <div className="video">
-                <ReactPlayer url={Path.join( path, selected )} playing={previewModalIsOpen} controls={true}/>
+                <ReactPlayer
+                    url={Path.join(path, selected)}
+                    playing={previewModalIsOpen}
+                    controls={true}/>
             </div>
         );
     }

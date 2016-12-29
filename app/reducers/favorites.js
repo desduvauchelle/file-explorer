@@ -36,7 +36,7 @@ export default function counter(state = initialState, action = {}) {
         case types.SECTION_REMOVE:{
             return {
                 ...state,
-                favorites: state.favorites.filter( fav => fav.id === action.id )
+                favorites: state.favorites.filter( fav => fav.id !== action.id )
             }
         }
         case types.SECTION_EDIT:{
