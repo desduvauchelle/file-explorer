@@ -6,16 +6,16 @@ import { shell } from 'electron';
 class FileItem extends Component {
     static propTypes = {
         directory: PropTypes.object,
-        path: PropTypes.string.isRequired,
         file: PropTypes.string.isRequired,
-        currentPath: PropTypes.string.isRequired,
+        path: PropTypes.string,
         selected: PropTypes.string,
-        selectPath: PropTypes.func.isRequired
+        selectPath: PropTypes.func.isRequired,
+        isFavorite: PropTypes.bool.isRequired
     };
 
     constructor(props) {
         super(props);
-        this.filePath = Path.join(props.path, props.file);
+        this.filePath = props.directory ? Path.join(props.directory.path, props.file) : props.file;
         // For mac, if it has the .app extension, it's an application and should be
         // treated differently
         this.displayName = props.file;
@@ -28,7 +28,11 @@ class FileItem extends Component {
 
     handleClick(e) {
         e.preventDefault();
-        this.props.selectPath(this.props.path, this.props.file);
+        if (this.props.isFavorite) {
+            this.props.selectPath(this.props.file);
+            return;
+        }
+        this.props.selectPath(this.props.directory.path, this.props.file);
     }
 
     handleDoubleClickFile(e) {
@@ -46,12 +50,22 @@ class FileItem extends Component {
     }
 
     render() {
-        let {file, currentPath, selected, directory} = this.props;
+        let {file, path, selected, directory, isFavorite} = this.props;
+
+        if (isFavorite) {
+            const fileSplit = file.split(Path.sep);
+            return (
+                <a onClick={ this.handleClick.bind(this) } onDoubleClick={ this.handleDoubleClickFolder.bind(this) }><i className="icon-file-directory left" data-name={ file } />
+                  { fileSplit[fileSplit.length - 1] }
+                </a>
+                );
+        }
+
         let isSelected = false;
         if (directory.isCurrent) {
             isSelected = (selected && selected === file);
         } else {
-            isSelected = currentPath && currentPath.indexOf(this.filePath) !== -1;
+            isSelected = path && path.indexOf(this.filePath) !== -1;
         }
         try {
             const isDirectory = fs.statSync(this.filePath).isDirectory();

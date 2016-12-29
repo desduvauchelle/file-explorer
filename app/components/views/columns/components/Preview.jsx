@@ -7,7 +7,7 @@ import fs from 'fs'
 const previewTypes = {
     image: ['png', 'jpeg', 'jpg', 'gif', 'tiff', 'bmp'],
     audioVisual: ['wav', 'mp3', 'aac', 'mp4', 'ogg', 'm4r', 'mkv', 'wmv', 'mov', 'aiff', 'm4a', 'wma', 'avi'],
-    text: ['js', 'html', 'css', 'jsx', 'txt', 'md', 'yml', 'json']
+    text: ['js', 'html', 'css', 'jsx', 'txt', 'md', 'yml', 'json', 'plist']
 }
 
 export default class Preview extends Component {
@@ -42,8 +42,8 @@ export default class Preview extends Component {
               { type === 'audioVisual' && (<AudioVisual path={ path } selected={ selected } previewModalIsOpen={ previewModalIsOpen } />) }
               { /* PHOTOSHOP */ }
               { /* {( file && [ '.psd' ].indexOf(Path.extname( file ).toLowerCase( )) !== -1 ) && PSD.fromURL( "/path/to/file.psd" ).then( function ( psd ) {
-                                                    return ( <img src={psd.image.toPng( )} className="image"/> )
-                                                })} */ }
+                                                                                                                                                                                                return ( <img src={psd.image.toPng( )} className="image"/> )
+                                                                                                                                                                                            })} */ }
             </div>
             );
     }

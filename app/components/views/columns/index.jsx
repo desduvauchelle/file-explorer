@@ -17,7 +17,9 @@ export default class Columns extends Component {
 
     static propTypes = {
         location: PropTypes.object.isRequired,
-        router: PropTypes.object.isRequired
+        router: PropTypes.object.isRequired,
+        linkAdd: PropTypes.func,
+        sectionAdd: PropTypes.func
     }
 
     constructor(props) {
@@ -36,6 +38,7 @@ export default class Columns extends Component {
     }
 
     render() {
+        let {linkAdd, sectionAdd} = this.props;
         let {path, selected} = this.props.location.query;
         // Get the root of hard drive (in mac, it's / whereas in windows it's C:\\)
         this.rootPath = Path
@@ -80,7 +83,7 @@ export default class Columns extends Component {
                 const isDirectory = fs
                     .statSync(filePath)
                     .isDirectory();
-                if (isDirectory) {
+                if (isDirectory && selected.indexOf('.app') === -1) {
                     let dirListing = this._getDirectoryListing(filePath);
                     list.push({
                         path: filePath,
@@ -103,7 +106,11 @@ export default class Columns extends Component {
             <HotKeys keyMap={ keyMap } handlers={ hokeyHandlers }>
               <div className="explorer">
                 <div className="explorer-header">
-                  <Header path={ path } selected={ selected } hokeyHandlers={ hokeyHandlers } />
+                  <Header path={ path }
+                    selected={ selected }
+                    hokeyHandlers={ hokeyHandlers }
+                    linkAdd={ linkAdd }
+                    sectionAdd={ sectionAdd } />
                 </div>
                 <div className="column favorites">
                   <Favorites selectPath={ this._selectPath } {...this.props}/>
@@ -113,11 +120,10 @@ export default class Columns extends Component {
                         return (
                             <div className={ directory.isCurrent
                                      ? 'column active'
-                                     : 'column' } key={ i }>
+                                     : 'column' } key={ directory.path + i }>
                               <Column directory={ directory }
-                                currentPath={ path }
+                                path={ path }
                                 selectPath={ this._selectPath }
-                                settings={ settings }
                                 selected={ selected } />
                             </div>
                         )

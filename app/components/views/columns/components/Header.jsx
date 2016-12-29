@@ -42,7 +42,7 @@ export default class Column extends Component {
     }
 
     render() {
-        const {path, selected, hokeyHandlers, linkAdd, sectionAdd} = this.props;
+        const {path, selected, hokeyHandlers, linkAdd } = this.props;
 
         return (
             <div>

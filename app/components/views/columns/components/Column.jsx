@@ -3,11 +3,9 @@ import FileItem from './FileItem.jsx';
 
 export default class Column extends Component {
     static propTypes = {
-        directory: PropTypes.object,
-        selectPath: PropTypes.func,
-        settings: PropTypes.object,
-        isLast: PropTypes.bool,
-        currentPath: PropTypes.string.isRequired,
+        directory: PropTypes.object.isRequired,
+        selectPath: PropTypes.func.isRequired,
+        path: PropTypes.string.isRequired,
         selected: PropTypes.string
     }
 
@@ -18,7 +16,7 @@ export default class Column extends Component {
     }
 
     render() {
-        const {directory, selectPath, currentPath, selected} = this.props;
+        const {directory, selectPath, path, selected} = this.props;
 
         return (
             <section>
@@ -32,13 +30,13 @@ export default class Column extends Component {
                   No files
                 </p>
                 ) }
-              { directory.files.map((file) => <FileItem key={ file }
-                                                directory={ directory }
-                                                path={ directory.path }
-                                                file={ file }
-                                                currentPath={ currentPath }
-                                                selectPath={ selectPath }
-                                                selected={ selected } />
+              { directory.files.map(file => <FileItem key={ file }
+                                              isFavorite={ false }
+                                              path={ path }
+                                              selected={ selected }
+                                              file={ file }
+                                              directory={ directory }
+                                              selectPath={ selectPath } />
                 ) }
             </section>
             );

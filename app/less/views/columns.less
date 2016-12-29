@@ -72,15 +72,7 @@
         font-size: 12px;
         padding: 0 5px;
     }
-    .favorites {
-        position: absolute;
-        left: 0;
-        top: @header-height;
-        bottom: @footer-height;
-        display: block;
-        width: @favorite-width;
-        background: @favorite-bg-color;
-    }
+    
     .columns-wrapper {
         display: block;
         overflow-x: auto;
@@ -100,7 +92,19 @@
         overflow-y: scroll;
         max-width: 300px;
         min-width: 200px;
+        width: 250px;
         height: 100%;
+
+        &.favorites {
+            position: absolute;
+            left: 0;
+            top: @header-height;
+            bottom: @footer-height;
+            display: block;
+            width: @favorite-width;
+            background: @favorite-bg-color;
+        }
+        
         header {
             display: block;
             font-size: 1.5em;
@@ -202,8 +206,7 @@
             }
         }
     }
-    .column-preview {
-        width: 300px;
+    .column-preview {        
         text-align: center;
         .preview {
             margin-top: 5px;
