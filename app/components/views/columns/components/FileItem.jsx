@@ -9,7 +9,7 @@ class FileItem extends Component {
         path: PropTypes.string.isRequired,
         file: PropTypes.string.isRequired,
         currentPath: PropTypes.string.isRequired,
-        selected: PropTypes.string.isRequired,
+        selected: PropTypes.string,
         selectPath: PropTypes.func.isRequired
     };
 

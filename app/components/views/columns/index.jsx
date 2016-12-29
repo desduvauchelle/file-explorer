@@ -48,7 +48,7 @@ export default class Columns extends Component {
         path = path || this.rootPath;
         // Get list of the directories and it's children
         let list = [ ];
-        if ( !path ) {
+        if ( !path || path == this.rootPath ) {
             let dirListing = this._getDirectoryListing( this.rootPath );
             list.push({
                 path: this.rootPath, 
@@ -77,22 +77,25 @@ export default class Columns extends Component {
                 });
             })
         }
+        let showFileInfo = false;
         if(selected){
             const filePath = Path.join(path,selected);
             try {
-            const isDirectory = fs.statSync( filePath ).isDirectory( );
-            if ( isDirectory ) {   
-                let dirListing = this._getDirectoryListing(filePath);             
-                list.push({
-                    path: filePath, 
-                    files: dirListing.files, 
-                    error: dirListing.error,
-                    isCurrent: false
-                });
+                const isDirectory = fs.statSync( filePath ).isDirectory( );
+                if ( isDirectory ) {   
+                    let dirListing = this._getDirectoryListing(filePath);             
+                    list.push({
+                        path: filePath, 
+                        files: dirListing.files, 
+                        error: dirListing.error,
+                        isCurrent: false
+                    });
+                } else {
+                    showFileInfo = true;
+                }
+            } catch ( ex ) {
+                console.log( `Failed to analyze: ${ filePath }, Caused by: ${ ex }` );
             }
-        } catch ( ex ) {
-            console.log( `Failed to analyze: ${ filePath }, Caused by: ${ ex }` );
-        }
         }
         
 
@@ -154,18 +157,39 @@ export default class Columns extends Component {
                                 </div>
                             )
                         })}
-
+                        {showFileInfo && (
+                            <div className="column column-preview">
+                                <Preview                                 
+                                    path={path} 
+                                    selected={selected}
+                                    previewModalIsOpen={this.state.previewModalIsOpen} />
+                                <h3>{selected}</h3>
+                            </div>
+                        )}
                     </div>
                 </HotKeys>
                 <div className="explorer-footer">{path} {selected ? `(${selected})`:''}</div>
 
-                <Preview 
-                    previewModalIsOpen={this.state.previewModalIsOpen} 
-                    handleClose={( ) => {
+                <Modal
+                    show={this.state.previewModalIsOpen} 
+                    onHide={( ) => {
                         this.setState({ previewModalIsOpen: false })
                     }} 
-                    path={path} 
-                    selected={selected}/>
+                    bsClass="modal-preview modal" 
+                    bsSize="lg" 
+                    onKeyPress={( e ) => {
+                        if ( e.keyCode == 0 ) {
+                            this.setState({ previewModalIsOpen: false })
+                        }
+                    }}>
+                    <Modal.Body>
+                        <Preview                                 
+                            path={path} 
+                            selected={selected}
+                            previewModalIsOpen={this.state.previewModalIsOpen} />
+                    </Modal.Body>
+                </Modal>
+                
 
                 <Modal show={this.state.newGroupModalIsOpen} onHide={( ) => {
                     this.setState({ newGroupModalIsOpen: false })

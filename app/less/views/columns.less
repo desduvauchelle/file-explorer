@@ -110,7 +110,7 @@
         overflow-x: hidden;
         overflow-y: scroll;
         max-width: 300px;
-        min-width: 100px;
+        min-width: 200px;
         height: 100%;
 
         header {
@@ -194,6 +194,21 @@
             }
         }
     }
+
+    .column-preview{
+        width: 300px;
+        text-align: center;
+        .preview{
+            margin-top: 5px;
+            display: block;
+            height: auto;
+            padding: 5px;
+        }
+
+        h3{
+            font-size: 18px;
+        }
+    }
 }
 
 .modal-preview {
@@ -203,9 +218,10 @@
 
     .modal-body {
         padding: 3px;
-    }
+    }    
+}
 
-    .preview {
+.preview {
         width: 100%;
         height: 100%;
         padding: 0;
@@ -213,6 +229,24 @@
         overflow: hidden;
         display: block;
         text-align: center;
+
+        .unknown{
+            display: block;
+            width: 100%;
+            .icon-file{                
+                &:before{ 
+                    font-size: 50px;                   
+                    left: -15px;
+                }
+            }
+        }
+        .text{
+            display: block;
+            width: 100%;
+            max-height: 400px;
+            overflow: auto;
+            text-align: left;
+        }
 
         .image {
             width: auto;
@@ -237,4 +271,3 @@
             }
         }
     }
-}
