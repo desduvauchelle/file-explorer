@@ -1,10 +1,13 @@
 {
     "indent_char": " ",
     "indent_size": 4,
+    "preserve_newlines": true,
     "max_preserve_newlines": 3,
-    "preserve_newlines": false,
+    "brace_style": "collapse",
     "space_after_anon_function": true,
     "space_in_empty_paren": false,
     "space_in_paren": true,
-    "newline_between_rules": true
+    "newline_between_rules": true,
+    "break_chained_methods": false,
+    "indent_with_tabs": false
 }

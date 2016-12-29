@@ -7,7 +7,10 @@
       "jsx": true
     }
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
   "env": {
     "es6": true,
     "browser": true,
@@ -15,24 +18,46 @@
     "node": true
   },
   "rules": {
-      "no-console": 1,
-      "no-unused-vars": 1,
-      "indent": ["warning",4],
-      "camelcase": 1,
-      "curly": 2,
-      "no-else-return": 1,
-      "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
-      "comma-dangle": 1,
-      "comma-spacing": ["error", { "before": false, "after": true }],
-      "keyword-spacing": ["error", { "before": true, "after": true }]
+    "no-console": 1,
+    "no-unused-vars": 1,
+    "indent": [
+      1,
+      4
+    ],
+    "camelcase": 1,
+    "curly": 2,
+    "no-else-return": 1,
+    "brace-style": [
+      "error",
+      "1tbs",
+      {
+        "allowSingleLine": true
+      }
+    ],
+    "comma-dangle": 1,
+    "comma-spacing": [
+      "error",
+      {
+        "before": false,
+        "after": true
+      }
+    ],
+    "keyword-spacing": [
+      "error",
+      {
+        "before": true,
+        "after": true
+      }
+    ]
   },
   "plugins": [
-      "react", "import"
+    "react",
+    "import"
   ],
   "ecmaFeatures": {
-      "jsx": true,
-      "classes": true,
-      "experimentalObjectRestSpread": true
+    "jsx": true,
+    "classes": true,
+    "experimentalObjectRestSpread": true
   },
   "settings": {
     "import/resolver": {

@@ -5,6 +5,7 @@
   "description": "Universal file explorer",
   "main": "main.js",
   "scripts": {
+    "beautify": "esformatter  -i './app/components/**.jsx'",
     "test": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 mocha --retries 2 --compilers js:babel-register --recursive --require ./test/setup.js test/**/*.spec.js",
     "test-watch": "npm test -- --watch",
     "test-e2e": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 mocha --retries 2 --compilers js:babel-register --require ./test/setup.js ./test/e2e.js",
@@ -84,6 +85,24 @@
     "file explorer"
   ],
   "homepage": "https://github.com/desduvauchelle/file-explorer#readme",
+  "esformatter": {
+    "plugins": [
+      "esformatter-jsx"
+    ],
+    "jsx": {
+      "formatJSX": true,
+      "attrsOnSameLineAsTag": false,
+      "maxAttrsOnTag": 3,
+      "firstAttributeOnSameLine": true,
+      "formatJSXExpressions": true,
+      "JSXExpressionsSingleLine": true,
+      "alignWithFirstAttribute": false,
+      "spaceInJSXExpressionContainers": " ",
+      "removeSpaceBeforeClosingJSX": false,
+      "closingTagOnNewLine": false,
+      "JSXAttributeQuotes": ""
+    }
+  },
   "devDependencies": {
     "asar": "^0.12.3",
     "babel-core": "^6.21.0",
@@ -111,6 +130,11 @@
     "electron-builder": "^10.8.1",
     "electron-devtools-installer": "^2.0.1",
     "enzyme": "^2.6.0",
+    "esformatter": "^0.10.0",
+    "esformatter-braces": "^1.2.1",
+    "esformatter-jsx": "^7.4.0",
+    "esformatter-limit-linebreaks": "0.0.3",
+    "esformatter-remove-trailing-commas": "^1.0.1",
     "eslint": "^3.12.2",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-formatter-pretty": "^1.1.0",
