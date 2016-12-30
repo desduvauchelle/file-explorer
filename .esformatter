@@ -3,19 +3,29 @@
     "esformatter": {
         "allowShebang": true
     },
-    "plugins": [ "esformatter-jsx", "esformatter-braces", "esformatter-remove-trailing-commas", "esformatter-limit-linebreaks" ],
+    "plugins": [ 
+        "esformatter-jsx", 
+        "esformatter-braces", 
+        "esformatter-remove-trailing-commas", 
+        "esformatter-limit-linebreaks" 
+    ],
     "jsx": {
+        "formatJSXExpressions": true,
+        "JSXExpressionsSingleLine": false,
         "formatJSX": true,
         "attrsOnSameLineAsTag": false,
-        "maxAttrsOnTag": 3,
+        "maxAttrsOnTag": 1,
         "firstAttributeOnSameLine": true,
-        "formatJSXExpressions": true,
-        "JSXExpressionsSingleLine": true,
-        "alignWithFirstAttribute": false,
-        "spaceInJSXExpressionContainers": " ",
-        "removeSpaceBeforeClosingJSX": false,
-        "closingTagOnNewLine": false,
-        "JSXAttributeQuotes": ""
+        "spaceInJSXExpressionContainers": "",
+        "alignWithFirstAttribute": true,
+        "htmlOptions": {
+            "brace_style": "collapse",
+            "indent_char": " ",
+            "indent_size": 4,
+            "max_preserve_newlines": 2,
+            "preserve_newlines": true,
+            "wrap_line_length": 0
+        }
     },
     "LimitLineBreaks": 2,
     "indent": {
@@ -278,7 +288,7 @@
 
     "whiteSpace": {
         "value": " ",
-        "removeTrailing": 1,
+        "removeTrailing": 1, 
         "before": {
             "ArgumentComma": 0,
             "ArgumentList": 0,
@@ -403,12 +413,12 @@
             "BinaryExpression": 0,
             "BinaryExpressionOperator": 1,
             "BlockComment": 1,
-            "BlockStatementClosingBrace": 1,
+            "BlockStatementClosingBrace": 0,
             "BlockStatementOpeningBrace": 1,
             "CallExpression": -1,
             "CallExpressionClosingParentheses": -1,
             "CallExpressionOpeningParentheses": -1,
-            "CatchClosingBrace": 1,
+            "CatchClosingBrace": 0,
             "CatchKeyword": 1,
             "CatchOpeningBrace": 1,
             "CatchParameterList": 0,
@@ -418,7 +428,7 @@
             "ConditionalExpressionConsequent": 1,
             "ConditionalExpressionTest": 1,
             "DoWhileStatementBody": 1,
-            "DoWhileStatementClosingBrace": 1,
+            "DoWhileStatementClosingBrace": 0,
             "DoWhileStatementOpeningBrace": 1,
             "ElseIfStatementClosingBrace": 1,
             "ElseIfStatementOpeningBrace": 1,
@@ -426,7 +436,7 @@
             "ElseStatementOpeningBrace": 1,
             "EmptyStatement": 0,
             "ExpressionOpeningParentheses": 0,
-            "FinallyClosingBrace": 1,
+            "FinallyClosingBrace": 0,
             "FinallyKeyword": -1,
             "FinallyOpeningBrace": 1,
             "ForInStatement": 1,

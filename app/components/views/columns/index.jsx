@@ -3,7 +3,7 @@ import fs from 'fs'
 // Plugins
 import { HotKeys } from 'react-hotkeys'
 import Path from 'path'
-import { Tooltip, OverlayTrigger, Modal } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
 // Components
 import Header from './components/Header'
 import Favorites from './components/Favorites'
@@ -47,7 +47,7 @@ export default class Columns extends Component {
         path = path || this.rootPath;
         // Get list of the directories and it's children
         let list = [];
-        if (!path || path == this.rootPath) {
+        if (!path || path === this.rootPath) {
             let dirListing = this._getDirectoryListing(this.rootPath);
             list.push({
                 path: this.rootPath,
@@ -116,28 +116,25 @@ export default class Columns extends Component {
                   <Favorites selectPath={ this._selectPath } {...this.props}/>
                 </div>
                 <div className="columns-wrapper" ref="columns">
-                  { list.map((directory, i) => {
+                  {list.map((directory, i) => {
                         return (
-                            <div className={ directory.isCurrent
-                                     ? 'column active'
-                                     : 'column' } key={ directory.path + i }>
+                            <div className={ directory.isCurrent ? 'column active' : 'column' } key={ directory.path + i }>
                               <Column directory={ directory }
                                 path={ path }
                                 selectPath={ this._selectPath }
                                 selected={ selected } />
                             </div>
                         )
-                    }) }
+                    })}
                   { showFileInfo && (
                     <div className="column column-preview">
                       <Preview path={ path } selected={ selected } previewModalIsOpen={ this.state.previewModalIsOpen } />
                       <h3>{ selected }</h3>
                     </div>
-                    ) }
+                    )}
                 </div>
                 <div className="explorer-footer">
-                  { path }
-                  { selected ? `(${selected})` : '' }
+                  { selected ? Path.join(path, selected) : path }
                 </div>
                 <Modal show={ this.state.previewModalIsOpen }
                   onHide={ () => {
@@ -148,7 +145,7 @@ export default class Columns extends Component {
                   bsClass="modal-preview modal"
                   bsSize="lg"
                   onKeyPress={ (e) => {
-                                   if (e.keyCode == 0) {
+                                   if (e.keyCode === 0) {
                                        this.setState({
                                            previewModalIsOpen: false
                                        })
@@ -190,21 +187,12 @@ export default class Columns extends Component {
             }
         }
 
-        this
-            .props
-            .router
-            .replace({
+        this.props.router.replace({
                 pathname: '/',
                 query: {
                     path: Path.normalize(path),
                     selected: selected
                 }
             })
-    }
-
-    _openPreviewModal = () => {
-        this.setState({
-            previewModalIsOpen: true
-        })
     }
 }

@@ -1,5 +1,6 @@
-import React, { Component, PropTypes } from 'react';
-import FileItem from './FileItem.jsx';
+import React, { Component, PropTypes } from 'react'
+import FileItem from './FileItem.jsx'
+import Path from 'path'
 
 export default class Column extends Component {
     static propTypes = {
@@ -11,8 +12,6 @@ export default class Column extends Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {}
     }
 
     render() {
@@ -20,24 +19,27 @@ export default class Column extends Component {
 
         return (
             <section>
-              { directory.error && (
-                <p className="error">
-                  { directory.error }
-                </p>
-                ) }
-              { directory.files.length === 0 && !directory.error && (
-                <p>
-                  No files
-                </p>
-                ) }
-              { directory.files.map(file => <FileItem key={ file }
-                                              isFavorite={ false }
-                                              path={ path }
-                                              selected={ selected }
-                                              file={ file }
-                                              directory={ directory }
-                                              selectPath={ selectPath } />
-                ) }
+                {directory.error && (
+                 <p className="alert alert-danger">
+                     {directory.error}
+                 </p>
+                 )}
+                {directory.files.length === 0 && !directory.error && (
+                 <p className="alert alert-info">
+                     No files
+                 </p>
+                 )}
+                {directory.files.map(file => {
+                     const currentPath = selected ? Path.join(path, selected) : path;
+                     const filePath = Path.join(directory.path, file);
+                     const isSelected = directory.isCurrent ? currentPath === filePath : currentPath.indexOf(filePath) !== -1;
+                     return (
+                         <FileItem key={filePath}
+                                   file={filePath}
+                                   isSelected={isSelected}
+                                   selectPath={selectPath} />
+                         );
+                 })}
             </section>
             );
     }

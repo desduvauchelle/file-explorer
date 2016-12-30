@@ -12,7 +12,7 @@ const previewTypes = {
 
 export default class Preview extends Component {
     static propTypes = {
-        selected: PropTypes.string.isRequired,
+        selected: PropTypes.string,
         path: PropTypes.string.isRequired,
         previewModalIsOpen: PropTypes.bool.isRequired
     }
@@ -40,10 +40,6 @@ export default class Preview extends Component {
               { type === 'image' && (<Image path={ path } selected={ selected } />) }
               { type === 'text' && (<Text path={ path } selected={ selected } />) }
               { type === 'audioVisual' && (<AudioVisual path={ path } selected={ selected } previewModalIsOpen={ previewModalIsOpen } />) }
-              { /* PHOTOSHOP */ }
-              { /* {( file && [ '.psd' ].indexOf(Path.extname( file ).toLowerCase( )) !== -1 ) && PSD.fromURL( "/path/to/file.psd" ).then( function ( psd ) {
-                                                                                                                                                                                                return ( <img src={psd.image.toPng( )} className="image"/> )
-                                                                                                                                                                                            })} */ }
             </div>
             );
     }

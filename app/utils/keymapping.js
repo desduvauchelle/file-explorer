@@ -4,7 +4,7 @@ import { shell } from 'electron'
 import fs from 'fs'
 
 export default {
-    keyMap : {
+    keyMap: {
         'delete': 'del',
         'moveUp': 'up',
         'moveDown': 'down',
@@ -14,12 +14,12 @@ export default {
         'paste': ['command+v', 'ctrl+v'],
         'open': 'enter',
         'rename': ['command+down', 'ctrl+down'],
-        'preview': [ 'space' ]
+        'preview': ['space']
     },
-    handlers : ( self, list, path, selected ) => {
+    handlers: (self, list, path, selected) => {
         return {
-            delete: ( e ) => {
-                e.preventDefault( );
+            delete: (e) => {
+                e.preventDefault();
                 swal({
                     title: "Are you sure?",
                     text: "You will not be able to recover this file!",
@@ -27,28 +27,28 @@ export default {
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
                     confirmButtonText: "Yes, delete it!"
-                }).then( function ( ) {
-                    let fullPath = selected? Path.join( path, selected ): path;
+                }).then(function() {
+                    let fullPath = selected ? Path.join(path, selected) : path;
 
-                    shell.moveItemToTrash( fullPath );
-                    self._selectPath(selected? path: Path.join( path, '..' ));
-                    swal({ 
-                        title: "File deleted", 
-                        text: "Your file has been deleted", 
-                        timer: 1000, 
-                        showConfirmButton: true, 
-                        type: 'success' 
+                    shell.moveItemToTrash(fullPath);
+                    self._selectPath(selected ? path : Path.join(path, '..'));
+                    swal({
+                        title: "File deleted",
+                        text: "Your file has been deleted",
+                        timer: 1000,
+                        showConfirmButton: true,
+                        type: 'success'
                     });
                 });
 
             },
-            rename: ( e ) => {
-                e.preventDefault( );
+            rename: (e) => {
+                e.preventDefault();
                 let fileName = "";
-                if ( selected ) {
+                if (selected) {
                     fileName = selected;
                 } else {
-                    let pathList = path.split( '/' );
+                    let pathList = path.split('/');
                     fileName = pathList[pathList - 1];
                 }
                 swal({
@@ -58,77 +58,78 @@ export default {
                     showCancelButton: true,
                     animation: "slide-from-top",
                     inputPlaceholder: "New name"
-                }, function ( inputValue ) {
-                    if ( inputValue === false )
+                }, function(inputValue) {
+                    if (inputValue === false) {
                         return false;
-                    if ( inputValue === "" ) {
-                        swal.showInputError( "You need to write something!" );
+                    }
+                    if (inputValue === "") {
+                        swal.showInputError("You need to write something!");
                         return false
-                    } 
-                    swal( "Nice!", "You wrote: " + inputValue, "success" );
-                    // fs.rename(oldPath, newPath, callback);
+                    }
+                    swal("Nice!", "You wrote: " + inputValue, "success");
+                // fs.rename(oldPath, newPath, callback);
                 });
             },
-            open: ( e ) => {
-                e.preventDefault( );
-                if ( selected ) {
-                    shell.openItem(Path.join( path, selected ));
+            open: (e) => {
+                e.preventDefault();
+                if (selected) {
+                    shell.openItem(Path.join(path, selected));
                     return;
                 }
-                shell.showItemInFolder( path );
+                shell.showItemInFolder(path);
             },
-            preview: ( e ) => {
-                e.preventDefault( );
+            preview: (e) => {
+                e.preventDefault();
                 self.setState({
                     previewModalIsOpen: !self.state.previewModalIsOpen
                 });
             },
-            moveLeft: ( e ) => {
-                e.preventDefault( );
-                console.log( "Move left" );            
-                if ( path === self.rootPath ) {
+            moveLeft: (e) => {
+                e.preventDefault();
+                console.log("Move left");
+                if (path === self.rootPath) {
                     return;
                 }
                 let directoryList = path.split(Path.sep);
-                self._selectPath(Path.join( path, '..' ), directoryList[directoryList.length -1]);
+                self._selectPath(Path.join(path, '..'), directoryList[directoryList.length - 1]);
             },
-            moveRight: ( e ) => {
-                e.preventDefault( );
-                console.log( "Move right" );
-                if(!selected){
+            moveRight: (e) => {
+                e.preventDefault();
+                console.log("Move right");
+                if (!selected) {
                     return;
                 }
-                const filePath = Path.join(path,selected);
+                const filePath = Path.join(path, selected);
                 let isDirectory = false;
                 try {
-                    isDirectory = fs.statSync( filePath ).isDirectory( );                
-                } catch ( ex ) {
-                    console.log( `Failed to analyze: ${ filePath }, Caused by: ${ ex }` );
+                    isDirectory = fs.statSync(filePath).isDirectory();
+                } catch (ex) {
+                    console.log(`Failed to analyze: ${ filePath }, Caused by: ${ ex }`);
                 }
 
-                if ( !isDirectory ) {
+                if (!isDirectory) {
                     shell.openItem(filePath);
                     return;
                 }
                 self._selectPath(filePath);
             },
-            moveDown: ( e ) => {
-                e.preventDefault( );
+            moveDown: (e) => {
+                e.preventDefault();
                 const directory = list.filter(directory => directory.path === path)[0];
                 const currentIndex = directory.files.indexOf(selected);
-                if(currentIndex === directory.files.length - 1){
+                if (currentIndex === directory.files.length - 1) {
                     return;
                 }
-                self._selectPath(path, directory.files[currentIndex+1]);
+                self._selectPath(path, directory.files[currentIndex + 1]);
             },
-            moveUp: ( e ) => {
-                e.preventDefault( );
+            moveUp: (e) => {
+                e.preventDefault();
                 const directory = list.filter(directory => directory.path === path)[0];
                 const currentIndex = directory.files.indexOf(selected);
-                if(currentIndex === 0){
+                if (currentIndex === 0) {
                     return;
                 }
-                self._selectPath(path, directory.files[currentIndex-1]);
+                self._selectPath(path, directory.files[currentIndex - 1]);
             }
         };
     }
