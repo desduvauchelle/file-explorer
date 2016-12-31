@@ -82,24 +82,6 @@
         "file explorer"
     ],
     "homepage": "https://github.com/desduvauchelle/file-explorer#readme",
-    "esformatter": {
-        "plugins": [
-            "esformatter-jsx"
-        ],
-        "jsx": {
-            "formatJSX": true,
-            "attrsOnSameLineAsTag": false,
-            "maxAttrsOnTag": 3,
-            "firstAttributeOnSameLine": true,
-            "formatJSXExpressions": true,
-            "JSXExpressionsSingleLine": true,
-            "alignWithFirstAttribute": false,
-            "spaceInJSXExpressionContainers": " ",
-            "removeSpaceBeforeClosingJSX": false,
-            "closingTagOnNewLine": false,
-            "JSXAttributeQuotes": ""
-        }
-    },
     "devDependencies": {
         "asar": "^0.12.3",
         "babel-core": "^6.21.0",

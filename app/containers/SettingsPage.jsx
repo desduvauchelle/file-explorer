@@ -10,7 +10,6 @@ class SettingsPage extends Component {
         state: PropTypes.object.isRequired
     }
     render() {
-        console.log(this.props);
         const {state} = this.props;
         const {showHidden} = state.view;
 

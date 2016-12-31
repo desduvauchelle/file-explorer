@@ -10,7 +10,6 @@ import Favorites from './components/Favorites'
 import Column from './components/Column'
 import Preview from './components/Preview'
 // Settings
-import settings from '../../../settings.default';
 import { keyMap, handlers } from '../../../utils/keymapping'
 
 export default class Columns extends Component {
@@ -91,7 +90,9 @@ export default class Columns extends Component {
                     showFileInfo = true;
                 }
             } catch (ex) {
+                /* eslint-disable */
                 console.log(`Failed to analyze: ${filePath}, Caused by: ${ex}`);
+            /* esling-enable */
             }
         }
 
@@ -168,7 +169,7 @@ export default class Columns extends Component {
     _getDirectoryListing(path) {
         try {
             let files = fs.readdirSync(path) || [];
-            if (!settings.view.showHidden) {
+            if (!this.props.state.view.showHidden) {
                 files = files.filter(file => file.charAt(0) !== '.');
             }
             return {
