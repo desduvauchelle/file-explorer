@@ -3,6 +3,7 @@ import Path from 'path'
 import ReactPlayer from 'react-player'
 import fs from 'fs'
 // import PSD from 'psd'
+import Prism from "../../../../utils/prism"
 
 const previewTypes = {
     image: ['png', 'jpeg', 'jpg', 'gif', 'tiff', 'bmp', 'svg'],
@@ -71,6 +72,49 @@ class Unknown extends Component {
     }
 }
 
+const codeTypes = [
+    {
+        name: 'javascript',
+        extensions: ['js']
+    },
+    {
+        name: 'jsx',
+        extensions: ['jsx']
+    },
+    {
+        name: 'json',
+        extensions: ['json']
+    },
+    {
+        name: 'html',
+        extensions: ['html']
+    },
+    {
+        name: 'php',
+        extensions: ['php']
+    },
+    {
+        name: 'css',
+        extensions: ['css']
+    },
+    {
+        name: 'less',
+        extensions: ['less']
+    },
+    {
+        name: 'scss',
+        extensions: ['scss']
+    },
+    {
+        name: 'sass',
+        extensions: ['sass']
+    },
+    {
+        name: 'markup',
+        extensions: ['md']
+    }
+]
+
 class Text extends Component {
     static propTypes = {
         path: PropTypes.string.isRequired,
@@ -78,18 +122,40 @@ class Text extends Component {
     }
     constructor(props) {
         super(props)
+
     }
 
     render() {
         const {path, selected} = this.props;
         const filePath = Path.join(path, selected);
+        //
         let text = "";
         try {
             text = fs.readFileSync(filePath).toString();
         } catch (ex) {
+            /* eslint-disable */
             console.log(`Error loading preview for ${filePath}, reason ${ex}`);
+        /* eslint-enable */
+        }
+        //
+        const fileParse = Path.parse(filePath);
+        const fileExtension = fileParse.ext.substr(1);
+        let codeType = null;
+        if (Prism.languages[fileExtension]) {
+            text = Prism.highlight(text, Prism.languages[fileExtension]);
+            codeType = fileExtension === 'js' ? 'javascript' : fileExtension;
         }
 
+        if (codeType) {
+            return (
+                <div className="text prism">
+                    <pre className={`language-${codeType}`}><code className={`language-${codeType}`}
+                                                              dangerouslySetInnerHTML={{
+                                                                                           __html: text
+                                                                                       }}></code></pre>
+                </div>
+            )
+        }
         return (
             <div className="text">
                 <pre><code>{text}</code></pre>
@@ -105,12 +171,12 @@ class Image extends Component {
     }
     constructor(props) {
         super(props)
+        const {path, selected} = this.props;
+        this.filePath = Path.join(path, selected);
     }
 
     render() {
-        const {path, selected} = this.props;
-
-        return (<img src={Path.join(path, selected)}
+        return (<img src={this.filePath}
                      className="image" />);
     }
 }
