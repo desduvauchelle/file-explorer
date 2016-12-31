@@ -1,0 +1,10 @@
+{
+    "name": "Columns",
+    "version": "1",
+    "description": "A mac style finder",
+    "screenshot": "./assets/screenshot.png",
+    "app": {
+        "view": "./index.js",
+        "style": "./column.css"
+    }
+}

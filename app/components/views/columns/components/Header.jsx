@@ -8,7 +8,8 @@ export default class Column extends Component {
         path: PropTypes.string.isRequired,
         selected: PropTypes.string,
         linkAdd: PropTypes.func.isRequired,
-        sectionAdd: PropTypes.func.isRequired
+        sectionAdd: PropTypes.func.isRequired,
+        goToSettings: PropTypes.func.isRequired
     }
 
     constructor(props) {
@@ -42,12 +43,19 @@ export default class Column extends Component {
     }
 
     render() {
-        const {path, selected, hokeyHandlers, linkAdd} = this.props;
+        const {path, selected, hokeyHandlers, linkAdd, goToSettings} = this.props;
 
         return (
             <div>
                 <div className="favorite">
                     <a className="logo"><img src={require('../../../../../resources/icons/256x256.png')} /></a>
+                    <OverlayTrigger placement="bottom"
+                                    overlay={(<Tooltip id="settings">
+                                                  <strong>Settings</strong>
+                                              </Tooltip>)}>
+                        <a className="actions"
+                           onClick={goToSettings}><i className="fa fa-cog fa-fw" /></a>
+                    </OverlayTrigger>
                     <OverlayTrigger placement="bottom"
                                     overlay={(<Tooltip id="newGroup">
                                                   <strong>New group</strong>

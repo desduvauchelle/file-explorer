@@ -1,21 +1,57 @@
-import React, { Component } from 'react'
-import settings from '../settings.default.js';
+import React, { Component, PropTypes } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { Link } from 'react-router'
+import * as ViewActions from '../actions/view'
 
-export default class HomePage extends Component {
-    
-    componentDidUpdate( ) {
-        var itemComponent = this.refs.columns;
-        if ( itemComponent ) {
-            itemComponent.scrollLeft = itemComponent.scrollWidth;
+class SettingsPage extends Component {
+    static propTypes = {
+        actions: PropTypes.object.isRequired,
+        state: PropTypes.object.isRequired
+    }
+    render() {
+        console.log(this.props);
+        const {state} = this.props;
+        const {showHidden} = state.view;
+
+        return (
+
+            <div className="full settings">
+                <div className="full-overflow">
+                    <div className="container">
+                        <div className="header">
+                            <Link to="/">
+                            <i className="fa fa-arrow-left" /> Back
+                            </Link>
+                            <h2>Settings</h2>
+                        </div>
+                        <h3>View</h3>
+                        <label>
+                            <input checked={showHidden}
+                                   onChange={this._onChange.bind(this, 'showHidden', !showHidden)}
+                                   type="checkbox" /> Show hidden files
+                        </label>
+                    </div>
+                </div>
+            </div>
+            );
+    }
+
+    _onChange = (attribute, value) => {
+        let newAttributeValues = {};
+        newAttributeValues[attribute] = value;
+        this.props.actions.view.update(newAttributeValues);
+    }
+}
+
+export default connect(
+    state => ({
+        state: state
+    }), (dispatch) => {
+        return {
+            actions: {
+                view: bindActionCreators(ViewActions, dispatch)
+            }
         }
     }
-
-    render( ) {
-        return (
-            <div className="full">
-                <h1>Settings</h1>
-            </div>
-        );
-    }
-
-}
+)(SettingsPage);

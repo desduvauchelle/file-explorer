@@ -18,8 +18,8 @@ export default class Columns extends Component {
     static propTypes = {
         location: PropTypes.object.isRequired,
         router: PropTypes.object.isRequired,
-        linkAdd: PropTypes.func,
-        sectionAdd: PropTypes.func
+        state: PropTypes.object.isRequired,
+        actions: PropTypes.object.isRequired
     }
 
     constructor(props) {
@@ -38,7 +38,7 @@ export default class Columns extends Component {
     }
 
     render() {
-        let {linkAdd, sectionAdd} = this.props;
+        let {linkAdd, sectionAdd} = this.props.actions.favorite;
         let {path, selected} = this.props.location.query;
         // Get the root of hard drive (in mac, it's / whereas in windows it's C:\\)
         this.rootPath = Path.parse(__dirname).root;
@@ -78,9 +78,7 @@ export default class Columns extends Component {
         if (selected) {
             const filePath = Path.join(path, selected);
             try {
-                const isDirectory = fs
-                    .statSync(filePath)
-                    .isDirectory();
+                const isDirectory = fs.statSync(filePath).isDirectory();
                 if (isDirectory && selected.indexOf('.app') === -1) {
                     let dirListing = this._getDirectoryListing(filePath);
                     list.push({
@@ -109,7 +107,8 @@ export default class Columns extends Component {
                                 selected={selected}
                                 hokeyHandlers={hokeyHandlers}
                                 linkAdd={linkAdd}
-                                sectionAdd={sectionAdd} />
+                                sectionAdd={sectionAdd}
+                                goToSettings={this._goToSettings} />
                     </div>
                     <div className="column favorites">
                         <Favorites selectPath={this._selectPath}
@@ -199,6 +198,12 @@ export default class Columns extends Component {
                 path: Path.normalize(path),
                 selected: selected
             }
+        })
+    }
+
+    _goToSettings = () => {
+        this.props.router.replace({
+            pathname: '/settings'
         })
     }
 }

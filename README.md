@@ -54,11 +54,9 @@ apm install editorconfig es6-javascript atom-ternjs javascript-snippets linter l
 
 **Others**
 
-- [Editorconfig](http://editorconfig.org/#download)
 - [ESLint](http://eslint.org/docs/user-guide/integrations#editors)
 - Babel Syntax Plugin
 
-## DevTools
 
 ## Packaging
 
@@ -100,6 +98,12 @@ $ npm run build
 $ npm run test-e2e
 ```
 
+To format the code style to fit our code style
+
+```bash
+$ npm run esformatter
+```
+
 ### Options
 
 See [electron-builder CLI Usage](https://github.com/electron-userland/electron-builder#cli-usage)
@@ -112,6 +116,3 @@ This boilerplate uses a [two package.json structure](https://github.com/electron
 2. If a module is `import`ed by another module, include it in `dependencies` in `./package.json`. See [this ESLint rule](https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md).
 3. Otherwise, modules used for building, testing and debugging should be included in `devDependencies` in `./package.json`.
 
-## Dispatching redux actions from main process
-
-see discusses in [#118](https://github.com/chentsulin/electron-react-boilerplate/issues/118) and [#108](https://github.com/chentsulin/electron-react-boilerplate/issues/108)

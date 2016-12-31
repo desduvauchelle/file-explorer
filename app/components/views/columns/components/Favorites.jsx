@@ -5,9 +5,8 @@ import swal from 'sweetalert2'
 export default class Favorites extends Component {
     static propTypes = {
         selectPath: PropTypes.func.isRequired,
-        favorites: PropTypes.array.isRequired,
-        sectionRemove: PropTypes.func.isRequired,
-        sectionEdit: PropTypes.func.isRequired
+        state: PropTypes.object.isRequired,
+        actions: PropTypes.object.isRequired
     }
 
     constructor(props) {
@@ -15,7 +14,7 @@ export default class Favorites extends Component {
     }
 
     _removeGroup(favorite) {
-        const {sectionRemove} = this.props;
+        const {sectionRemove} = this.props.actions.favorite;
         swal({
             title: "Are you sure?",
             text: "You will not be able to undo this",
@@ -29,13 +28,15 @@ export default class Favorites extends Component {
     }
 
     _toggleVisibility(favorite) {
-        this.props.sectionEdit(favorite.id, {
+        this.props.actions.favorite.sectionEdit(favorite.id, {
             isOpen: !favorite.isOpen
         })
     }
 
     render() {
-        const {selectPath, favorites} = this.props;
+        const {selectPath, state} = this.props;
+        const favorites = state.favorites;
+
         return (
             <div>
                 {favorites.map((favorite, i) => {
@@ -57,7 +58,7 @@ export default class Favorites extends Component {
                              <section className={favorite.isOpen ? 'open' : 'closed'}>
                                  {favorite.links.map((link, k) => {
                                       return (
-                                          <FileItem key={link}
+                                          <FileItem key={`${link}-${k}`}
                                                     file={link}
                                                     isSelected={false}
                                                     selectPath={selectPath}

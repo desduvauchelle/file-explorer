@@ -6,7 +6,7 @@ The perfect file explorer for all operating system.
 
 ## What's a perfect file explorer
 
-A perfect file explorer will change from person to person. For that reason, we aim to make it extremely flexible so that you can transform it into anything you want as well as plugins to add more power.
+A perfect file explorer will change from person to person. For that reason, we aim to make it extremely flexible so that you can transform it into anything you want as well as install plugins to add more power.
 
 ## Status
 

@@ -1,14 +1,10 @@
-export default
-{
-    view:
-    {
+export default {
+    view: {
         showHidden: false,
-        size:
-        {
+        size: {
             width: 1024,
             height: 728
         }
     },
-    state:
-    {}
+    state: {}
 }
