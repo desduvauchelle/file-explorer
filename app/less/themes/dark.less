@@ -33,11 +33,19 @@
             }
             &.active section a.selected{
                     background: @color-links;
-                    text: @color-text;
+                    color: @color-text;
                 }
         }
         .column-preview h3{
             color: @color-text;
         }
+        .explorer-footer{
+            background: darken(@color-bg,12%);
+            color: @color-text;
+        }
+    }
+
+    &.modal-backdrop{
+        background: @color-bg;
     }
 }

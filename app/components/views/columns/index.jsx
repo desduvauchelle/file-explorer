@@ -37,7 +37,8 @@ export default class Columns extends Component {
     }
 
     render() {
-        let {linkAdd, sectionAdd} = this.props.actions.favorite;
+        const {actions, state} = this.props;
+        const {linkAdd, sectionAdd} = actions.favorite;
         let {path, selected} = this.props.location.query;
         // Get the root of hard drive (in mac, it's / whereas in windows it's C:\\)
         this.rootPath = Path.parse(__dirname).root;
@@ -146,7 +147,7 @@ export default class Columns extends Component {
                                            previewModalIsOpen: false
                                        })
                                    }}
-                           bsClass="modal-preview modal"
+                           bsClass={`${state.view.theme} modal-preview modal`}
                            bsSize="lg"
                            onKeyPress={(e) => {
                                            if (e.keyCode === 0) {

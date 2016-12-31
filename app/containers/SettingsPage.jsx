@@ -60,7 +60,6 @@ class SettingsPage extends Component {
     }
 
     _onChange = (attribute, value) => {
-        console.log(value);
         let newAttributeValues = {};
         newAttributeValues[attribute] = value;
         this.props.actions.view.update(newAttributeValues);
