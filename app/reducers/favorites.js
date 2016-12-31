@@ -1,18 +1,15 @@
-/* eslint-disable */
 import * as types from '../actions/favorites';
 import uuid from 'uuid/v1';
 
-const initialState = {
-    favorites: [
-        {
-            id: 'default',
-            order: 0,
-            name: "Favorites",
-            isOpen: true,
-            links: []
-        }
-    ]
-};
+const initialState = [
+    {
+        id: 'default',
+        order: 0,
+        name: "Favorites",
+        isOpen: true,
+        links: []
+    }
+];
 
 const initialStateFavorite = {
     id: '',
@@ -25,34 +22,22 @@ const initialStateFavorite = {
 export default function counter(state = initialState, action = {}) {
     switch (action.type) {
         case types.SECTION_ADD: {
-            return {
+            return [
                 ...state,
-                favorites: [...state.favorites, {
-                    ...initialStateFavorite,
-                    ...action.section,
-                    id: uuid()
-                }]
-            }
+                {...initialStateFavorite, ...action.section, id: uuid()}
+            ]
         }
         case types.SECTION_REMOVE: {
-            return {
-                ...state,
-                favorites: state.favorites.filter(fav => fav.id !== action.id)
-            }
+            return state.filter(fav => fav.id !== action.id)
         }
         case types.SECTION_EDIT: {
-            return {
-                ...state,
-                favorites: state.favorites.map(fav => fav.id === action.id ? {
+            return state.map(fav => fav.id === action.id ? {
                     ...fav,
                     ...action.newAttributes
                 } : fav)
-            }
         }
         case types.LINK_ADD: {
-            return {
-                ...state,
-                favorites: state.favorites.map(fav => {
+            return state.map(fav => {
                     if (fav.id === action.sectionId) {
                         let links = fav.links;
                         links.push(action.link);
@@ -63,18 +48,14 @@ export default function counter(state = initialState, action = {}) {
                     }
                     return fav;
                 })
-            }
         }
         case types.LINK_REMOVE: {
-            return {
-                ...state,
-                favorites: state.favorites.map(fav => fav.id === action.sectionId ?
+            return state.map(fav => fav.id === action.sectionId ?
                     {
                         ...fav,
                         links: fav.links.filter(link => link !== action.link)
                     }
                     : fav)
-            }
         }
         default:
             return state;

@@ -13,7 +13,7 @@ The best file explorer for all platforms.
 First, clone the repo via git:
 
 ```bash
-git clone https://github.com/desduvauchelle/file-explorer.git`
+git clone https://github.com/desduvauchelle/file-explorer.git
 ```
 
 And then install dependencies.

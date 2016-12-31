@@ -113,7 +113,7 @@ export default class Columns extends Component {
                     sectionAdd={ sectionAdd } />
                 </div>
                 <div className="column favorites">
-                  <Favorites selectPath={ this._selectPath } {...this.props}/>
+                  <Favorites selectPath={ this._selectPath } favorites={this.props.favorites} {...this.props}/>
                 </div>
                 <div className="columns-wrapper" ref="columns">
                   {list.map((directory, i) => {

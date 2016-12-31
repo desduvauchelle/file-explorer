@@ -5,7 +5,7 @@ import swal from 'sweetalert2'
 export default class Favorites extends Component {
     static propTypes = {
         selectPath: PropTypes.func.isRequired,
-        favorites: PropTypes.object.isRequired,
+        favorites: PropTypes.array.isRequired,
         sectionRemove: PropTypes.func.isRequired,
         sectionEdit: PropTypes.func.isRequired
     }
@@ -38,7 +38,7 @@ export default class Favorites extends Component {
         const {selectPath, favorites} = this.props;
         return (
             <div>
-                {favorites.favorites.map((favorite, i) => {
+                {favorites.map((favorite, i) => {
                      return (
                          <div key={i}>
                              <header>
