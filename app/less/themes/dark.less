@@ -1,0 +1,43 @@
+.dark{
+    @color-bg: #333;
+    @color-links: #65a51f;
+    @color-text: #f1f1f1;
+
+    a{
+       color: @color-links;
+       &:hover{
+           color: darken(@color-links,8%);
+       } 
+    }
+    .explorer{
+        background: darken(@color-bg,12%);
+        .column{
+            background: @color-bg;
+            &.favorites{
+                background: darken(@color-bg,6%);
+            }
+
+            header{
+                color: darken(@color-text,5%);
+                .right{
+                    background: darken(@color-bg,6%);
+                }
+            }
+
+            section a {
+                color: @color-text;
+                &:hover, &.selected{
+                    background: lighten(@color-bg,8%);
+                    color: @color-text;
+                }                
+            }
+            &.active section a.selected{
+                    background: @color-links;
+                    text: @color-text;
+                }
+        }
+        .column-preview h3{
+            color: @color-text;
+        }
+    }
+}

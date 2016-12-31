@@ -103,6 +103,15 @@
             display: block;
             width: @favorite-width;
             background: @favorite-bg-color;
+
+            section{
+                max-height: 0;
+                transition: max-height 1s ease-out;
+                &.open {
+                    max-height: 10000px;
+                    transition: max-height 1s ease-in;
+                }
+            }
         }
         
         header {
@@ -151,14 +160,8 @@
         section {
             display: block;
             overflow: hidden;
-            &.open {
-                max-height: 10000px;
-                transition: max-height 0.25s ease-in;
-            }
-            &.closed {
-                max-height: 0;
-                transition: max-height 0.15s ease-out;
-            }
+            
+           
             a {
                 -webkit-user-select: none;
                 cursor: default;

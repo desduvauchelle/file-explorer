@@ -65,19 +65,6 @@ export default class Column extends Component {
                     </OverlayTrigger>
                 </div>
                 <OverlayTrigger placement="bottom"
-                                overlay={(<Tooltip id="back">
-                                              <strong>Back</strong>(<i className="fa fa-arrow-left" />)
-                                          </Tooltip>)}>
-                    <a className="actions"><i className="fa fa-chevron-left fa-fw" /></a>
-                </OverlayTrigger>
-                <OverlayTrigger placement="bottom"
-                                overlay={(<Tooltip id="forward">
-                                              <strong>Forward</strong>(<i className="fa fa-arrow-right" />)
-                                          </Tooltip>)}>
-                    <a className="actions"><i className="fa fa-chevron-right fa-fw" /></a>
-                </OverlayTrigger>
-                <div className="spacer-md" />
-                <OverlayTrigger placement="bottom"
                                 overlay={(<Tooltip id="trash">
                                               <strong>Delete</strong>(cmd + delete)
                                           </Tooltip>)}>
@@ -147,5 +134,18 @@ export default class Column extends Component {
             </div>
             );
     }
-
 }
+
+// <OverlayTrigger placement="bottom"
+//                                 overlay={(<Tooltip id="back">
+//                                               <strong>Back</strong>(<i className="fa fa-arrow-left" />)
+//                                           </Tooltip>)}>
+//                     <a className="actions"><i className="fa fa-chevron-left fa-fw" /></a>
+//                 </OverlayTrigger>
+//                 <OverlayTrigger placement="bottom"
+//                                 overlay={(<Tooltip id="forward">
+//                                               <strong>Forward</strong>(<i className="fa fa-arrow-right" />)
+//                                           </Tooltip>)}>
+//                     <a className="actions"><i className="fa fa-chevron-right fa-fw" /></a>
+//                 </OverlayTrigger>
+//                 <div className="spacer-md" />

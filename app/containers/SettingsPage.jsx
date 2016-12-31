@@ -4,6 +4,17 @@ import { bindActionCreators } from 'redux'
 import { Link } from 'react-router'
 import * as ViewActions from '../actions/view'
 
+const themes = [
+    {
+        name: 'Default',
+        value: 'default'
+    },
+    {
+        name: 'Dark',
+        value: 'dark'
+    }
+]
+
 class SettingsPage extends Component {
     static propTypes = {
         actions: PropTypes.object.isRequired,
@@ -11,10 +22,9 @@ class SettingsPage extends Component {
     }
     render() {
         const {state} = this.props;
-        const {showHidden} = state.view;
+        const {showHidden, theme} = state.view;
 
         return (
-
             <div className="full settings">
                 <div className="full-overflow">
                     <div className="container">
@@ -30,6 +40,19 @@ class SettingsPage extends Component {
                                    onChange={this._onChange.bind(this, 'showHidden', !showHidden)}
                                    type="checkbox" /> Show hidden files
                         </label>
+                        <br />
+                        <label>
+                            Themes
+                        </label>
+                        <select value={theme}
+                                className="form-control"
+                                ref="theme"
+                                onChange={this._onChange.bind(this, 'theme', this.refs.theme.value)}>
+                            {themes.map(item => <option value={item.value}
+                                                        key={item.value}>
+                                                    {item.name}
+                                                </option>)}
+                        </select>
                     </div>
                 </div>
             </div>
@@ -37,6 +60,7 @@ class SettingsPage extends Component {
     }
 
     _onChange = (attribute, value) => {
+        console.log(value);
         let newAttributeValues = {};
         newAttributeValues[attribute] = value;
         this.props.actions.view.update(newAttributeValues);

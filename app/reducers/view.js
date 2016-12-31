@@ -1,7 +1,8 @@
 import * as types from '../actions/view'
 
 const initialState = {
-    showHidden: false
+    showHidden: false,
+    theme: 'dark'
 };
 
 export default function counter(state = initialState, action = {}) {
