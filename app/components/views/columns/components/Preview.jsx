@@ -5,7 +5,7 @@ import fs from 'fs'
 // import PSD from 'psd'
 
 const previewTypes = {
-    image: ['png', 'jpeg', 'jpg', 'gif', 'tiff', 'bmp'],
+    image: ['png', 'jpeg', 'jpg', 'gif', 'tiff', 'bmp', 'svg'],
     audioVisual: ['wav', 'mp3', 'aac', 'mp4', 'ogg', 'm4r', 'mkv', 'wmv', 'mov', 'aiff', 'm4a', 'wma', 'avi'],
     text: ['js', 'html', 'css', 'jsx', 'txt', 'md', 'yml', 'json', 'plist']
 }
@@ -36,10 +36,15 @@ export default class Preview extends Component {
 
         return (
             <div className="preview">
-              { type === 'unknown' && (<Unknown path={ path } selected={ selected } />) }
-              { type === 'image' && (<Image path={ path } selected={ selected } />) }
-              { type === 'text' && (<Text path={ path } selected={ selected } />) }
-              { type === 'audioVisual' && (<AudioVisual path={ path } selected={ selected } previewModalIsOpen={ previewModalIsOpen } />) }
+                {type === 'unknown' && (<Unknown path={path}
+                                                 selected={selected} />)}
+                {type === 'image' && (<Image path={path}
+                                             selected={selected} />)}
+                {type === 'text' && (<Text path={path}
+                                           selected={selected} />)}
+                {type === 'audioVisual' && (<AudioVisual path={path}
+                                                         selected={selected}
+                                                         previewModalIsOpen={previewModalIsOpen} />)}
             </div>
             );
     }
@@ -59,7 +64,8 @@ class Unknown extends Component {
 
         return (
             <div className="unknown">
-              <i className="icon-file" data-name={ selected } />
+                <i className="icon-file"
+                   data-name={selected} />
             </div>
             );
     }
@@ -86,7 +92,7 @@ class Text extends Component {
 
         return (
             <div className="text">
-              <pre><code>{ text }</code></pre>
+                <pre><code>{text}</code></pre>
             </div>
             );
     }
@@ -104,7 +110,8 @@ class Image extends Component {
     render() {
         const {path, selected} = this.props;
 
-        return (<img src={ Path.join(path, selected) } className="image" />);
+        return (<img src={Path.join(path, selected)}
+                     className="image" />);
     }
 }
 
@@ -123,7 +130,9 @@ class AudioVisual extends Component {
 
         return (
             <div className="video">
-              <ReactPlayer url={ Path.join(path, selected) } playing={ previewModalIsOpen } controls={ true } />
+                <ReactPlayer url={Path.join(path, selected)}
+                             playing={previewModalIsOpen}
+                             controls={true} />
             </div>
             );
     }

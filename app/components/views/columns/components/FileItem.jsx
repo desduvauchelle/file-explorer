@@ -1,7 +1,8 @@
-import React, { Component, PropTypes } from 'react';
-import fs from 'fs';
-import Path from 'path';
-import { shell } from 'electron';
+import React, { Component, PropTypes } from 'react'
+import fs from 'fs'
+import Path from 'path'
+import { shell } from 'electron'
+import { getInfo } from '../../../../utils/fileSystemTools.js'
 
 class FileItem extends Component {
     static propTypes = {
@@ -41,10 +42,9 @@ class FileItem extends Component {
         let {file, isSelected, isFavorite, selectPath, handleClick, handleDoubleClick, handleDoubleClickFolder} = this.props;
 
         let isDirectory = false;
-        try {
-            isDirectory = fs.statSync(file).isDirectory();
-        } catch (ex) {
-            console.log(`Failed to analyze: ${file}, Caused by: ${ex}`);
+        let directoryInfo = getInfo(file);
+        if (directoryInfo && directoryInfo.isDirectory) {
+            isDirectory = true;
         }
 
         let fileParse = Path.parse(file);
