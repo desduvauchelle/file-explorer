@@ -182,13 +182,12 @@ class SortableFileItem extends Component {
         isDragging: PropTypes.bool.isRequired
     }
     render() {
-        const {index, file, selectPath} = this.props;
+        const {file, selectPath} = this.props;
         const {isDragging, connectDragSource, connectDropTarget} = this.props;
 
         return connectDragSource(connectDropTarget(
             <div>
-                <FileItem index={index}
-                          file={file}
+                <FileItem file={file}
                           isSelected={false}
                           selectPath={selectPath}
                           isFavorite={true}

@@ -21,12 +21,11 @@ class FileItem extends Component {
         isSelected: false,
         isFavorite: false,
         isDragging: false,
-        handleClick: (self, file = "") => {
-            // if (self.isDirectory) {
-            //     const fileParse = Path.parse(file);
-            //     self.props.selectPath(fileParse.dir, fileParse.base);
-            //     return;
-            // }
+        handleClick: (self) => {
+            if (self.props.isFavorite) {
+                self.props.selectPath(self.props.file);
+                return;
+            }
             self.props.selectPath(self.fileParse.dir, self.fileParse.base);
         },
         handleDoubleClick: (file = "") => {
@@ -61,7 +60,7 @@ class FileItem extends Component {
         const {file, isSelected, isFavorite, isDragging, handleClick, handleDoubleClick, handleDoubleClickFolder} = this.props;
 
         return (
-            <a onClick={handleClick.bind(this, this, file)}
+            <a onClick={handleClick.bind(this, this)}
                onDoubleClick={!this.isDirectory ? handleDoubleClick.bind(this, file) : handleDoubleClickFolder.bind(this, file, this.isMacApp)}
                className={`${isSelected ? 'selected' : ''} ${isDragging ? 'dragging' : ''}`}><i className={this.isDirectory ? `icon-file-directory ${isSelected ? 'open' : ''} left` : 'icon-file left'}
                                                                                                                  data-name={this.displayName} />

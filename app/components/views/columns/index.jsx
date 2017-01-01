@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import fs from 'fs'
+import Helmet from 'react-helmet'
 // Plugins
 import { HotKeys } from 'react-hotkeys'
 import Path from 'path'
@@ -107,6 +108,7 @@ export default class Columns extends Component {
         return (
             <HotKeys keyMap={keyMap}
                      handlers={hokeyHandlers}>
+                <Helmet title={selected} />
                 <div className="explorer">
                     <div className="explorer-header">
                         <Header path={path}

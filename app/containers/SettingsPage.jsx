@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { Link } from 'react-router'
 import * as ViewActions from '../actions/view'
 import Select from 'react-select'
+import Helmet from 'react-helmet'
 
 const themes = [
     {
@@ -27,6 +28,7 @@ class SettingsPage extends Component {
 
         return (
             <div className="full settings">
+                <Helmet title="Settings" />
                 <div className="full-overflow">
                     <div className="container">
                         <div className="header">
