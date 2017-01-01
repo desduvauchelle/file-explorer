@@ -19,12 +19,21 @@ const initialStateFavorite = {
     links: []
 };
 
+const initialStateLink = {
+    id: '',
+    link: ''
+}
+
 export default function counter(state = initialState, action = {}) {
     switch (action.type) {
         case types.SECTION_ADD: {
             return [
                 ...state,
-                {...initialStateFavorite, ...action.section, id: uuid()}
+                {
+                    ...initialStateFavorite,
+                    ...action.section,
+                    id: uuid()
+                }
             ]
         }
         case types.SECTION_REMOVE: {
@@ -32,30 +41,33 @@ export default function counter(state = initialState, action = {}) {
         }
         case types.SECTION_EDIT: {
             return state.map(fav => fav.id === action.id ? {
-                    ...fav,
-                    ...action.newAttributes
-                } : fav)
+                ...fav,
+                ...action.newAttributes
+            } : fav)
         }
         case types.LINK_ADD: {
             return state.map(fav => {
-                    if (fav.id === action.sectionId) {
-                        let links = fav.links;
-                        links.push(action.link);
-                        let newFav = Object.assign({}, initialStateFavorite, fav, {
-                            links: links
-                        });
-                        return newFav;
-                    }
-                    return fav;
-                })
+                if (fav.id === action.sectionId) {
+                    let links = fav.links;
+                    links.push(Object.assign({}, initialStateLink, {
+                        id: uuid(),
+                        link: action.link
+                    }));
+                    let newFav = Object.assign({}, initialStateFavorite, fav, {
+                        links: links
+                    });
+                    return newFav;
+                }
+                return fav;
+            })
         }
         case types.LINK_REMOVE: {
             return state.map(fav => fav.id === action.sectionId ?
-                    {
-                        ...fav,
-                        links: fav.links.filter(link => link !== action.link)
-                    }
-                    : fav)
+                {
+                    ...fav,
+                    links: fav.links.filter(link => link !== action.link)
+                }
+                : fav)
         }
         default:
             return state;
