@@ -72,7 +72,6 @@ class Unknown extends Component {
     }
 }
 
-
 class Text extends Component {
     static propTypes = {
         path: PropTypes.string.isRequired,
@@ -137,11 +136,11 @@ class Image extends Component {
     }
     constructor(props) {
         super(props)
-        const {path, selected} = this.props;
-        this.filePath = Path.join(path, selected);
     }
 
     render() {
+        const {path, selected} = this.props;
+        this.filePath = Path.join(path, selected);
         return (<img src={this.filePath}
                      className="image" />);
     }

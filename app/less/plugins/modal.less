@@ -11,13 +11,18 @@
 }
 
 .modal.fade {
-    transform: scale(0.2);
-    transition: opacity 0.15s linear, transform 0.15s;
+    transition: opacity 0.15s linear;
+    .modal-dialog{
+        transform: scale(0.2);
+        transition: transform 0.15s linear;
+    }
 }
 
 .modal.fade.in {
-    transform: scale(1);
     opacity: 1;
+    .modal-dialog{
+        transform: scale(1);
+    }
 }
 
 .modal-content {

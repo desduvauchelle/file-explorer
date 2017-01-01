@@ -157,6 +157,7 @@ export default class Columns extends Component {
                                    }}
                            bsClass={`${state.view.theme} modal-preview modal`}
                            bsSize="lg"
+                           autoFocus={false}
                            onKeyPress={(e) => {
                                            if (e.keyCode === 0) {
                                                this.setState({
