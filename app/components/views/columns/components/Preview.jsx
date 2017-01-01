@@ -72,48 +72,6 @@ class Unknown extends Component {
     }
 }
 
-const codeTypes = [
-    {
-        name: 'javascript',
-        extensions: ['js']
-    },
-    {
-        name: 'jsx',
-        extensions: ['jsx']
-    },
-    {
-        name: 'json',
-        extensions: ['json']
-    },
-    {
-        name: 'html',
-        extensions: ['html']
-    },
-    {
-        name: 'php',
-        extensions: ['php']
-    },
-    {
-        name: 'css',
-        extensions: ['css']
-    },
-    {
-        name: 'less',
-        extensions: ['less']
-    },
-    {
-        name: 'scss',
-        extensions: ['scss']
-    },
-    {
-        name: 'sass',
-        extensions: ['sass']
-    },
-    {
-        name: 'markup',
-        extensions: ['md']
-    }
-]
 
 class Text extends Component {
     static propTypes = {
@@ -139,11 +97,19 @@ class Text extends Component {
         }
         //
         const fileParse = Path.parse(filePath);
-        const fileExtension = fileParse.ext.substr(1);
+        let fileExtension = fileParse.ext.substr(1);
         let codeType = null;
+        switch (fileExtension) {
+            case 'js':
+                fileExtension = 'javascript';
+                break;
+            case 'md':
+                fileExtension = 'markdown';
+                break;
+        }
         if (Prism.languages[fileExtension]) {
             text = Prism.highlight(text, Prism.languages[fileExtension]);
-            codeType = fileExtension === 'js' ? 'javascript' : fileExtension;
+            codeType = fileExtension;
         }
 
         if (codeType) {

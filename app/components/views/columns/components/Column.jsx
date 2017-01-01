@@ -7,7 +7,8 @@ export default class Column extends Component {
         directory: PropTypes.object.isRequired,
         selectPath: PropTypes.func.isRequired,
         path: PropTypes.string.isRequired,
-        selected: PropTypes.string
+        selected: PropTypes.string,
+        moveCard: PropTypes.func
     }
 
     constructor(props) {
@@ -15,7 +16,7 @@ export default class Column extends Component {
     }
 
     render() {
-        const {directory, selectPath, path, selected} = this.props;
+        const {directory, selectPath, path, selected, moveCard} = this.props;
 
         return (
             <section>
@@ -29,12 +30,14 @@ export default class Column extends Component {
                      No files
                  </p>
                  )}
-                {directory.files.map(file => {
+                {directory.files.map((file, i) => {
                      const currentPath = selected ? Path.join(path, selected) : path;
                      const filePath = Path.join(directory.path, file);
                      const isSelected = directory.isCurrent ? currentPath === filePath : currentPath.indexOf(filePath) !== -1;
                      return (
                          <FileItem key={filePath}
+                                   index={i}
+                                   moveCard={moveCard}
                                    file={filePath}
                                    isSelected={isSelected}
                                    selectPath={selectPath} />

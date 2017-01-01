@@ -4,6 +4,9 @@ import fs from 'fs'
 import { HotKeys } from 'react-hotkeys'
 import Path from 'path'
 import { Modal } from 'react-bootstrap'
+// Drag and drop
+import { DragDropContext } from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
 // Components
 import Header from './components/Header'
 import Favorites from './components/Favorites'
@@ -12,6 +15,7 @@ import Preview from './components/Preview'
 // Settings
 import { keyMap, handlers } from '../../../utils/keymapping'
 
+@DragDropContext(HTML5Backend)
 export default class Columns extends Component {
 
     static propTypes = {
@@ -114,6 +118,7 @@ export default class Columns extends Component {
                     </div>
                     <div className="column favorites">
                         <Favorites selectPath={this._selectPath}
+                                   moveCard={this.moveCard.bind(this)}
                                    {...this.props}/>
                     </div>
                     <div className="columns-wrapper"
@@ -125,6 +130,7 @@ export default class Columns extends Component {
                                      <Column directory={directory}
                                              path={path}
                                              selectPath={this._selectPath}
+                                             moveCard={this.moveCard.bind(this)}
                                              selected={selected} />
                                  </div>
                              )
@@ -165,6 +171,20 @@ export default class Columns extends Component {
                 </div>
             </HotKeys>
             );
+    }
+
+    moveCard(dragIndex, hoverIndex) {
+        // const {cards} = this.state.favorites.filter(fav => fav.id === 'default')[0].links;
+        // const dragCard = cards[dragIndex];
+
+        // this.setState(update(this.state, {
+        //     cards: {
+        //         $splice: [
+        //             [dragIndex, 1],
+        //             [hoverIndex, 0, dragCard]
+        //         ]
+        //     }
+        // }));
     }
 
     _getDirectoryListing(path) {

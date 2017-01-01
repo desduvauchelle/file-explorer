@@ -3,14 +3,15 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Link } from 'react-router'
 import * as ViewActions from '../actions/view'
+import Select from 'react-select'
 
 const themes = [
     {
-        name: 'Default',
+        label: 'Default',
         value: 'default'
     },
     {
-        name: 'Dark',
+        label: 'Dark',
         value: 'dark'
     }
 ]
@@ -44,15 +45,12 @@ class SettingsPage extends Component {
                         <label>
                             Themes
                         </label>
-                        <select value={theme}
-                                className="form-control"
-                                ref="theme"
-                                onChange={this._onChange.bind(this, 'theme', this.refs.theme.value)}>
-                            {themes.map(item => <option value={item.value}
-                                                        key={item.value}>
-                                                    {item.name}
-                                                </option>)}
-                        </select>
+                        <Select name="form-field-name"
+                                value={theme}
+                                options={themes}
+                                onChange={(item) => {
+                                              this._onChange('theme', item.value)
+                                          }} />
                     </div>
                 </div>
             </div>
@@ -60,6 +58,7 @@ class SettingsPage extends Component {
     }
 
     _onChange = (attribute, value) => {
+
         let newAttributeValues = {};
         newAttributeValues[attribute] = value;
         this.props.actions.view.update(newAttributeValues);

@@ -6,7 +6,8 @@ export default class Favorites extends Component {
     static propTypes = {
         selectPath: PropTypes.func.isRequired,
         state: PropTypes.object.isRequired,
-        actions: PropTypes.object.isRequired
+        actions: PropTypes.object.isRequired,
+        moveCard: PropTypes.func
     }
 
     constructor(props) {
@@ -34,7 +35,7 @@ export default class Favorites extends Component {
     }
 
     render() {
-        const {selectPath, state} = this.props;
+        const {selectPath, state, moveCard} = this.props;
         const favorites = state.favorites;
 
         return (
@@ -59,6 +60,8 @@ export default class Favorites extends Component {
                                  {favorite.links.map((link, k) => {
                                       return (
                                           <FileItem key={`${link}-${k}`}
+                                                    moveCard={moveCard}
+                                                    index={k}
                                                     file={link}
                                                     isSelected={false}
                                                     selectPath={selectPath}
