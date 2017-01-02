@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Tooltip, OverlayTrigger, Modal } from 'react-bootstrap'
 import Path from 'path'
+import FavoritesNewGroupModal from './FavoritesNewGroupModal'
 
 export default class Column extends Component {
     static propTypes = {
@@ -9,15 +10,15 @@ export default class Column extends Component {
         selected: PropTypes.string,
         linkAdd: PropTypes.func.isRequired,
         sectionAdd: PropTypes.func.isRequired,
-        goToSettings: PropTypes.func.isRequired
+        goToSettings: PropTypes.func.isRequired,
+        actions: PropTypes.object.isRequired
     }
 
     constructor(props) {
         super(props);
 
         this.state = {
-            newGroupModalIsOpen: false,
-            newGroupName: ''
+            newGroupModalIsOpen: false
         }
     }
 
@@ -26,24 +27,12 @@ export default class Column extends Component {
             e.preventDefault()
         }
         this.setState({
-            newGroupModalIsOpen: !this.state.newGroupModalIsOpen,
-            newGroupName: ''
-        });
-    }
-
-    _onSubmitForm(e) {
-        e.preventDefault();
-        this.props.sectionAdd({
-            name: this.state.newGroupName
-        });
-        this.setState({
-            newGroupModalIsOpen: false,
-            newGroupName: ''
+            newGroupModalIsOpen: !this.state.newGroupModalIsOpen
         });
     }
 
     render() {
-        const {path, selected, hokeyHandlers, linkAdd, goToSettings} = this.props;
+        const {path, selected, hokeyHandlers, linkAdd, goToSettings, actions} = this.props;
 
         return (
             <div>
@@ -99,53 +88,10 @@ export default class Column extends Component {
                                     })
                                 }}><i className="fa fa-eye fa-fw" /></a>
                 </OverlayTrigger>
-                <Modal show={this.state.newGroupModalIsOpen}
-                       onHide={this._newGroupModalToggle.bind(this)}
-                       bsSize="sm">
-                    <form onSubmit={this._onSubmitForm.bind(this)}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>
-                                New group
-                            </Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <div>
-                                <input type="text"
-                                       ref="newGroupName"
-                                       placeholder="Enter new group name..."
-                                       className="form-control"
-                                       value={this.state.newGroupName}
-                                       autoFocus
-                                       onChange={() => {
-                                                     this.setState({
-                                                         newGroupName: this.refs.newGroupName.value
-                                                     })
-                                                 }} />
-                            </div>
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <button type="submit"
-                                    className="btn btn-primary btn-block">
-                                Create
-                            </button>
-                        </Modal.Footer>
-                    </form>
-                </Modal>
+                <FavoritesNewGroupModal isOpen={this.state.newGroupModalIsOpen}
+                                        onHide={this._newGroupModalToggle.bind(this)}
+                                        actions={actions} />
             </div>
             );
     }
 }
-
-// <OverlayTrigger placement="bottom"
-//                                 overlay={(<Tooltip id="back">
-//                                               <strong>Back</strong>(<i className="fa fa-arrow-left" />)
-//                                           </Tooltip>)}>
-//                     <a className="actions"><i className="fa fa-chevron-left fa-fw" /></a>
-//                 </OverlayTrigger>
-//                 <OverlayTrigger placement="bottom"
-//                                 overlay={(<Tooltip id="forward">
-//                                               <strong>Forward</strong>(<i className="fa fa-arrow-right" />)
-//                                           </Tooltip>)}>
-//                     <a className="actions"><i className="fa fa-chevron-right fa-fw" /></a>
-//                 </OverlayTrigger>
-//                 <div className="spacer-md" />

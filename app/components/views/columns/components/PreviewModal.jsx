@@ -11,11 +11,11 @@ export default class PreviewModal extends Component {
         theme: PropTypes.string
     }
     render() {
-        const {previewModalIsOpen, onHide, path, selected, theme} = this.props;
+        const {previewModalIsOpen, onHide, path, selected} = this.props;
         return (
             <Modal show={previewModalIsOpen}
                    onHide={onHide}
-                   bsClass={`${theme} modal-preview modal`}
+                   bsClass={`modal-preview modal`}
                    bsSize="lg"
                    autoFocus={false}>
                 <Modal.Body>

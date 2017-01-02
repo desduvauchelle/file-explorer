@@ -113,7 +113,6 @@ export default class Columns extends Component {
 
         // For key mapping
         const hokeyHandlers = handlers(this, list, path, selected);
-
         return (
             <HotKeys keyMap={keyMap}
                      handlers={hokeyHandlers}>
@@ -125,6 +124,7 @@ export default class Columns extends Component {
                                 hokeyHandlers={hokeyHandlers}
                                 linkAdd={linkAdd}
                                 sectionAdd={sectionAdd}
+                                actions={actions}
                                 goToSettings={this._goToSettings} />
                     </div>
                     <div className="column favorites">
@@ -166,8 +166,7 @@ export default class Columns extends Component {
                                               })
                                           }}
                                   path={path}
-                                  selected={selected}
-                                  theme={state.view.theme} />
+                                  selected={selected} />
                     <FileItemRenameModal isOpen={this.state.renameModalIsOpen}
                                          onHide={() => {
                                                      this.setState({

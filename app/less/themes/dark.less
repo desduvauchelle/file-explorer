@@ -11,18 +11,7 @@
     }
     .explorer{
         background: darken(@color-bg,12%);
-        .columns-wrapper, .column{
-            @scroll-foreground: lighten(@color-bg,40%);
-            @scroll-background: #000;
-
-            &::-webkit-scrollbar-thumb {
-                background: @scroll-foreground;
-            }
-
-            &::-webkit-scrollbar-track {
-                background: darken(@color-bg,6%);
-            }
-        }
+        
         .columns-wrapper{
             background: @color-bg;
         }
@@ -30,8 +19,8 @@
             background: @color-bg;
             
             .column-hovered{
-            background: lighten(@color-bg,5%);
-        }
+                background: lighten(@color-bg,5%);
+            }
             &.favorites{
                 background: darken(@color-bg,6%);
             }
@@ -67,7 +56,22 @@
         }
     }
 
-    &.modal-backdrop{
+    .modal-backdrop{
         background: @color-bg;
+    }
+
+    .modal-open .modal,
+    .columns-wrapper, 
+    .column{
+            @scroll-foreground: lighten(@color-bg,40%);
+            @scroll-background: #000;
+
+            &::-webkit-scrollbar-thumb {
+                background: @scroll-foreground !important;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: darken(@color-bg,6%) !important;
+            }
     }
 }

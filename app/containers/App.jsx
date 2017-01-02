@@ -8,10 +8,18 @@ class App extends Component {
         view: PropTypes.object
     }
 
+    componentDidMount() {
+        let body = document.body;
+        body.className = this.props.view.theme;
+    }
+    componentWillReceiveProps(nextProps) {
+        let body = document.body;
+        body.className = nextProps.view.theme;
+    }
+
     render() {
-        const {theme} = this.props.view;
         return (
-            <div className={`full ${theme || ''}`}>
+            <div className="full">
                 <Helmet titleTemplate="FileExplorer - %s"
                         defaultTitle="FileExplorer" />
                 {this.props.children}
