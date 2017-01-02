@@ -35,7 +35,13 @@ export default class Columns extends Component {
     }
 
     componentDidUpdate() {
-        var itemComponent = this.refs.columns;
+        let itemComponent = this.refs.columns;
+        if (itemComponent) {
+            itemComponent.scrollLeft = itemComponent.scrollWidth;
+        }
+    }
+    componentDidMount() {
+        let itemComponent = this.refs.columns;
         if (itemComponent) {
             itemComponent.scrollLeft = itemComponent.scrollWidth;
         }
@@ -120,7 +126,6 @@ export default class Columns extends Component {
                     </div>
                     <div className="column favorites">
                         <Favorites selectPath={this._selectPath}
-                                   moveCard={this.moveCard.bind(this)}
                                    {...this.props}/>
                     </div>
                     <div className="columns-wrapper"
@@ -132,7 +137,7 @@ export default class Columns extends Component {
                                      <Column directory={directory}
                                              path={path}
                                              selectPath={this._selectPath}
-                                             moveCard={this.moveCard.bind(this)}
+                                             forceRefresh={this.forceRefresh.bind(this)}
                                              selected={selected} />
                                  </div>
                              )
@@ -176,18 +181,8 @@ export default class Columns extends Component {
             );
     }
 
-    moveCard(dragIndex, hoverIndex) {
-        // const {cards} = this.state.favorites.filter(fav => fav.id === 'default')[0].links;
-        // const dragCard = cards[dragIndex];
-
-        // this.setState(update(this.state, {
-        //     cards: {
-        //         $splice: [
-        //             [dragIndex, 1],
-        //             [hoverIndex, 0, dragCard]
-        //         ]
-        //     }
-        // }));
+    forceRefresh() {
+        this.forceUpdate();
     }
 
     _getDirectoryListing(path) {

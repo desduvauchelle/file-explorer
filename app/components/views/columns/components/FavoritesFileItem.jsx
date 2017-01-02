@@ -5,7 +5,7 @@ import FileItem from './FileItem'
 import { DragSource, DropTarget } from 'react-dnd'
 import { findDOMNode } from 'react-dom'
 
-const cardSource = {
+const favoriteFileItemSource = {
     beginDrag(props) {
         return {
             favoriteId: props.favorite.id,
@@ -15,7 +15,7 @@ const cardSource = {
     }
 };
 
-const cardTarget = {
+const favoriteFileItemTarget = {
     hover(props, monitor, component) {
         const item = monitor.getItem();
         const favoriteId = item.favoriteId;
@@ -65,10 +65,10 @@ const cardTarget = {
     }
 };
 
-@DropTarget(DraggableTypes.FAVORITE_LINK, cardTarget, connect => ({
+@DropTarget(DraggableTypes.FAVORITE_LINK, favoriteFileItemTarget, connect => ({
     connectDropTarget: connect.dropTarget()
 }))
-@DragSource(DraggableTypes.FAVORITE_LINK, cardSource, (connect, monitor) => ({
+@DragSource(DraggableTypes.FAVORITE_LINK, favoriteFileItemSource, (connect, monitor) => ({
     connectDragSource: connect.dragSource(),
     isDragging: monitor.isDragging()
 }))
