@@ -28,6 +28,7 @@ export default class Favorites extends Component {
                                          actions={actions}
                                          state={state}
                                          reorderFavoritesGroup={this._reorderFavoritesGroup.bind(this)}
+                                         addFavorite={this._addFavorite.bind(this)}
                                          selectPath={selectPath} />
                      )
                  })}
@@ -35,7 +36,7 @@ export default class Favorites extends Component {
             );
     }
 
-    _reorderFavoritesGroup = (dragIndex, hoverIndex, favorite) => {
+    _reorderFavoritesGroup(dragIndex, hoverIndex, favorite) {
         let newFavorites = update({
             favorites: this.props.state.favorites
         }, {
@@ -47,6 +48,10 @@ export default class Favorites extends Component {
             }
         });
         this.props.actions.favorite.sectionReorder(newFavorites.favorites);
+    }
+
+    _addFavorite(groupId, filePath) {
+        this.props.actions.favorite.linkAdd(groupId, filePath);
     }
 
 }

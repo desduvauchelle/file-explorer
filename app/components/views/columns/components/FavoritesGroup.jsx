@@ -18,55 +18,55 @@ const favoriteGroupSource = {
 
 const favoriteGroupTarget = {
     hover(props, monitor, component) {
+        const type = monitor.getItemType();
         const item = monitor.getItem();
-        const favorite = item.favorite;
-        const dragIndex = item.index;
-        const hoverIndex = props.index;
 
-        // Don't replace items with themselves
-        if (dragIndex === hoverIndex) {
-            return;
+        switch (type) {
+            case DraggableTypes.FAVORITE: {
+                const favorite = item.favorite;
+                const dragIndex = item.index;
+                const hoverIndex = props.index;
+
+                if (dragIndex === hoverIndex) {
+                    return;
+                }
+                const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
+                const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+                const clientOffset = monitor.getClientOffset();
+                const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+                if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+                    return;
+                }
+                if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+                    return;
+                }
+                props.reorderFavoritesGroup(dragIndex, hoverIndex, favorite);
+                monitor.getItem().index = hoverIndex;
+                break;
+            }
+            case DraggableTypes.FAVORITE_LINK: {
+                // So something only on drop
+                break;
+            }
         }
+    },
+    drop(props, monitor, component) {
+        const type = monitor.getItemType();
+        const item = monitor.getItem();
 
-        // Determine rectangle on screen
-        const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
-
-        // Get vertical middle
-        const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-
-        // Determine mouse position
-        const clientOffset = monitor.getClientOffset();
-
-        // Get pixels to the top
-        const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-
-        // Only perform the move when the mouse has crossed half of the items height
-        // When dragging downwards, only move when the cursor is below 50%
-        // When dragging upwards, only move when the cursor is above 50%
-
-        // Dragging downwards
-        if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-            return;
+        switch (type) {
+            case DraggableTypes.FILE: {
+                const filePath = item.filePath;
+                props.addFavorite(props.favorite.id, filePath);
+                break;
+            }
         }
-
-        // Dragging upwards
-        if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-            return;
-        }
-
-        // Time to actually perform the action
-        props.reorderFavoritesGroup(dragIndex, hoverIndex, favorite);
-
-        // Note: we're mutating the monitor item here!
-        // Generally it's better to avoid mutations,
-        // but it's good here for the sake of performance
-        // to avoid expensive index searches.
-        monitor.getItem().index = hoverIndex;
     }
 };
 
-@DropTarget(DraggableTypes.FAVORITE, favoriteGroupTarget, connect => ({
-    connectDropTarget: connect.dropTarget()
+@DropTarget([DraggableTypes.FAVORITE, DraggableTypes.FAVORITE_LINK, DraggableTypes.FILE], favoriteGroupTarget, (connect, monitor) => ({
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver()
 }))
 @DragSource(DraggableTypes.FAVORITE, favoriteGroupSource, (connect, monitor) => ({
     connectDragSource: connect.dragSource(),
@@ -79,17 +79,22 @@ export default class FavoritesGroup extends Component {
         state: PropTypes.object.isRequired,
         selectPath: PropTypes.func.isRequired,
         reorderFavoritesGroup: PropTypes.func.isRequired,
+        addFavorite: PropTypes.func.isRequired,
         // For drag and drop
         index: PropTypes.number.isRequired,
         connectDragSource: PropTypes.func.isRequired,
         connectDropTarget: PropTypes.func.isRequired,
-        isDragging: PropTypes.bool.isRequired
+        isDragging: PropTypes.bool.isRequired,
+        isOver: PropTypes.bool.isRequired
     }
     render() {
-        const {isDragging, connectDragSource, connectDropTarget, favorite, selectPath} = this.props;
+        const {isDragging, connectDragSource, connectDropTarget, favorite, selectPath, isOver} = this.props;
 
         return connectDragSource(connectDropTarget(
-            <div>
+            <div style={{
+                opacity: isDragging ? 0.6 : 1,
+                background: isOver ? '#f1f1f1' : ''
+            }}>
                 <header>
                     {favorite.name}
                     <div className="right">
@@ -124,6 +129,9 @@ export default class FavoritesGroup extends Component {
         // NOTE: Keep favoriteID so that we can then drag and drop favorite links into other groups
         const favoriteLinks = this.props.state.favorites.filter(fav => fav.id === favoriteId)[0].links;
         const draggedLink = favoriteLinks[dragIndex];
+        if (!draggedLink) {
+            // It's in a different group.
+        }
         // Remove dragged link
         let newLinks = {
             links: favoriteLinks

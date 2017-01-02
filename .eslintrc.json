@@ -66,6 +66,7 @@
             "before": true,
             "after": true
         } ],
-        "no-semi": 0
+        "no-semi": 0,
+        "react/no-find-dom-node": 1
     }
 }
