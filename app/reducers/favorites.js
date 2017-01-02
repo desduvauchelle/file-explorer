@@ -4,7 +4,6 @@ import uuid from 'uuid/v1';
 const initialState = [
     {
         id: 'default',
-        order: 0,
         name: "Favorites",
         isOpen: true,
         links: []
@@ -13,7 +12,6 @@ const initialState = [
 
 const initialStateFavorite = {
     id: '',
-    order: 0,
     name: '',
     isOpen: true,
     links: []
@@ -44,6 +42,9 @@ export default function counter(state = initialState, action = {}) {
                 ...fav,
                 ...action.newAttributes
             } : fav)
+        }
+        case types.SECTION_REORDER: {
+            return action.favorites;
         }
         case types.LINK_ADD: {
             return state.map(fav => {
