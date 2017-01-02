@@ -30,6 +30,9 @@ const columnFileItemTarget = {
             return;
         }
         const draggedFileParse = Path.parse(draggedFilePath);
+        if (destinationFilePath === draggedFileParse.dir) {
+            return;
+        }
         const newName = Path.join(destinationFilePath, draggedFileParse.base);
         fs.rename(draggedFilePath, newName, function(err) {
             if (err) {
@@ -44,8 +47,9 @@ const columnFileItemTarget = {
     }
 };
 
-@DropTarget(DraggableTypes.FILE, columnFileItemTarget, connect => ({
-    connectDropTarget: connect.dropTarget()
+@DropTarget(DraggableTypes.FILE, columnFileItemTarget, (connect, monitor) => ({
+    connectDropTarget: connect.dropTarget(),
+    isOverCurrent: monitor.isOver()
 }))
 @DragSource(DraggableTypes.FILE, columnFileItemSource, (connect, monitor) => ({
     connectDragSource: connect.dragSource(),
@@ -60,14 +64,14 @@ export default class ColumnFileItem extends Component {
         forceRefresh: PropTypes.func.isRequired,
         connectDragSource: PropTypes.func.isRequired,
         connectDropTarget: PropTypes.func.isRequired,
-        isDragging: PropTypes.bool.isRequired
+        isDragging: PropTypes.bool.isRequired,
+        isOverCurrent: PropTypes.bool.isRequired
     }
     render() {
-        const {file, selectPath, isSelected} = this.props;
-        const {isDragging, connectDragSource, connectDropTarget} = this.props;
+        const {file, selectPath, isSelected, isOverCurrent, isDragging, connectDragSource, connectDropTarget} = this.props;
 
         return connectDragSource(connectDropTarget(
-            <div>
+            <div className={isOverCurrent ? 'file-hovered' : ''}>
                 <FileItem file={file}
                           isSelected={isSelected}
                           selectPath={selectPath}

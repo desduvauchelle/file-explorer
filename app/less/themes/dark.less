@@ -28,6 +28,10 @@
         }
         .column{
             background: @color-bg;
+            
+            .column-hovered{
+            background: lighten(@color-bg,5%);
+        }
             &.favorites{
                 background: darken(@color-bg,6%);
             }
@@ -47,9 +51,12 @@
                 }                
             }
             &.active section a.selected{
-                    background: @color-links;
-                    color: @color-text;
-                }
+                background: @color-links;
+                color: @color-text;
+            }
+            .file-hovered{
+                background: lighten(@color-bg,12%);
+            }
         }
         .column-preview h3{
             color: @color-text;

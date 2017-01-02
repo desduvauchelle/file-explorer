@@ -115,6 +115,9 @@
         width: 250px;
         height: 100%;       
         
+        .column-hovered{
+            background: lighten(@brand-primary,47%);
+        }
 
         &.favorites {
             position: absolute;
@@ -188,12 +191,9 @@
                 -webkit-user-select: none;
                 cursor: default;
                 display: block;
-                position: relative;
-                margin-top: 4px;
-                margin-bottom: 4px;
-                padding: 5px 18px;
+                position: relative;                
+                padding: 9px 18px;
                 display: block;
-                -webkit-user-select: none;
                 cursor: default;
                 font-size: 13px;
                 color: rgb(65, 65, 65);
@@ -223,7 +223,10 @@
                 }
                 &.dragging{
                     opacity: 0.2;                                        
-                }
+                }                
+            }
+            .file-hovered{
+                background: darken(#f1f1f1,5%);
             }
         }
         &.active section a.selected {

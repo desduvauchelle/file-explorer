@@ -25,8 +25,11 @@ const columnFileItemTarget = {
     }
 };
 
-@DropTarget(DraggableTypes.FILE, columnFileItemTarget, connect => ({
-    connectDropTarget: connect.dropTarget()
+@DropTarget(DraggableTypes.FILE, columnFileItemTarget, (connect, monitor) => ({
+    connectDropTarget: connect.dropTarget(),
+    isOverCurrent: monitor.isOver({
+        shallow: true
+    })
 }))
 export default class Column extends Component {
     static propTypes = {
@@ -35,7 +38,8 @@ export default class Column extends Component {
         path: PropTypes.string.isRequired,
         selected: PropTypes.string,
         forceRefresh: PropTypes.func,
-        connectDropTarget: PropTypes.func.isRequired
+        connectDropTarget: PropTypes.func.isRequired,
+        isOverCurrent: PropTypes.bool.isRequired
     }
 
     constructor(props) {
@@ -43,12 +47,13 @@ export default class Column extends Component {
     }
 
     render() {
-        const {directory, selectPath, path, selected, forceRefresh, connectDropTarget} = this.props;
+        const {directory, selectPath, path, selected, forceRefresh, connectDropTarget, isOverCurrent} = this.props;
 
         return connectDropTarget(
             <div style={{
                 height: '100%'
-            }}>
+            }}
+                 className={isOverCurrent ? 'column-hovered' : ''}>
                 <section>
                     {directory.error && (
                      <p className="alert alert-danger">
