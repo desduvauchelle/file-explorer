@@ -4,7 +4,7 @@ import Helmet from 'react-helmet'
 // Plugins
 import { HotKeys } from 'react-hotkeys'
 import Path from 'path'
-import { Modal } from 'react-bootstrap'
+
 // Drag and drop
 import { DragDropContext } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
@@ -13,6 +13,8 @@ import Header from './components/Header'
 import Favorites from './components/Favorites'
 import Column from './components/Column'
 import Preview from './components/Preview'
+import PreviewModal from './components/PreviewModal'
+import FileItemRenameModal from './components/FileItemRenameModal'
 // Settings
 import { keyMap, handlers } from '../../../utils/keymapping'
 
@@ -30,7 +32,8 @@ export default class Columns extends Component {
         super(props);
 
         this.state = {
-            previewModalIsOpen: false
+            previewModalIsOpen: false,
+            renameModalIsOpen: false
         }
     }
 
@@ -145,6 +148,7 @@ export default class Columns extends Component {
                         {showFileInfo && (
                          <div className="column column-preview">
                              <Preview path={path}
+                                      isColumnView={true}
                                       selected={selected}
                                       previewModalIsOpen={this.state.previewModalIsOpen} />
                              <h3>{selected}</h3>
@@ -154,28 +158,25 @@ export default class Columns extends Component {
                     <div className="explorer-footer">
                         {selected ? Path.join(path, selected) : path}
                     </div>
-                    <Modal show={this.state.previewModalIsOpen}
-                           onHide={() => {
-                                       this.setState({
-                                           previewModalIsOpen: false
-                                       })
-                                   }}
-                           bsClass={`${state.view.theme} modal-preview modal`}
-                           bsSize="lg"
-                           autoFocus={false}
-                           onKeyPress={(e) => {
-                                           if (e.keyCode === 0) {
-                                               this.setState({
-                                                   previewModalIsOpen: false
-                                               })
-                                           }
-                                       }}>
-                        <Modal.Body>
-                            <Preview path={path}
-                                     selected={selected}
-                                     previewModalIsOpen={this.state.previewModalIsOpen} />
-                        </Modal.Body>
-                    </Modal>
+                    {/* MODALS */}
+                    <PreviewModal previewModalIsOpen={this.state.previewModalIsOpen}
+                                  onHide={() => {
+                                              this.setState({
+                                                  previewModalIsOpen: false
+                                              })
+                                          }}
+                                  path={path}
+                                  selected={selected}
+                                  theme={state.view.theme} />
+                    <FileItemRenameModal isOpen={this.state.renameModalIsOpen}
+                                         onHide={() => {
+                                                     this.setState({
+                                                         renameModalIsOpen: false
+                                                     })
+                                                 }}
+                                         forceRefresh={this.forceRefresh.bind(this)}
+                                         path={path}
+                                         selected={selected} />
                 </div>
             </HotKeys>
             );
@@ -227,3 +228,4 @@ export default class Columns extends Component {
         })
     }
 }
+

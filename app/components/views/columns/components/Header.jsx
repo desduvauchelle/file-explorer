@@ -73,7 +73,7 @@ export default class Column extends Component {
                 </OverlayTrigger>
                 <OverlayTrigger placement="bottom"
                                 overlay={(<Tooltip id="rename">
-                                              <strong>Rename</strong>(enter)
+                                              <strong>Rename</strong>(Cmd/ctrl + <i className="fa fa-arrow-down" />)
                                           </Tooltip>)}>
                     <a className="actions"
                        onClick={hokeyHandlers.rename}><i className="fa fa-pencil-square-o fa-fw" /></a>

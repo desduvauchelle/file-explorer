@@ -44,30 +44,8 @@ export default {
             },
             rename: (e) => {
                 e.preventDefault();
-                let fileName = "";
-                if (selected) {
-                    fileName = selected;
-                } else {
-                    let pathList = path.split('/');
-                    fileName = pathList[pathList - 1];
-                }
-                swal({
-                    title: "Rename",
-                    text: "Change the name of the file",
-                    type: "input",
-                    showCancelButton: true,
-                    animation: "slide-from-top",
-                    inputPlaceholder: "New name"
-                }, function(inputValue) {
-                    if (inputValue === false) {
-                        return false;
-                    }
-                    if (inputValue === "") {
-                        swal.showInputError("You need to write something!");
-                        return false
-                    }
-                    swal("Nice!", "You wrote: " + inputValue, "success");
-                // fs.rename(oldPath, newPath, callback);
+                self.setState({
+                    renameModalIsOpen: !self.state.renameModalIsOpen
                 });
             },
             open: (e) => {
@@ -86,7 +64,6 @@ export default {
             },
             moveLeft: (e) => {
                 e.preventDefault();
-                console.log("Move left");
                 if (path === self.rootPath) {
                     return;
                 }
@@ -95,7 +72,6 @@ export default {
             },
             moveRight: (e) => {
                 e.preventDefault();
-                console.log("Move right");
                 if (!selected) {
                     return;
                 }
@@ -104,7 +80,9 @@ export default {
                 try {
                     isDirectory = fs.statSync(filePath).isDirectory();
                 } catch (ex) {
+                    /* eslint-disable */
                     console.log(`Failed to analyze: ${ filePath }, Caused by: ${ ex }`);
+                /* eslint-enable */
                 }
 
                 if (!isDirectory) {

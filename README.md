@@ -104,11 +104,11 @@ To format the code style to fit our code style
 $ npm run esformatter
 ```
 
-### Options
+## Options
 
 See [electron-builder CLI Usage](https://github.com/electron-userland/electron-builder#cli-usage)
 
-### Module Structure
+## Module Structure
 
 This boilerplate uses a [two package.json structure](https://github.com/electron-userland/electron-builder#two-packagejson-structure).
 
@@ -116,3 +116,6 @@ This boilerplate uses a [two package.json structure](https://github.com/electron
 2. If a module is `import`ed by another module, include it in `dependencies` in `./package.json`. See [this ESLint rule](https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md).
 3. Otherwise, modules used for building, testing and debugging should be included in `devDependencies` in `./package.json`.
 
+## Help wanted
+
+If you are interested in the project, we're open. You can fork and push a pull request or if you help even more, you can become a contributor. Reach out to us in the issues section.

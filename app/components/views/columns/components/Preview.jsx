@@ -15,7 +15,8 @@ export default class Preview extends Component {
     static propTypes = {
         selected: PropTypes.string,
         path: PropTypes.string.isRequired,
-        previewModalIsOpen: PropTypes.bool.isRequired
+        previewModalIsOpen: PropTypes.bool.isRequired,
+        isColumnView: PropTypes.bool
     }
 
     constructor(props) {
@@ -23,7 +24,7 @@ export default class Preview extends Component {
     }
 
     render() {
-        let {path, selected, previewModalIsOpen} = this.props;
+        let {path, selected, previewModalIsOpen, isColumnView} = this.props;
 
         let type = 'unknown';
         if (selected) {
@@ -45,6 +46,7 @@ export default class Preview extends Component {
                                            selected={selected} />)}
                 {type === 'audioVisual' && (<AudioVisual path={path}
                                                          selected={selected}
+                                                         isColumnView={isColumnView}
                                                          previewModalIsOpen={previewModalIsOpen} />)}
             </div>
             );
@@ -150,19 +152,20 @@ class AudioVisual extends Component {
     static propTypes = {
         path: PropTypes.string.isRequired,
         selected: PropTypes.string.isRequired,
-        previewModalIsOpen: PropTypes.bool.isRequired
+        previewModalIsOpen: PropTypes.bool.isRequired,
+        isColumnView: PropTypes.bool.isRequired
     }
     constructor(props) {
         super(props)
     }
 
     render() {
-        const {path, selected, previewModalIsOpen} = this.props;
+        const {path, selected, previewModalIsOpen, isColumnView} = this.props;
 
         return (
             <div className="video">
                 <ReactPlayer url={Path.join(path, selected)}
-                             playing={previewModalIsOpen}
+                             playing={isColumnView ? false : previewModalIsOpen}
                              controls={true} />
             </div>
             );
