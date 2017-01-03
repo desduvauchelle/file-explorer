@@ -42,10 +42,10 @@ export function linkAdd(sectionId, link) {
     }
 }
 
-export function linkRemove(sectionId, link) {
+export function linkRemove(sectionId, linkId) {
     return {
         type: LINK_REMOVE,
         sectionId: sectionId,
-        link: link
+        linkId: linkId
     }
 }

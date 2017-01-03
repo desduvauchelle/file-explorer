@@ -50,14 +50,20 @@ const favoriteGroupTarget = {
             }
         }
     },
-    drop(props, monitor, component) {
+    drop(props, monitor) {
         const type = monitor.getItemType();
         const item = monitor.getItem();
 
         switch (type) {
             case DraggableTypes.FILE: {
-                const filePath = item.filePath;
-                props.addFavorite(props.favorite.id, filePath);
+                props.addFavorite(props.favorite.id, item.filePath);
+                break;
+            }
+            case DraggableTypes.FAVORITE_LINK: {
+                if (props.favorite.id !== item.favoriteId) {
+                    props.addFavorite(props.favorite.id, item.file);
+                    props.actions.favorite.linkRemove(item.favoriteId, item.fileId);
+                }
                 break;
             }
         }
@@ -66,7 +72,9 @@ const favoriteGroupTarget = {
 
 @DropTarget([DraggableTypes.FAVORITE, DraggableTypes.FAVORITE_LINK, DraggableTypes.FILE], favoriteGroupTarget, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver()
+    isOver: monitor.isOver({
+        shallow: true
+    })
 }))
 @DragSource(DraggableTypes.FAVORITE, favoriteGroupSource, (connect, monitor) => ({
     connectDragSource: connect.dragSource(),
@@ -88,13 +96,13 @@ export default class FavoritesGroup extends Component {
         isOver: PropTypes.bool.isRequired
     }
     render() {
-        const {isDragging, connectDragSource, connectDropTarget, favorite, selectPath, isOver} = this.props;
+        const {isDragging, connectDragSource, connectDropTarget, favorite, selectPath, isOver, actions} = this.props;
 
         return connectDragSource(connectDropTarget(
             <div style={{
-                opacity: isDragging ? 0.6 : 1,
-                background: isOver ? '#f1f1f1' : ''
-            }}>
+                opacity: isDragging ? 0.6 : 1
+            }}
+                 className={`${isOver? 'is-over':''}`}>
                 <header>
                     {favorite.name}
                     <div className="right">
@@ -112,6 +120,7 @@ export default class FavoritesGroup extends Component {
                     {favorite.links.map((link, k) => {
                          return (
                              <FavoriteFileItem key={link.id}
+                                               actions={actions}
                                                reorderFavoriteLink={this._reorderFavoriteLink}
                                                index={k}
                                                favorite={favorite}
@@ -129,21 +138,30 @@ export default class FavoritesGroup extends Component {
         // NOTE: Keep favoriteID so that we can then drag and drop favorite links into other groups
         const favoriteLinks = this.props.state.favorites.filter(fav => fav.id === favoriteId)[0].links;
         const draggedLink = favoriteLinks[dragIndex];
-        if (!draggedLink) {
-            // It's in a different group.
-        }
-        // Remove dragged link
         let newLinks = {
             links: favoriteLinks
         }
-        newLinks = update(newLinks, {
-            links: {
-                $splice: [
-                    [dragIndex, 1],
-                    [hoverIndex, 0, draggedLink]
-                ]
-            }
-        });
+        if (!draggedLink || draggedLink.id !== fileId) {
+            // It's in a different group.
+            newLinks = update(newLinks, {
+                links: {
+                    $splice: [
+                        [hoverIndex, 0, draggedLink]
+                    ]
+                }
+            });
+            return false;
+        } else {
+            newLinks = update(newLinks, {
+                links: {
+                    $splice: [
+                        [dragIndex, 1],
+                        [hoverIndex, 0, draggedLink]
+                    ]
+                }
+            });
+        }
+
         this.props.actions.favorite.sectionEdit(favoriteId, newLinks);
     }
 

@@ -120,6 +120,10 @@
                     min-height: 20px;
                 }
             }
+            // When a section has an item over it. 
+            .is-over{
+                background: #f1f1f1;
+            }
         }
         
         header {
@@ -168,8 +172,7 @@
         section {
             display: block;
             overflow: hidden;
-            
-           
+
             a {
                 -webkit-user-select: none;
                 cursor: default;
@@ -195,6 +198,11 @@
                     line-height: 25px;
                     color: rgb(150, 150, 150);
                 }
+                .favorite-remove{
+                    display: none;
+                    color: @brand-danger;
+                    cursor: pointer;
+                }
                 &:hover {
                     background: #f1f1f1;
                     color: rgb(65, 65, 65);
@@ -206,12 +214,20 @@
                 }
                 &.dragging{
                     opacity: 0.2;                                        
-                }                
+                }  
+
+                &:hover{
+                    .favorite-remove{
+                        display: inline-block;
+                    }
+                }              
             }
             .file-hovered{
                 background: darken(#f1f1f1,5%);
             }
+            
         }
+        
         &.active section a.selected {
             background: rgb(255, 149, 0);
             color: #FFF;

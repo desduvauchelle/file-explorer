@@ -16,12 +16,12 @@ const columnFileItemSource = {
 };
 
 const columnFileItemTarget = {
-    canDrop(props, monitor) {
+    canDrop(props) {
         const destinationFilePath = props.file;
         const destinationInfo = getInfo(destinationFilePath);
         return destinationInfo.isDirectory;
     },
-    drop(props, monitor, component) {
+    drop(props, monitor) {
         const draggedFilePath = monitor.getItem().filePath;
         const destinationFilePath = props.file;
         const destinationInfo = getInfo(destinationFilePath);

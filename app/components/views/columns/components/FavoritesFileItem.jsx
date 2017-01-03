@@ -8,8 +8,10 @@ import { findDOMNode } from 'react-dom'
 const favoriteFileItemSource = {
     beginDrag(props) {
         return {
+            favorite: props.favorite,
             favoriteId: props.favorite.id,
             fileId: props.fileId,
+            file: props.file,
             index: props.index
         };
     }
@@ -22,41 +24,27 @@ const favoriteFileItemTarget = {
         const dragIndex = item.index;
         const fileId = item.fileId;
         const hoverIndex = props.index;
-
+        if (favoriteId !== props.favorite.id) {
+            return;
+        }
         // Don't replace items with themselves
         if (dragIndex === hoverIndex) {
             return;
         }
-
         // Determine rectangle on screen
         const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
-
         // Get vertical middle
         const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-
         // Determine mouse position
         const clientOffset = monitor.getClientOffset();
-
-        // Get pixels to the top
         const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-
-        // Only perform the move when the mouse has crossed half of the items height
-        // When dragging downwards, only move when the cursor is below 50%
-        // When dragging upwards, only move when the cursor is above 50%
-
-        // Dragging downwards
         if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
             return;
         }
-
-        // Dragging upwards
         if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
             return;
         }
-
-        // Time to actually perform the action
         props.reorderFavoriteLink(dragIndex, hoverIndex, fileId, favoriteId);
-
         // Note: we're mutating the monitor item here!
         // Generally it's better to avoid mutations,
         // but it's good here for the sake of performance
@@ -76,6 +64,9 @@ export default class FavoriteFileItem extends Component {
     static propTypes = {
         file: PropTypes.string.isRequired,
         selectPath: PropTypes.func.isRequired,
+        actions: PropTypes.object.isRequired,
+        favorite: PropTypes.object.isRequired,
+        fileId: PropTypes.string.isRequired,
         // For drag and drop
         reorderFavoriteLink: PropTypes.func.isRequired,
         index: PropTypes.number.isRequired,
@@ -84,7 +75,7 @@ export default class FavoriteFileItem extends Component {
         isDragging: PropTypes.bool.isRequired
     }
     render() {
-        const {file, selectPath} = this.props;
+        const {file, selectPath, actions, favorite, fileId} = this.props;
         const {isDragging, connectDragSource, connectDropTarget} = this.props;
 
         return connectDragSource(connectDropTarget(
@@ -93,6 +84,9 @@ export default class FavoriteFileItem extends Component {
                           isSelected={false}
                           selectPath={selectPath}
                           isFavorite={true}
+                          handleRemoveFavorite={() => {
+                                                    actions.favorite.linkRemove(favorite.id, fileId);
+                                                }}
                           isDragging={isDragging} />
             </div>
         ));

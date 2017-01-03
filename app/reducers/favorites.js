@@ -66,7 +66,7 @@ export default function counter(state = initialState, action = {}) {
             return state.map(fav => fav.id === action.sectionId ?
                 {
                     ...fav,
-                    links: fav.links.filter(link => link !== action.link)
+                    links: fav.links.filter(link => link.id !== action.linkId)
                 }
                 : fav)
         }

@@ -12,6 +12,7 @@ class FileItem extends Component {
         handleClick: PropTypes.func,
         handleDoubleClick: PropTypes.func,
         handleDoubleClickFolder: PropTypes.func,
+        handleRemoveFavorite: PropTypes.func,
         isDragging: PropTypes.bool
 
     };
@@ -37,6 +38,8 @@ class FileItem extends Component {
                 return;
             }
             shell.showItemInFolder(file);
+        },
+        handleRemoveFavorite: () => {
         }
     }
 
@@ -57,7 +60,7 @@ class FileItem extends Component {
     }
 
     render() {
-        const {file, isSelected, isFavorite, isDragging, handleClick, handleDoubleClick, handleDoubleClickFolder} = this.props;
+        const {file, isSelected, isFavorite, isDragging, handleClick, handleDoubleClick, handleDoubleClickFolder, handleRemoveFavorite} = this.props;
 
         return (
             <a onClick={handleClick.bind(this, this)}
@@ -66,6 +69,11 @@ class FileItem extends Component {
                                                                                                                  data-name={this.displayName} />
                 {this.displayName}
                 {(!isFavorite && (this.isDirectory && !this.isMacApp)) && (<i className="fa fa-caret-right right" />)}
+                {isFavorite && (<i onClick={(e) => {
+                                 e.stopPropagation();
+                                 handleRemoveFavorite();
+                             }}
+                                   className="fa fa-trash-o right favorite-remove" />)}
             </a>
             );
     }

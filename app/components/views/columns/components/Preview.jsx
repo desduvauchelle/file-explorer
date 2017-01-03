@@ -2,13 +2,15 @@ import React, { Component, PropTypes } from 'react'
 import Path from 'path'
 import ReactPlayer from 'react-player'
 import fs from 'fs'
+// import PDF from 'react-pdf'
 // import PSD from 'psd'
 import Prism from "../../../../utils/prism"
 
 const previewTypes = {
     image: ['png', 'jpeg', 'jpg', 'gif', 'tiff', 'bmp', 'svg'],
     audioVisual: ['wav', 'mp3', 'aac', 'mp4', 'ogg', 'm4r', 'mkv', 'wmv', 'mov', 'aiff', 'm4a', 'wma', 'avi'],
-    text: ['js', 'html', 'css', 'jsx', 'txt', 'md', 'yml', 'json', 'plist', 'sh']
+    text: ['js', 'html', 'css', 'jsx', 'txt', 'md', 'yml', 'json', 'plist', 'sh'],
+    pdf: ['pdf']
 }
 
 export default class Preview extends Component {
@@ -48,6 +50,8 @@ export default class Preview extends Component {
                                                          selected={selected}
                                                          isColumnView={isColumnView}
                                                          previewModalIsOpen={previewModalIsOpen} />)}
+                {/*type === 'pdf' && (<PDFViewer path={path}
+                                                                               selected={selected} />)*/}
             </div>
             );
     }
@@ -169,5 +173,43 @@ class AudioVisual extends Component {
                              controls={true} />
             </div>
             );
+    }
+}
+
+class PDFViewer extends React.Component {
+    static propTypes = {
+        path: PropTypes.string.isRequired,
+        selected: PropTypes.string.isRequired
+    }
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            currentPage: null,
+            page: null
+        }
+    }
+
+    render() {
+        const {currentPage} = this.state;
+        const {path, selected} = this.props;
+        const filePath = Path.join(path, selected);
+
+        return <PDF file={filePath}
+                    page={currentPage}
+                    scale="1.0"
+                    onDocumentComplete={this._onDocumentComplete.bind(this)}
+                    onPageComplete={this._onPageComplete.bind(this)}
+                    loading={(<span>Your own loading message ...</span>)} />
+    }
+    _onDocumentCompleted(pages) {
+        this.setState({
+            pages: pages
+        });
+    }
+    _onPageCompleted(page) {
+        this.setState({
+            currentPage: page
+        });
     }
 }
