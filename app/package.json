@@ -1,7 +1,7 @@
 {
     "name": "file-eplorer",
     "productName": "file-eplorer",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Cross OS file explorer",
     "main": "./main.js",
     "author": {

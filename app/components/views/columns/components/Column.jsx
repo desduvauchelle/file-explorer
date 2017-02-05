@@ -4,28 +4,50 @@ import Path from 'path'
 import { DropTarget } from 'react-dnd'
 import fs from 'fs'
 import DraggableTypes from './DraggableTypes'
+import { NativeTypes } from 'react-dnd-html5-backend'
 
 const columnFileItemTarget = {
-    drop(props, monitor, component) {
-        const draggedFilePath = monitor.getItem().filePath;
+    drop(props, monitor) {
+        const monitorItem = monitor.getItem();
         const destinationFilePath = props.directory.path;
-
-        const draggedFileParse = Path.parse(draggedFilePath);
-        const newName = Path.join(destinationFilePath, draggedFileParse.base);
-        fs.rename(draggedFilePath, newName, function(err) {
-            if (err) {
-                /* eslint-disable */
-                console.log(`Error moving file ${draggedFilePath} to ${destinationFilePath}, reason:`);
-                console.log(err);
-                /* esling-enable */
-                return;
+        if (monitorItem.files) {
+            let counter = 0;
+            for (var k in monitorItem.files) {
+                let currentFile = monitorItem.files[k];
+                const newName = Path.join(destinationFilePath, currentFile.name);
+                fs.rename(currentFile.path, newName, function(err) {
+                    if (err) {
+                        /* eslint-disable */
+                        console.log(`Error moving file ${currentFile.path} to ${newName}, reason:`);
+                        console.log(err);
+                        /* esling-enable */
+                        return;
+                    }
+                    counter++;
+                    if (counter === monitorItem.files.length) {
+                        props.forceRefresh();
+                    }
+                })
             }
-            props.forceRefresh();
-        })
+        } else {
+            const draggedFilePath = monitorItem.filePath;
+            const draggedFileParse = Path.parse(draggedFilePath);
+            const newName = Path.join(destinationFilePath, draggedFileParse.base);
+            fs.rename(draggedFilePath, newName, function(err) {
+                if (err) {
+                    /* eslint-disable */
+                    console.log(`Error moving file ${draggedFilePath} to ${destinationFilePath}, reason:`);
+                    console.log(err);
+                    /* esling-enable */
+                    return;
+                }
+                props.forceRefresh();
+            })
+        }
     }
 };
 
-@DropTarget(DraggableTypes.FILE, columnFileItemTarget, (connect, monitor) => ({
+@DropTarget([DraggableTypes.FILE, NativeTypes.FILE], columnFileItemTarget, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
     isOverCurrent: monitor.isOver({
         shallow: true

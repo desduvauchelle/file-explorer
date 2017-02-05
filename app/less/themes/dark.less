@@ -1,89 +1,88 @@
-.dark{
+.dark {
     @color-bg: #333;
     @color-links: #65a51f;
     @color-text: #f1f1f1;
 
-    .full{
-        background: @color-bg;
+    .full {
         color: @color-text;
-    }
-    p, h1, h2, h3, label{
-        
+        background: @color-bg;
     }
 
-    a{
-       color: @color-links;
-       &:hover{
-           color: darken(@color-links,8%);
-       } 
+
+    a {
+        color: @color-links;
+        &:hover {
+            color: darken(@color-links,8%);
+        }
     }
-    .explorer{
+    .explorer {
         background: darken(@color-bg,12%);
-        
-        .columns-wrapper{
+
+        .columns-wrapper {
             background: @color-bg;
         }
-        .column{
+        .column {
             background: @color-bg;
-            
-            .column-hovered{
+
+            .column-hovered {
                 background: lighten(@color-bg,5%);
             }
-            &.favorites{
+            &.favorites {
                 background: darken(@color-bg,6%);
 
-                .is-over{
+                .is-over {
                     background: darken(@color-bg,12%);
                 }
             }
 
-            header{
+            header {
                 color: darken(@color-text,5%);
-                .right{
+                .right {
                     background: darken(@color-bg,6%);
                 }
             }
 
             section a {
                 color: @color-text;
-                &:hover, &.selected{
-                    background: lighten(@color-bg,8%);
+                &:hover,
+                &.selected {
                     color: @color-text;
-                }                
+                    background: lighten(@color-bg,8%);
+                }
             }
-            &.active section a.selected{
-                background: @color-links;
+            &.active section a.selected {
                 color: @color-text;
+                background: @color-links;
             }
-            .file-hovered{
+            .file-hovered {
                 background: lighten(@color-bg,12%);
             }
         }
-        .column-preview h3{
+        .column-preview h3 {
             color: @color-text;
         }
-        .explorer-footer{
-            background: darken(@color-bg,12%);
+        .explorer-footer {
             color: @color-text;
+            background: darken(@color-bg,12%);
         }
     }
 
-    .modal-backdrop{
+    .modal-backdrop {
         background: @color-bg;
     }
 
     .modal-open .modal,
-    .columns-wrapper, 
-    .column{
-            @scroll-foreground: lighten(@color-bg,40%);
-            @scroll-background: #000;
+    .columns-wrapper,
+    .column {
+        @scroll-foreground: lighten(@color-bg,40%);
+        @scroll-background: #000;
 
-            &::-webkit-scrollbar-thumb {
-                background: @scroll-foreground !important;
-            }
+        &::-webkit-scrollbar-thumb {
+            background: @scroll-foreground !important;
+        }
 
-            &::-webkit-scrollbar-track {
-                background: darken(@color-bg,6%) !important;
-            }
+        &::-webkit-scrollbar-track {
+            background: darken(@color-bg,6%) !important;
+        }
     }
 }

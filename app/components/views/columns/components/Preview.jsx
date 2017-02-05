@@ -9,9 +9,10 @@ import Prism from "../../../../utils/prism"
 const previewTypes = {
     image: ['png', 'jpeg', 'jpg', 'gif', 'tiff', 'bmp', 'svg'],
     audioVisual: ['wav', 'mp3', 'aac', 'mp4', 'ogg', 'm4r', 'mkv', 'wmv', 'mov', 'aiff', 'm4a', 'wma', 'avi'],
-    text: ['js', 'html', 'css', 'jsx', 'txt', 'md', 'yml', 'json', 'plist', 'sh'],
-    pdf: ['pdf']
+    text: ['js', 'html', 'css', 'jsx', 'txt', 'md', 'yml', 'json', 'plist', 'sh']
 }
+//   pdf: ['pdf'],
+//     psd: ['psd']
 
 export default class Preview extends Component {
     static propTypes = {
@@ -50,8 +51,8 @@ export default class Preview extends Component {
                                                          selected={selected}
                                                          isColumnView={isColumnView}
                                                          previewModalIsOpen={previewModalIsOpen} />)}
-                {/*type === 'pdf' && (<PDFViewer path={path}
-                                                                               selected={selected} />)*/}
+                {/* type === 'psd' && (<PSDViewer path={path} selected={selected} />) */}
+                {/*type === 'pdf' && (<PDFViewer path={path} selected={selected} />)*/}
             </div>
             );
     }
@@ -148,6 +149,55 @@ class Image extends Component {
         const {path, selected} = this.props;
         this.filePath = Path.join(path, selected);
         return (<img src={this.filePath}
+                     className="image" />);
+    }
+}
+
+class PSDViewer extends Component {
+    static propTypes = {
+        path: PropTypes.string.isRequired,
+        selected: PropTypes.string.isRequired
+    }
+    constructor(props) {
+        super(props);
+        const {path, selected} = this.props;
+        const filePath = Path.join(path, selected);
+        this.state = {
+            imgToPng: null,
+            filePath: filePath
+        }
+    }
+
+    componenrDidMount() {
+        this._psdToImg();
+    }
+    componentWillReceiveProps(newProps) {
+        const {path, selected} = newProps;
+        const filePath = Path.join(path, selected);
+        if (filePath !== this.state.filePath) {
+            this.setState({
+                filePath: filePath
+            });
+            this._psdToImg();
+        }
+    }
+
+    _psdToImg() {
+        PSD.open(this.state.filePath).then((psd) => {
+            this.setState({
+                imgToPng: psd.image.toPng()
+            });
+        });
+    }
+
+    render() {
+        const {imgToPng} = this.state;
+        if (!imgToPng) {
+            return (<p>
+                        Loading...
+                    </p>);
+        }
+        return (<img src={imgToPng}
                      className="image" />);
     }
 }
