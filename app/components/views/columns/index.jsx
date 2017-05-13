@@ -51,9 +51,9 @@ export default class Columns extends Component {
     }
 
     render() {
-        const {actions, state} = this.props;
-        const {linkAdd, sectionAdd} = actions.favorite;
-        let {path, selected} = this.props.location.query;
+        const { actions, state } = this.props;
+        const { linkAdd, sectionAdd } = actions.favorite;
+        let { path, selected } = this.props.location.query;
         // Get the root of hard drive (in mac, it's / whereas in windows it's C:\\)
         this.rootPath = Path.parse(__dirname).root;
         path = path || this.rootPath;
@@ -69,6 +69,11 @@ export default class Columns extends Component {
             });
         } else {
             let directories = path.split(Path.sep);
+            if (path.indexOf("C:\\") !== -1) {
+                // Do something special for windows
+                directories[0] = "C:\\";
+                delete directories[1];
+            }
             let currentPath = "";
             directories.map(directory => {
                 if (directory === "") {
@@ -107,7 +112,7 @@ export default class Columns extends Component {
             } catch (ex) {
                 /* eslint-disable */
                 console.log(`Failed to analyze: ${filePath}, Caused by: ${ex}`);
-            /* esling-enable */
+                /* esling-enable */
             }
         }
 
@@ -115,70 +120,70 @@ export default class Columns extends Component {
         const hokeyHandlers = handlers(this, list, path, selected);
         return (
             <HotKeys keyMap={keyMap}
-                     handlers={hokeyHandlers}>
+                handlers={hokeyHandlers}>
                 <Helmet title={selected} />
                 <div className="explorer">
                     <div className="explorer-header">
                         <Header path={path}
-                                selected={selected}
-                                hokeyHandlers={hokeyHandlers}
-                                linkAdd={linkAdd}
-                                sectionAdd={sectionAdd}
-                                actions={actions}
-                                goToSettings={this._goToSettings} />
+                            selected={selected}
+                            hokeyHandlers={hokeyHandlers}
+                            linkAdd={linkAdd}
+                            sectionAdd={sectionAdd}
+                            actions={actions}
+                            goToSettings={this._goToSettings} />
                     </div>
                     <div className="column favorites">
                         <Favorites selectPath={this._selectPath}
-                                   {...this.props}/>
+                            {...this.props} />
                     </div>
                     <div className="columns-wrapper"
-                         ref="columns">
+                        ref="columns">
                         {list.map((directory, i) => {
-                             return (
-                                 <div className={directory.isCurrent ? 'column active' : 'column'}
-                                      key={directory.path + i}>
-                                     <Column directory={directory}
-                                             path={path}
-                                             selectPath={this._selectPath}
-                                             forceRefresh={this.forceRefresh.bind(this)}
-                                             selected={selected} />
-                                 </div>
-                             )
-                         })}
+                            return (
+                                <div className={directory.isCurrent ? 'column active' : 'column'}
+                                    key={directory.path + i}>
+                                    <Column directory={directory}
+                                        path={path}
+                                        selectPath={this._selectPath}
+                                        forceRefresh={this.forceRefresh.bind(this)}
+                                        selected={selected} />
+                                </div>
+                            )
+                        })}
                         {showFileInfo && (
-                         <div className="column column-preview">
-                             <Preview path={path}
-                                      isColumnView={true}
-                                      selected={selected}
-                                      previewModalIsOpen={this.state.previewModalIsOpen} />
-                             <h3>{selected}</h3>
-                         </div>
-                         )}
+                            <div className="column column-preview">
+                                <Preview path={path}
+                                    isColumnView={true}
+                                    selected={selected}
+                                    previewModalIsOpen={this.state.previewModalIsOpen} />
+                                <h3>{selected}</h3>
+                            </div>
+                        )}
                     </div>
                     <div className="explorer-footer">
                         {selected ? Path.join(path, selected) : path}
                     </div>
                     {/* MODALS */}
                     <PreviewModal previewModalIsOpen={this.state.previewModalIsOpen}
-                                  onHide={() => {
-                                              this.setState({
-                                                  previewModalIsOpen: false
-                                              })
-                                          }}
-                                  path={path}
-                                  selected={selected} />
+                        onHide={() => {
+                            this.setState({
+                                previewModalIsOpen: false
+                            })
+                        }}
+                        path={path}
+                        selected={selected} />
                     <FileItemRenameModal isOpen={this.state.renameModalIsOpen}
-                                         onHide={() => {
-                                                     this.setState({
-                                                         renameModalIsOpen: false
-                                                     })
-                                                 }}
-                                         forceRefresh={this.forceRefresh.bind(this)}
-                                         path={path}
-                                         selected={selected} />
+                        onHide={() => {
+                            this.setState({
+                                renameModalIsOpen: false
+                            })
+                        }}
+                        forceRefresh={this.forceRefresh.bind(this)}
+                        path={path}
+                        selected={selected} />
                 </div>
             </HotKeys>
-            );
+        );
     }
 
     forceRefresh() {
