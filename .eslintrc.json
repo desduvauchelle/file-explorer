@@ -6,7 +6,8 @@
         "sourceType": "module",
         "ecmaFeatures": {
             "jsx": true,
-            "experimentalObjectRestSpread": true
+            "experimentalObjectRestSpread": true,
+            "experimentalDecorators": true
         }
     },
     "plugins": [
@@ -16,7 +17,8 @@
     "ecmaFeatures": {
         "jsx": true,
         "classes": true,
-        "experimentalObjectRestSpread": true
+        "experimentalObjectRestSpread": true,
+            "experimentalDecorators": true
     },
     "extends": [
         "eslint:recommended",
@@ -67,6 +69,7 @@
             "after": true
         } ],
         "no-semi": 0,
-        "react/no-find-dom-node": 1
+        "react/no-find-dom-node": 1,
+        "experimentalDecorators": 0
     }
 }

@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import fs from 'fs'
 import Helmet from 'react-helmet'
 // Plugins
@@ -55,29 +56,24 @@ export default class Columns extends Component {
         const { linkAdd, sectionAdd } = actions.favorite;
         let { path, selected } = this.props.location.query;
         // Get the root of hard drive (in mac, it's / whereas in windows it's C:\\)
-        this.rootPath = Path.parse(__dirname).root;
-        path = path || this.rootPath;
+        let rootPath = Path.sep;
+
         // Get list of the directories and it's children
         let list = [];
-        if (!path || path === this.rootPath) {
-            let dirListing = this._getDirectoryListing(this.rootPath);
+        if (!path || path === rootPath) {
+            let dirListing = this._getDirectoryListing(rootPath);
             list.push({
-                path: this.rootPath,
+                path: rootPath,
                 files: dirListing.files,
                 error: dirListing.error,
                 isCurrent: true
             });
         } else {
             let directories = path.split(Path.sep);
-            if (path.indexOf("C:\\") !== -1) {
-                // Do something special for windows
-                directories[0] = "C:\\";
-                delete directories[1];
-            }
             let currentPath = "";
             directories.map(directory => {
                 if (directory === "") {
-                    currentPath = this.rootPath
+                    currentPath = rootPath
                 } else {
                     currentPath = Path.join(currentPath, directory)
                 }

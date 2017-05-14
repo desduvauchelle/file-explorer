@@ -8,7 +8,7 @@ export default {
             results = fs.statSync(file);
         } catch (ex) {
             /* eslint-disable */
-            console.log(`Failed to analyze: ${file}, Caused by: ${ex}`);
+            // console.log(`Failed to analyze: ${file}, Caused by: ${ex}`);
         /* eslint-enable */
         }
         if (results) {

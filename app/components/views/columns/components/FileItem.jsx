@@ -1,6 +1,8 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import Path from 'path'
 import { shell } from 'electron'
+import { spawn } from 'child_process'
 import { getInfo } from '../../../../utils/fileSystemTools.js'
 
 class FileItem extends Component {
@@ -29,15 +31,17 @@ class FileItem extends Component {
             }
             self.props.selectPath(self.fileParse.dir, self.fileParse.base);
         },
-        handleDoubleClick: (file = "") => {
-            shell.openItem(file)
-        },
-        handleDoubleClickFolder(file = "", isMacApp = false) {
-            if (isMacApp) {
-                shell.openItem(file);
+        handleDoubleClick: (file = "", self) => {
+            if(self, self.isDirectory){
+               if (self.isMacApp) {
+                    shell.openItem(file);
+                    return;
+                }
+                // spawn('C:\\Program Files (x86)\\Microsoft VS Code\\Code.exe',[file])
+                shell.showItemInFolder(file);  
                 return;
             }
-            shell.showItemInFolder(file);
+            shell.openItem(file)
         },
         handleRemoveFavorite: () => {
         }
@@ -64,7 +68,7 @@ class FileItem extends Component {
 
         return (
             <a onClick={handleClick.bind(this, this)}
-               onDoubleClick={!this.isDirectory ? handleDoubleClick.bind(this, file) : handleDoubleClickFolder.bind(this, file, this.isMacApp)}
+               onDoubleClick={handleDoubleClick.bind(this, file, this)}
                className={`${isSelected ? 'selected' : ''} ${isDragging ? 'dragging' : ''}`}><i className={this.isDirectory ? `icon-file-directory ${isSelected ? 'open' : ''} left` : 'icon-file left'}
                                                                                                                  data-name={this.displayName} />
                 {this.displayName}

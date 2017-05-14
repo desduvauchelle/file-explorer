@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import ColumnFileItem from './ColumnFileItem'
 import Path from 'path'
 import { DropTarget } from 'react-dnd'
@@ -57,7 +58,7 @@ export default class Column extends Component {
     static propTypes = {
         directory: PropTypes.object.isRequired,
         selectPath: PropTypes.func.isRequired,
-        path: PropTypes.string.isRequired,
+        path: PropTypes.string,
         selected: PropTypes.string,
         forceRefresh: PropTypes.func,
         connectDropTarget: PropTypes.func.isRequired,
@@ -77,16 +78,8 @@ export default class Column extends Component {
             }}
                  className={isOverCurrent ? 'column-hovered' : ''}>
                 <section>
-                    {directory.error && (
-                     <p className="alert alert-danger">
-                         {directory.error}
-                     </p>
-                     )}
-                    {directory.files.length === 0 && !directory.error && (
-                     <p className="alert alert-info">
-                         No files
-                     </p>
-                     )}
+                    {directory.error && <p className="alert alert-danger">{directory.error}</p>}
+                    {(directory.files.length === 0 && !directory.error) && <p className="alert alert-info">No files</p>}
                     {directory.files.map((file) => {
                          const currentPath = selected ? Path.join(path, selected) : path;
                          const filePath = Path.join(directory.path, file);
