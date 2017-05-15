@@ -38,7 +38,7 @@ export default class Column extends Component {
         return (
             <div>
                 <div className="favorite">
-                    <a className="logo"><img src={require('../../../../../resources/icons/256x256.png')} /></a>
+                    <a className="logo"><img src={require('alias-resources/icons/256x256.png')} /></a>
                     <OverlayTrigger placement="bottom"
                                     overlay={(<Tooltip id="settings">
                                                   <strong>Settings</strong>

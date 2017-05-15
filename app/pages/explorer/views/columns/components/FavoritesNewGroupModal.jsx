@@ -59,7 +59,7 @@ export default class FavoritesNewGroupModal extends Component {
 
     _onSubmitForm(e) {
         e.preventDefault();
-        this.props.actions.favorite.sectionAdd({
+        this.props.actions.favorites.sectionAdd({
             name: this.state.newGroupName
         });
         this.setState({

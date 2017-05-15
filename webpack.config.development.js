@@ -68,14 +68,16 @@ export default validate(merge(baseConfig, {
 
     plugins: [
         // https://webpack.github.io/docs/hot-module-replacement-with-webpack.html
-        new webpack.HotModuleReplacementPlugin( ),
+        new webpack.HotModuleReplacementPlugin(),
 
         // “If you are using the CLI, the webpack process will not exit with an error code by enabling this plugin.”
         // https://github.com/webpack/docs/wiki/list-of-plugins#noerrorsplugin
-        new webpack.NoErrorsPlugin( ),
+        new webpack.NoErrorsPlugin(),
 
         // NODE_ENV should be production so that modules do not perform certain development checks
-        new webpack.DefinePlugin({'process.env.NODE_ENV': JSON.stringify( 'development' )})
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify('development')
+        })
     ],
 
     // https://github.com/chentsulin/webpack-target-electron-renderer#how-this-module-works

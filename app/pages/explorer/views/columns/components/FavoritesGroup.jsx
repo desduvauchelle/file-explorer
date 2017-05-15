@@ -63,7 +63,7 @@ const favoriteGroupTarget = {
             case DraggableTypes.FAVORITE_LINK: {
                 if (props.favorite.id !== item.favoriteId) {
                     props.addFavorite(props.favorite.id, item.file);
-                    props.actions.favorite.linkRemove(item.favoriteId, item.fileId);
+                    props.actions.favorites.linkRemove(item.favoriteId, item.fileId);
                 }
                 break;
             }
@@ -86,7 +86,6 @@ export default class FavoritesGroup extends Component {
         favorite: PropTypes.object.isRequired,
         actions: PropTypes.object.isRequired,
         state: PropTypes.object.isRequired,
-        selectPath: PropTypes.func.isRequired,
         reorderFavoritesGroup: PropTypes.func.isRequired,
         addFavorite: PropTypes.func.isRequired,
         // For drag and drop
@@ -97,7 +96,7 @@ export default class FavoritesGroup extends Component {
         isOver: PropTypes.bool.isRequired
     }
     render() {
-        const {isDragging, connectDragSource, connectDropTarget, favorite, selectPath, isOver, actions} = this.props;
+        const {isDragging, connectDragSource, connectDropTarget, favorite, isOver, actions} = this.props;
 
         return connectDragSource(connectDropTarget(
             <div style={{
@@ -126,8 +125,7 @@ export default class FavoritesGroup extends Component {
                                                index={k}
                                                favorite={favorite}
                                                file={link.link}
-                                               fileId={link.id}
-                                               selectPath={selectPath} />
+                                               fileId={link.id} />
                              );
                      })}
                 </section>
@@ -163,7 +161,7 @@ export default class FavoritesGroup extends Component {
             });
         }
 
-        this.props.actions.favorite.sectionEdit(favoriteId, newLinks);
+        this.props.actions.favorites.sectionEdit(favoriteId, newLinks);
     }
 
     _removeGroup(favorite) {
@@ -181,7 +179,7 @@ export default class FavoritesGroup extends Component {
     }
 
     _toggleVisibility(favorite) {
-        this.props.actions.favorite.sectionEdit(favorite.id, {
+        this.props.actions.favorites.sectionEdit(favorite.id, {
             isOpen: !favorite.isOpen
         })
     }

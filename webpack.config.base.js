@@ -45,7 +45,12 @@ export default validate({
                 'jam', 'main'
             ],
             'main'
-        ]
+        ],
+        alias: {
+            'alias-redux': path.resolve(__dirname, './app/redux'),
+            'alias-resources': path.resolve(__dirname, './resources'),
+            'alias-utils': path.resolve(__dirname, './app/utils')
+        }
     },
 
     plugins: [],

@@ -64,7 +64,6 @@ const favoriteFileItemTarget = {
 export default class FavoriteFileItem extends Component {
     static propTypes = {
         file: PropTypes.string.isRequired,
-        selectPath: PropTypes.func.isRequired,
         actions: PropTypes.object.isRequired,
         favorite: PropTypes.object.isRequired,
         fileId: PropTypes.string.isRequired,
@@ -76,18 +75,15 @@ export default class FavoriteFileItem extends Component {
         isDragging: PropTypes.bool.isRequired
     }
     render() {
-        const {file, selectPath, actions, favorite, fileId} = this.props;
+        const {file, actions, favorite, fileId} = this.props;
         const {isDragging, connectDragSource, connectDropTarget} = this.props;
 
         return connectDragSource(connectDropTarget(
             <div>
                 <FileItem file={file}
                           isSelected={false}
-                          selectPath={selectPath}
                           isFavorite={true}
-                          handleRemoveFavorite={() => {
-                                                    actions.favorite.linkRemove(favorite.id, fileId);
-                                                }}
+                          handleRemoveFavorite={() => actions.favorites.linkRemove(favorite.id, fileId)}
                           isDragging={isDragging} />
             </div>
         ));

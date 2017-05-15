@@ -1,29 +1,71 @@
-import React from 'react';
-import { render } from 'react-dom';
-import { Provider } from 'react-redux';
-import { Router, hashHistory } from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux';
-import routes from './routes';
-import configureStore from './store/configureStore';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { render } from 'react-dom'
+import Helmet from 'react-helmet'
+
+import { Provider } from 'react-redux'
+import configureStore from './redux/store'
+import ReduxBinder from 'alias-redux/ReduxBinder'
 import './app.global.less';
-// Local store into JSON file
+//
+// REDUX STORE AND STORAGE
+//
 import Storage from './utils/storage'
 import defaultSettings from './settings.default'
 const settings = new Storage({
-    // We'll call our data file 'user-preferences'
     configName: 'settings',
     defaults: defaultSettings
 });
-console.log( settings );
-const store = configureStore(settings.get( 'state' ));
-const history = syncHistoryWithStore( hashHistory, store );
-
-store.subscribe(( ) => {
+console.log(settings);
+const store = configureStore(settings.get('state'));
+store.subscribe(() => {
     // Update local storage store.getState()
-    settings.set('state', store.getState( ))
+    settings.set('state', store.getState())
 });
 
-render(
-    <Provider store={store}>
-    <Router history={history} routes={routes}/>
-</Provider>, document.getElementById( 'root' ));
+//
+// PAGES
+//
+import ExplorerPage from './pages/ExplorerPage';
+import SettingsPage from './pages/SettingsPage';
+//
+// APP
+//
+class App extends Component {
+    static propTypes = {
+        state: PropTypes.object
+    }
+
+    componentDidMount() {
+        let body = document.body;
+        body.className = this.props.state.settings.theme;
+    }
+    componentWillReceiveProps(nextProps) {
+        let body = document.body;
+        body.className = nextProps.state.settings.theme;
+    }
+
+    render() {
+        const {page} = this.props.state.navigation
+        switch (page) {
+            case "settings":
+                return <SettingsPage />
+            default:
+                return <ExplorerPage />
+
+        }
+    }
+}
+const AppWrapper = ReduxBinder(App, {
+    state: ['navigation', 'settings']
+})
+//
+// INITIAL RENDER
+//
+render(<Provider store={store}>
+           <div className="full">
+               <Helmet titleTemplate="FileExplorer - %s"
+                       defaultTitle="FileExplorer" />
+               <AppWrapper />
+           </div>
+       </Provider>, document.getElementById('root'));

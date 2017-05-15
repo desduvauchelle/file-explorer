@@ -5,7 +5,7 @@ import ReactPlayer from 'react-player'
 import fs from 'fs'
 // import PDF from 'react-pdf'
 // import PSD from 'psd'
-import Prism from "../../../../utils/prism"
+import Prism from "alias-utils/prism"
 
 const previewTypes = {
     image: ['png', 'jpeg', 'jpg', 'gif', 'tiff', 'bmp', 'svg'],

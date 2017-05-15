@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import DraggableTypes from './DraggableTypes'
 import FileItem from './FileItem'
-import { getInfo } from '../../../../utils/fileSystemTools.js'
+import { getInfo } from 'alias-utils/fileSystemTools.js'
 import fs from 'fs'
 import Path from 'path'
 // Drag and drop

@@ -95,7 +95,14 @@ app.on('ready', async() => {
                     click() {
                         mainWindow.inspectElement(x, y);
                     }
-                }]).popup(mainWindow);
+                },
+                {
+                    label: 'Hello :P',
+                    click() {
+                        console.log(e, props);
+                    }
+                }
+            ]).popup(mainWindow);
         });
     }
 

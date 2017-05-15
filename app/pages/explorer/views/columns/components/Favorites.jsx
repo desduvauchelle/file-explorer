@@ -2,21 +2,16 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import update from 'react/lib/update'
 import FavoritesGroup from './FavoritesGroup'
+import ReduxBinder from 'alias-redux/ReduxBinder'
 
-export default class Favorites extends Component {
+class Favorites extends Component {
     static propTypes = {
-        selectPath: PropTypes.func.isRequired,
         state: PropTypes.object.isRequired,
-        actions: PropTypes.object.isRequired,
-        moveCard: PropTypes.func
-    }
-
-    constructor(props) {
-        super(props);
+        actions: PropTypes.object.isRequired
     }
 
     render() {
-        const {state, actions, selectPath} = this.props;
+        const {state, actions} = this.props;
         const favorites = state.favorites;
 
         return (
@@ -29,8 +24,7 @@ export default class Favorites extends Component {
                                          actions={actions}
                                          state={state}
                                          reorderFavoritesGroup={this._reorderFavoritesGroup.bind(this)}
-                                         addFavorite={this._addFavorite.bind(this)}
-                                         selectPath={selectPath} />
+                                         addFavorite={this._addFavorite.bind(this)} />
                      )
                  })}
             </div>
@@ -48,11 +42,15 @@ export default class Favorites extends Component {
                 ]
             }
         });
-        this.props.actions.favorite.sectionReorder(newFavorites.favorites);
+        this.props.actions.favorites.sectionReorder(newFavorites.favorites);
     }
 
     _addFavorite(groupId, filePath) {
-        this.props.actions.favorite.linkAdd(groupId, filePath);
+        this.props.actions.favorites.linkAdd(groupId, filePath);
     }
 
 }
+
+export default ReduxBinder(Favorites, {
+    state: ['favorites', 'fileExplorer']
+})

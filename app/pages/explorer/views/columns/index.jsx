@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import fs from 'fs'
 import Helmet from 'react-helmet'
+import ReduxBinder from 'alias-redux/ReduxBinder'
 // Plugins
 import { HotKeys } from 'react-hotkeys'
 import Path from 'path'
@@ -17,14 +18,13 @@ import Preview from './components/Preview'
 import PreviewModal from './components/PreviewModal'
 import FileItemRenameModal from './components/FileItemRenameModal'
 // Settings
-import { keyMap, handlers } from '../../../utils/keymapping'
+import { keyMap, handlers } from 'alias-utils/keymapping'
+import fileSystemTools from 'alias-utils/fileSystemTools'
 
 @DragDropContext(HTML5Backend)
-export default class Columns extends Component {
+class Columns extends Component {
 
     static propTypes = {
-        location: PropTypes.object.isRequired,
-        router: PropTypes.object.isRequired,
         state: PropTypes.object.isRequired,
         actions: PropTypes.object.isRequired
     }
@@ -52,16 +52,20 @@ export default class Columns extends Component {
     }
 
     render() {
-        const { actions, state } = this.props;
-        const { linkAdd, sectionAdd } = actions.favorite;
-        let { path, selected } = this.props.location.query;
+        const {actions, state} = this.props;
+
+        const {linkAdd, sectionAdd} = actions.favorites;
+        let {path, selected} = state.fileExplorer;
+        const showHidden = state.settings.showHidden;
         // Get the root of hard drive (in mac, it's / whereas in windows it's C:\\)
         let rootPath = Path.sep;
-
+        let footerPath = ''
+        path = path || rootPath;
         // Get list of the directories and it's children
         let list = [];
+        let directories = [];
         if (!path || path === rootPath) {
-            let dirListing = this._getDirectoryListing(rootPath);
+            let dirListing = fileSystemTools.getDirectoryListing(rootPath, showHidden);
             list.push({
                 path: rootPath,
                 files: dirListing.files,
@@ -69,7 +73,7 @@ export default class Columns extends Component {
                 isCurrent: true
             });
         } else {
-            let directories = path.split(Path.sep);
+            directories = path.split(Path.sep);
             let currentPath = "";
             directories.map(directory => {
                 if (directory === "") {
@@ -78,7 +82,7 @@ export default class Columns extends Component {
                     currentPath = Path.join(currentPath, directory)
                 }
                 currentPath = Path.normalize(currentPath);
-                let dirListing = this._getDirectoryListing(currentPath);
+                let dirListing = fileSystemTools.getDirectoryListing(currentPath, showHidden);
                 let isCurrent = (selected && path === currentPath) || (!selected && Path.join(path, '..') === currentPath);
 
                 list.push({
@@ -95,7 +99,7 @@ export default class Columns extends Component {
             try {
                 const isDirectory = fs.statSync(filePath).isDirectory();
                 if (isDirectory && selected.indexOf('.app') === -1) {
-                    let dirListing = this._getDirectoryListing(filePath);
+                    let dirListing = fileSystemTools.getDirectoryListing(filePath, showHidden);
                     list.push({
                         path: filePath,
                         files: dirListing.files,
@@ -106,9 +110,7 @@ export default class Columns extends Component {
                     showFileInfo = true;
                 }
             } catch (ex) {
-                /* eslint-disable */
-                console.log(`Failed to analyze: ${filePath}, Caused by: ${ex}`);
-                /* esling-enable */
+                console.log(`Failed to analyze: ${filePath}, Caused by: ${ex}`); // eslint-disable-line
             }
         }
 
@@ -116,116 +118,98 @@ export default class Columns extends Component {
         const hokeyHandlers = handlers(this, list, path, selected);
         return (
             <HotKeys keyMap={keyMap}
-                handlers={hokeyHandlers}>
+                     handlers={hokeyHandlers}>
                 <Helmet title={selected} />
                 <div className="explorer">
                     <div className="explorer-header">
                         <Header path={path}
-                            selected={selected}
-                            hokeyHandlers={hokeyHandlers}
-                            linkAdd={linkAdd}
-                            sectionAdd={sectionAdd}
-                            actions={actions}
-                            goToSettings={this._goToSettings} />
+                                selected={selected}
+                                hokeyHandlers={hokeyHandlers}
+                                linkAdd={linkAdd}
+                                sectionAdd={sectionAdd}
+                                actions={actions}
+                                goToSettings={this._goToSettings} />
                     </div>
                     <div className="column favorites">
-                        <Favorites selectPath={this._selectPath}
-                            {...this.props} />
+                        <Favorites />
                     </div>
                     <div className="columns-wrapper"
-                        ref="columns">
+                         ref="columns">
                         {list.map((directory, i) => {
-                            return (
-                                <div className={directory.isCurrent ? 'column active' : 'column'}
-                                    key={directory.path + i}>
-                                    <Column directory={directory}
-                                        path={path}
-                                        selectPath={this._selectPath}
-                                        forceRefresh={this.forceRefresh.bind(this)}
-                                        selected={selected} />
-                                </div>
-                            )
-                        })}
+                             return (
+                                 <div className={directory.isCurrent ? 'column active' : 'column'}
+                                      key={directory.path + i}>
+                                     <Column directory={directory}
+                                             path={path}
+                                             selectPath={this._selectPath}
+                                             forceRefresh={this.forceRefresh.bind(this)}
+                                             selected={selected} />
+                                 </div>
+                             )
+                         })}
                         {showFileInfo && (
-                            <div className="column column-preview">
-                                <Preview path={path}
-                                    isColumnView={true}
-                                    selected={selected}
-                                    previewModalIsOpen={this.state.previewModalIsOpen} />
-                                <h3>{selected}</h3>
-                            </div>
-                        )}
+                         <div className="column column-preview">
+                             <Preview path={path}
+                                      isColumnView={true}
+                                      selected={selected}
+                                      previewModalIsOpen={this.state.previewModalIsOpen} />
+                             <h3>{selected}</h3>
+                         </div>
+                         )}
                     </div>
                     <div className="explorer-footer">
-                        {selected ? Path.join(path, selected) : path}
+                        {directories.map((dir, i) => {
+                             if (i === 0) {
+                                 footerPath = "/"
+                             }
+                             if (dir === '.') {
+                                 return null
+                             }
+                             let display = <span key={i}><a onClick={this._selectPath.bind(this, footerPath, dir)}>{dir}</a>{(i < directories.length) ? ' / ' : ''}</span>
+                             footerPath = Path.join(footerPath, dir)
+                             return display
+                         })}
+                        {selected ? `${selected}` : ''}
                     </div>
                     {/* MODALS */}
                     <PreviewModal previewModalIsOpen={this.state.previewModalIsOpen}
-                        onHide={() => {
-                            this.setState({
-                                previewModalIsOpen: false
-                            })
-                        }}
-                        path={path}
-                        selected={selected} />
+                                  onHide={() => this.setState({
+                                              previewModalIsOpen: false
+                                          })}
+                                  path={path}
+                                  selected={selected} />
                     <FileItemRenameModal isOpen={this.state.renameModalIsOpen}
-                        onHide={() => {
-                            this.setState({
-                                renameModalIsOpen: false
-                            })
-                        }}
-                        forceRefresh={this.forceRefresh.bind(this)}
-                        path={path}
-                        selected={selected} />
+                                         onHide={() => this.setState({
+                                                     renameModalIsOpen: false
+                                                 })}
+                                         forceRefresh={this.forceRefresh.bind(this)}
+                                         path={path}
+                                         selected={selected} />
                 </div>
             </HotKeys>
-        );
+            );
     }
 
     forceRefresh() {
         this.forceUpdate();
     }
 
-    _getDirectoryListing(path) {
-        try {
-            let files = fs.readdirSync(path) || [];
-            if (!this.props.state.view.showHidden) {
-                files = files.filter(file => file.charAt(0) !== '.');
-            }
-            return {
-                files: files.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
-            };
-        } catch (ex) {
-            console.log(`Failed to list directory files. path=${path}, caused by: ${ex}`);
-            return {
-                files: [],
-                error: "Permission denied"
-            };
-        }
-    }
-
     _selectPath = (path = '/', selected = null) => {
         // If no selected, select the first if it's a directory
         if (!selected) {
-            const currentDirectory = this._getDirectoryListing(path);
+            const currentDirectory = fileSystemTools.getDirectoryListing(path, this.props.state.settings.showHidden);
             if (currentDirectory.files.length > 0) {
                 selected = currentDirectory.files[0];
             }
         }
-
-        this.props.router.replace({
-            pathname: '/',
-            query: {
-                path: Path.normalize(path),
-                selected: selected
-            }
-        })
+        this.props.actions.fileExplorer.goTo(Path.normalize(path), selected)
     }
 
     _goToSettings = () => {
-        this.props.router.replace({
-            pathname: '/settings'
-        })
+        this.props.actions.navigation.goToPage('settings')
     }
 }
 
+export default ReduxBinder(Columns, {
+    state: ['fileExplorer', 'settings']
+})
