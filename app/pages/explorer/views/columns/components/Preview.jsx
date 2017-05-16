@@ -113,6 +113,9 @@ class Text extends Component {
             case 'md':
                 fileExtension = 'markdown';
                 break;
+            case 'hbs':
+                fileExtension = 'html';
+                break;
         }
         if (Prism.languages[fileExtension]) {
             text = Prism.highlight(text, Prism.languages[fileExtension]);
