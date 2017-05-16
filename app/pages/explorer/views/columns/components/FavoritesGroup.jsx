@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import DraggableTypes from './DraggableTypes'
 import FavoriteFileItem from './FavoritesFileItem'
-import swal from 'sweetalert2'
 import update from 'react/lib/update'
 // Drag and drop
 import { DragSource, DropTarget } from 'react-dnd'
@@ -165,17 +164,9 @@ export default class FavoritesGroup extends Component {
     }
 
     _removeGroup(favorite) {
-        const {sectionRemove} = this.props.actions.favorite;
-        swal({
-            title: "Are you sure?",
-            text: "You will not be able to undo this",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Yes, delete it!"
-        }).then(function() {
-            sectionRemove(favorite.id);
-        });
+        if (confirm("Are you sure you want to delete this group and it's links?")) {
+            this.props.actions.favorites.sectionRemove(favorite.id)
+        }
     }
 
     _toggleVisibility(favorite) {

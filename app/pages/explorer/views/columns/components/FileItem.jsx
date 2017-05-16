@@ -113,6 +113,7 @@ class FileItem extends Component {
                 {(!isFavorite && (this.isDirectory && !this.isMacApp)) && (<i className="fa fa-caret-right right" />)}
                 {isFavorite && (<i onClick={(e) => {
                                  e.stopPropagation();
+                                 e.preventDefault();
                                  handleRemoveFavorite();
                              }}
                                    className="fa fa-trash-o right favorite-remove" />)}

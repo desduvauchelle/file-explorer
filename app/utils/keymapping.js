@@ -1,5 +1,4 @@
 import Path from 'path'
-import swal from 'sweetalert2'
 import { shell } from 'electron'
 import fs from 'fs'
 
@@ -20,27 +19,12 @@ export default {
         return {
             delete: (e) => {
                 e.preventDefault();
-                swal({
-                    title: "Are you sure?",
-                    text: "You will not be able to recover this file!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Yes, delete it!"
-                }).then(function() {
+                if (confirm("Are you sure you want to delete this file?")) {
                     let fullPath = selected ? Path.join(path, selected) : path;
 
                     shell.moveItemToTrash(fullPath);
                     self._selectPath(selected ? path : Path.join(path, '..'));
-                    swal({
-                        title: "File deleted",
-                        text: "Your file has been deleted",
-                        timer: 1000,
-                        showConfirmButton: true,
-                        type: 'success'
-                    });
-                });
-
+                }
             },
             rename: (e) => {
                 e.preventDefault();
