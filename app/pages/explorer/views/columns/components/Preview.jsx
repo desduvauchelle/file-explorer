@@ -10,7 +10,7 @@ import Prism from "alias-utils/prism"
 const previewTypes = {
     image: ['png', 'jpeg', 'jpg', 'gif', 'tiff', 'bmp', 'svg'],
     audioVisual: ['wav', 'mp3', 'aac', 'mp4', 'ogg', 'm4r', 'mkv', 'wmv', 'mov', 'aiff', 'm4a', 'wma', 'avi'],
-    text: ['js', 'html', 'css', 'jsx', 'txt', 'md', 'yml', 'json', 'plist', 'sh']
+    text: ['js', 'html', 'css', 'jsx', 'txt', 'md', 'yml', 'json', 'plist', 'sh', 'less', 'hbs', 'scss', 'sass', 'coffee']
 }
 //   pdf: ['pdf'],
 //     psd: ['psd']

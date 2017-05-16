@@ -1,4 +1,5 @@
-import { app, BrowserWindow, Menu, shell } from 'electron'
+import { app, BrowserWindow, Menu, shell, clipboard } from 'electron'
+import { spawn } from 'child_process'
 import Storage from './utils/storage'
 
 let menu;
@@ -86,25 +87,76 @@ app.on('ready', async() => {
 
     if (process.env.NODE_ENV === 'development') {
         mainWindow.openDevTools();
-        mainWindow.webContents.on('context-menu', (e, props) => {
-            const {x, y} = props;
-
-            Menu.buildFromTemplate([
-                {
-                    label: 'Inspect element',
-                    click() {
-                        mainWindow.inspectElement(x, y);
-                    }
-                },
-                {
-                    label: 'Hello :P',
-                    click() {
-                        console.log(e, props);
-                    }
-                }
-            ]).popup(mainWindow);
-        });
     }
+    mainWindow.webContents.on('context-menu', (e, props) => {
+        const {x, y} = props;
+        let menuContent = []
+        if (process.env.NODE_ENV === 'development') {
+            menuContent.push({
+                label: 'Inspect element',
+                click() {
+                    mainWindow.inspectElement(x, y);
+                }
+            })
+            menuContent.push({
+                type: 'separator'
+            })
+        }
+        if (props.linkURL) {
+            let file = props.linkURL.replace('file://', '')
+            menuContent.push({
+                label: 'Copy path',
+                click() {
+                    clipboard.writeText(file)
+                }
+            })
+            menuContent.push({
+                type: 'separator'
+            })
+            menuContent.push({
+                label: 'Open',
+                click() {
+                    shell.openItem(file)
+                }
+            })
+            let openWith = []
+            let state = new Storage({
+                configName: 'settings',
+                defaults: defaultSettings
+            }).get('state')
+            if (state && state.settings && state.settings.apps) {
+                state.settings.apps.map(app => {
+                    openWith.push({
+                        label: app.name,
+                        click() {
+                            spawn(app.path, [file])
+                        }
+                    })
+                })
+            }
+            menuContent.push({
+                label: 'Open with',
+                submenu: openWith
+            })
+        }
+        if (process.env.NODE_ENV === 'development') {
+            menuContent.push({
+                type: 'separator'
+            })
+            menuContent.push({
+                label: 'Log content',
+                click() {
+                    console.log('=================================')
+                    console.log(e)
+                    console.log('=================================')
+                    console.log(props);
+                    console.log('=================================')
+                    console.log('=================================')
+                }
+            })
+        }
+        Menu.buildFromTemplate(menuContent).popup(mainWindow);
+    });
 
     if (process.platform === 'darwin') {
         template = [
@@ -214,6 +266,13 @@ app.on('ready', async() => {
                         }] :
                     [
                         {
+                            label: 'Reload',
+                            accelerator: 'Command+R',
+                            click() {
+                                mainWindow.webContents.reload();
+                            }
+                        },
+                        {
                             label: 'Toggle Full Screen',
                             accelerator: 'Ctrl+Command+F',
                             click() {
@@ -248,27 +307,16 @@ app.on('ready', async() => {
                     {
                         label: 'Learn More',
                         click() {
-                            shell.openExternal('http://electron.atom.io');
+                            shell.openExternal('http://explorer.hashup.io');
                         }
                     },
                     {
-                        label: 'Documentation',
+                        label: 'Report issues',
                         click() {
-                            shell.openExternal('https://github.com/atom/electron/tree/master/docs#readme');
+                            shell.openExternal('https://github.com/desduvauchelle/file-explorer/issues');
                         }
-                    },
-                    {
-                        label: 'Community Discussions',
-                        click() {
-                            shell.openExternal('https://discuss.atom.io/c/electron');
-                        }
-                    },
-                    {
-                        label: 'Search Issues',
-                        click() {
-                            shell.openExternal('https://github.com/atom/electron/issues');
-                        }
-                    }]
+                    }
+                ]
             }];
 
         menu = Menu.buildFromTemplate(template);
@@ -317,6 +365,13 @@ app.on('ready', async() => {
                         }] :
                     [
                         {
+                            label: '&Reload',
+                            accelerator: 'Ctrl+R',
+                            click() {
+                                mainWindow.webContents.reload();
+                            }
+                        },
+                        {
                             label: 'Toggle &Full Screen',
                             accelerator: 'F11',
                             click() {
@@ -330,27 +385,16 @@ app.on('ready', async() => {
                     {
                         label: 'Learn More',
                         click() {
-                            shell.openExternal('http://electron.atom.io');
+                            shell.openExternal('http://explorer.hashup.io');
                         }
                     },
                     {
-                        label: 'Documentation',
+                        label: 'Report issues',
                         click() {
-                            shell.openExternal('https://github.com/atom/electron/tree/master/docs#readme');
+                            shell.openExternal('https://github.com/desduvauchelle/file-explorer/issues');
                         }
-                    },
-                    {
-                        label: 'Community Discussions',
-                        click() {
-                            shell.openExternal('https://discuss.atom.io/c/electron');
-                        }
-                    },
-                    {
-                        label: 'Search Issues',
-                        click() {
-                            shell.openExternal('https://github.com/atom/electron/issues');
-                        }
-                    }]
+                    }
+                ]
             }];
         menu = Menu.buildFromTemplate(template);
         mainWindow.setMenu(menu);

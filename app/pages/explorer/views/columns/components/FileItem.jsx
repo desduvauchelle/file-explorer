@@ -98,10 +98,17 @@ class FileItem extends Component {
         const {file, isSelected, isFavorite, isDragging, handleClick, handleDoubleClick, handleRemoveFavorite} = this.props;
 
         return (
-            <a onClick={handleClick.bind(this, this)}
-               onDoubleClick={handleDoubleClick.bind(this, file, this)}
+            <a onClick={(e) => {
+                e.preventDefault();
+                handleClick(this);
+            }}
+               href={file}
+               onDoubleClick={(e) => {
+                                  e.preventDefault();
+                                  handleDoubleClick(file, this)
+                              }}
                className={`${isSelected ? 'selected' : ''} ${isDragging ? 'dragging' : ''}`}><i className={this.isDirectory ? `icon-file-directory ${isSelected ? 'open' : ''} left` : 'icon-file left'}
-                                                                                                                 data-name={this.displayName} />
+                                                                                                                                           data-name={this.displayName} />
                 {this.displayName}
                 {(!isFavorite && (this.isDirectory && !this.isMacApp)) && (<i className="fa fa-caret-right right" />)}
                 {isFavorite && (<i onClick={(e) => {
