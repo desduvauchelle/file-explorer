@@ -4,6 +4,7 @@
 // Action types
 //
 const GO_TO_PAGE = 'explorer/navigation/GO_TO_PAGE';
+
 //
 // REDUCER
 //

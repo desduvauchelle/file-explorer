@@ -12,62 +12,10 @@
 
     display: block;
 
-    @header-height: 45px;
     @footer-height: 20px;
     @favorite-width: 220px;
     @favorite-bg-color: rgb(235, 239, 243);
-    .explorer-header {
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
 
-        height: @header-height;
-        .favorite {
-            display: inline-block;
-            width: 220px;
-            height: @header-height;
-            .logo {
-                display: inline-block;
-                height: @header-height;
-                margin-right: w0px;
-                img {
-                    width: auto;
-                    height: 40px;
-                    padding-top: 7px;
-                    padding-left: 7px;
-                }
-            }
-        }
-        .actions,
-        .spacer-lg,
-        .spacer-md,
-        .spacer-sm {
-            line-height: @header-height;
-
-            display: inline-block;
-
-            vertical-align: top;
-        }
-        .actions {
-            font-size: 14px;
-
-            padding: 0 5px;
-            &.disabled,
-            &[disabled] {
-                color: lighten(#333, 20%);
-            }
-        }
-        .spacer-sm {
-            width: 20px;
-        }
-        .spacer-md {
-            width: 40px;
-        }
-        .spacer-lg {
-            width: 60px;
-        }
-    }
     .explorer-footer {
         font-size: 12px;
         line-height: @footer-height;
@@ -80,13 +28,15 @@
         padding: 0 5px;
 
         background: #e2e2e2;
+
+        -webkit-app-region: drag;
     }
 
 
 
     .columns-wrapper {
         position: absolute;
-        top: @header-height;
+        top: 0;
         right: 0;
         bottom: @footer-height;
         left: @favorite-width;
@@ -117,7 +67,7 @@
 
         &.favorites {
             position: absolute;
-            top: @header-height;
+            top: 0;
             bottom: @footer-height;
             left: 0;
 
@@ -140,6 +90,15 @@
             // When a section has an item over it. 
             .is-over {
                 background: #f1f1f1;
+            }
+
+            & > div > .new {
+                text-indent: 8px;
+
+                opacity: 0;
+            }
+            &:hover > div > .new {
+                opacity: 1;
             }
         }
 
@@ -210,6 +169,7 @@
                 cursor: default;
                 -webkit-user-select: none;
                 white-space: nowrap;
+                text-decoration: none !important;
                 text-overflow: ellipsis;
 
                 color: rgb(65, 65, 65);

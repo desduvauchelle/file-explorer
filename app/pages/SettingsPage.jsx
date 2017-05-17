@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import ReduxBinder from 'alias-redux/ReduxBinder'
 import Select from 'react-select'
-import Helmet from 'react-helmet'
 import fileSystemTools from 'alias-utils/fileSystemTools'
 import Path from 'path'
 
@@ -48,7 +47,6 @@ class SettingsPage extends Component {
 
         return (
             <div className="full settings">
-                <Helmet title="Settings" />
                 <div className="full-overflow">
                     <div className="container">
                         <div className="header">

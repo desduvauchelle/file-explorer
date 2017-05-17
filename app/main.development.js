@@ -1,24 +1,35 @@
-import { app, BrowserWindow, Menu, shell, clipboard } from 'electron'
-import { spawn } from 'child_process'
+import { app, BrowserWindow, Menu, ipcMain } from 'electron'
 import Storage from './utils/storage'
+import CustomMenu from './main/CustomMenu'
+import CustomContextMenu from './main/CustomContextMenu'
+import CustomIPC from './main/CustomIPC'
 
 let menu;
 let template;
 let mainWindow = null;
-
+//
+// INIT LOCAL STORAGE
+//
 import defaultSettings from './settings.default'
 const settings = new Storage(
     {
-        // We'll call our data file 'user-preferences'
         configName: 'settings',
         defaults: defaultSettings
     });
-
+//
+//
+//
+const customIPC = new CustomIPC()
+ipcMain.on('window-init', (event, arg) => {
+    customIPC.setEvent(event)
+})
+//
+//
+//
 if (process.env.NODE_ENV === 'production') {
     const sourceMapSupport = require('source-map-support'); // eslint-disable-line
     sourceMapSupport.install();
 }
-
 if (process.env.NODE_ENV === 'development') {
     require('electron-debug')(); // eslint-disable-line global-require
     const path = require('path'); // eslint-disable-line
@@ -26,6 +37,9 @@ if (process.env.NODE_ENV === 'development') {
     require('module').globalPaths.push(p); // eslint-disable-line
 }
 
+//
+//
+//
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();
@@ -56,7 +70,8 @@ app.on('ready', async() => {
             width: windowView.size.width,
             height: windowView.size.height,
             minWidth: 600,
-            minHeight: 600
+            minHeight: 600,
+            titleBarStyle: 'hidden'
         });
 
     mainWindow.on('resize', () => {
@@ -90,313 +105,17 @@ app.on('ready', async() => {
     }
     mainWindow.webContents.on('context-menu', (e, props) => {
         const {x, y} = props;
-        let menuContent = []
-        if (process.env.NODE_ENV === 'development') {
-            menuContent.push({
-                label: 'Inspect element',
-                click() {
-                    mainWindow.inspectElement(x, y);
-                }
-            })
-            menuContent.push({
-                type: 'separator'
-            })
-        }
-        if (props.linkURL) {
-            let file = props.linkURL.replace('file://', '')
-            menuContent.push({
-                label: 'Copy path',
-                click() {
-                    clipboard.writeText(file)
-                }
-            })
-            menuContent.push({
-                type: 'separator'
-            })
-            menuContent.push({
-                label: 'Open',
-                click() {
-                    shell.openItem(file)
-                }
-            })
-            let openWith = []
-            let state = new Storage({
-                configName: 'settings',
-                defaults: defaultSettings
-            }).get('state')
-            if (state && state.settings && state.settings.apps) {
-                state.settings.apps.map(app => {
-                    openWith.push({
-                        label: app.name,
-                        click() {
-                            spawn(app.path, [file])
-                        }
-                    })
-                })
-            }
-            menuContent.push({
-                label: 'Open with',
-                submenu: openWith
-            })
-        }
-        if (process.env.NODE_ENV === 'development') {
-            menuContent.push({
-                type: 'separator'
-            })
-            menuContent.push({
-                label: 'Log content',
-                click() {
-                    console.log('=================================')
-                    console.log(e)
-                    console.log('=================================')
-                    console.log(props);
-                    console.log('=================================')
-                    console.log('=================================')
-                }
-            })
-        }
+        const customContextMenu = new CustomContextMenu(mainWindow, props, e, customIPC)
+        let menuContent = customContextMenu.menuContent
         Menu.buildFromTemplate(menuContent).popup(mainWindow);
     });
 
+    const customMenu = new CustomMenu(app, process.env.NODE_ENV, mainWindow, customIPC)
+    template = customMenu.template
+    menu = Menu.buildFromTemplate(template)
     if (process.platform === 'darwin') {
-        template = [
-            {
-                label: 'File explorer',
-                submenu: [
-                    {
-                        label: 'About File explorer',
-                        selector: 'orderFrontStandardAboutPanel:'
-                    },
-                    {
-                        type: 'separator'
-                    },
-                    {
-                        label: 'Services',
-                        submenu: []
-                    },
-                    {
-                        type: 'separator'
-                    },
-                    {
-                        label: 'Hide File explorer',
-                        accelerator: 'Command+H',
-                        selector: 'hide:'
-                    },
-                    {
-                        label: 'Hide Others',
-                        accelerator: 'Command+Shift+H',
-                        selector: 'hideOtherApplications:'
-                    },
-                    {
-                        label: 'Show All',
-                        selector: 'unhideAllApplications:'
-                    },
-                    {
-                        type: 'separator'
-                    },
-                    {
-                        label: 'Quit',
-                        accelerator: 'Command+Q',
-                        click() {
-                            app.quit();
-                        }
-                    }]
-            },
-            {
-                label: 'Edit',
-                submenu: [
-                    {
-                        label: 'Undo',
-                        accelerator: 'Command+Z',
-                        selector: 'undo:'
-                    },
-                    {
-                        label: 'Redo',
-                        accelerator: 'Shift+Command+Z',
-                        selector: 'redo:'
-                    },
-                    {
-                        type: 'separator'
-                    },
-                    {
-                        label: 'Cut',
-                        accelerator: 'Command+X',
-                        selector: 'cut:'
-                    },
-                    {
-                        label: 'Copy',
-                        accelerator: 'Command+C',
-                        selector: 'copy:'
-                    },
-                    {
-                        label: 'Paste',
-                        accelerator: 'Command+V',
-                        selector: 'paste:'
-                    },
-                    {
-                        label: 'Select All',
-                        accelerator: 'Command+A',
-                        selector: 'selectAll:'
-                    }]
-            },
-            {
-                label: 'View',
-                submenu: (process.env.NODE_ENV === 'development') ?
-                    [
-                        {
-                            label: 'Reload',
-                            accelerator: 'Command+R',
-                            click() {
-                                mainWindow.webContents.reload();
-                            }
-                        },
-                        {
-                            label: 'Toggle Full Screen',
-                            accelerator: 'Ctrl+Command+F',
-                            click() {
-                                mainWindow.setFullScreen(!mainWindow.isFullScreen());
-                            }
-                        },
-                        {
-                            label: 'Toggle Developer Tools',
-                            accelerator: 'Alt+Command+I',
-                            click() {
-                                mainWindow.toggleDevTools();
-                            }
-                        }] :
-                    [
-                        {
-                            label: 'Reload',
-                            accelerator: 'Command+R',
-                            click() {
-                                mainWindow.webContents.reload();
-                            }
-                        },
-                        {
-                            label: 'Toggle Full Screen',
-                            accelerator: 'Ctrl+Command+F',
-                            click() {
-                                mainWindow.setFullScreen(!mainWindow.isFullScreen());
-                            }
-                        }]
-            },
-            {
-                label: 'Window',
-                submenu: [
-                    {
-                        label: 'Minimize',
-                        accelerator: 'Command+M',
-                        selector: 'performMiniaturize:'
-                    },
-                    {
-                        label: 'Close',
-                        accelerator: 'Command+W',
-                        selector: 'performClose:'
-                    },
-                    {
-                        type: 'separator'
-                    },
-                    {
-                        label: 'Bring All to Front',
-                        selector: 'arrangeInFront:'
-                    }]
-            },
-            {
-                label: 'Help',
-                submenu: [
-                    {
-                        label: 'Learn More',
-                        click() {
-                            shell.openExternal('http://explorer.hashup.io');
-                        }
-                    },
-                    {
-                        label: 'Report issues',
-                        click() {
-                            shell.openExternal('https://github.com/desduvauchelle/file-explorer/issues');
-                        }
-                    }
-                ]
-            }];
-
-        menu = Menu.buildFromTemplate(template);
         Menu.setApplicationMenu(menu);
     } else {
-        template = [
-            {
-                label: '&File',
-                submenu: [
-                    {
-                        label: '&Open',
-                        accelerator: 'Ctrl+O'
-                    },
-                    {
-                        label: '&Close',
-                        accelerator: 'Ctrl+W',
-                        click() {
-                            mainWindow.close();
-                        }
-                    }]
-            },
-            {
-                label: '&View',
-                submenu: (process.env.NODE_ENV === 'development') ?
-                    [
-                        {
-                            label: '&Reload',
-                            accelerator: 'Ctrl+R',
-                            click() {
-                                mainWindow.webContents.reload();
-                            }
-                        },
-                        {
-                            label: 'Toggle &Full Screen',
-                            accelerator: 'F11',
-                            click() {
-                                mainWindow.setFullScreen(!mainWindow.isFullScreen());
-                            }
-                        },
-                        {
-                            label: 'Toggle &Developer Tools',
-                            accelerator: 'Alt+Ctrl+I',
-                            click() {
-                                mainWindow.toggleDevTools();
-                            }
-                        }] :
-                    [
-                        {
-                            label: '&Reload',
-                            accelerator: 'Ctrl+R',
-                            click() {
-                                mainWindow.webContents.reload();
-                            }
-                        },
-                        {
-                            label: 'Toggle &Full Screen',
-                            accelerator: 'F11',
-                            click() {
-                                mainWindow.setFullScreen(!mainWindow.isFullScreen());
-                            }
-                        }]
-            },
-            {
-                label: 'Help',
-                submenu: [
-                    {
-                        label: 'Learn More',
-                        click() {
-                            shell.openExternal('http://explorer.hashup.io');
-                        }
-                    },
-                    {
-                        label: 'Report issues',
-                        click() {
-                            shell.openExternal('https://github.com/desduvauchelle/file-explorer/issues');
-                        }
-                    }
-                ]
-            }];
-        menu = Menu.buildFromTemplate(template);
         mainWindow.setMenu(menu);
     }
 });

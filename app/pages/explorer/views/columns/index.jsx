@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import fs from 'fs'
-import Helmet from 'react-helmet'
 import ReduxBinder from 'alias-redux/ReduxBinder'
 // Plugins
 import { HotKeys } from 'react-hotkeys'
@@ -11,7 +10,6 @@ import Path from 'path'
 import { DragDropContext } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 // Components
-import Header from './components/Header'
 import Favorites from './components/Favorites'
 import Column from './components/Column'
 import Preview from './components/Preview'
@@ -119,17 +117,7 @@ class Columns extends Component {
         return (
             <HotKeys keyMap={keyMap}
                      handlers={hokeyHandlers}>
-                <Helmet title={selected} />
                 <div className="explorer">
-                    <div className="explorer-header">
-                        <Header path={path}
-                                selected={selected}
-                                hokeyHandlers={hokeyHandlers}
-                                linkAdd={linkAdd}
-                                sectionAdd={sectionAdd}
-                                actions={actions}
-                                goToSettings={this._goToSettings} />
-                    </div>
                     <div className="column favorites">
                         <Favorites />
                     </div>

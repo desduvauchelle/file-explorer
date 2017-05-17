@@ -62,6 +62,9 @@ export default class FavoritesNewGroupModal extends Component {
         this.props.actions.favorites.sectionAdd({
             name: this.state.newGroupName
         });
+        new Notification(`${this.state.newGroupName} created`, {
+            body: 'New group created'
+        })
         this.setState({
             newGroupName: ''
         });

@@ -102,7 +102,7 @@ class FileItem extends Component {
                 e.preventDefault();
                 handleClick(this);
             }}
-               href={file}
+               href={isFavorite ? null : file}
                onDoubleClick={(e) => {
                                   e.preventDefault();
                                   handleDoubleClick(file, this)

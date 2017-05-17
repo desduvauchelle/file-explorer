@@ -1,4 +1,5 @@
-
+import { shell } from 'electron'
+import Path from 'path'
 
 //
 // Action types
@@ -8,6 +9,7 @@ const FORWARD = 'explorer/navigation/FORWARD';
 const UP = 'explorer/navigation/UP';
 const DOWN = 'explorer/navigation/DOWN';
 const TO = 'explorer/navigation/TO';
+const REMOVE = 'explorer/navigation/REMOVE'
 
 const initialState = {
     path: '/',
@@ -32,6 +34,11 @@ export default function reducer(state = {
                 ...state,
                 path: action.path,
                 selected: action.selected
+            }
+        case REMOVE:
+            return {
+                ...state,
+                path: action.path
             }
         default:
             return state
@@ -67,5 +74,15 @@ export function goTo(path = '/', selected = null) {
         type: TO,
         path: path,
         selected: selected
+    }
+}
+
+export function remove(path, selected) {
+    let fullPath = selected ? Path.join(path, selected) : path;
+    fullPath = fullPath.replace(/%20/g, ' ')
+    shell.moveItemToTrash(fullPath);
+    return {
+        type: REMOVE,
+        path: selected ? path : Path.join(path, '..')
     }
 }

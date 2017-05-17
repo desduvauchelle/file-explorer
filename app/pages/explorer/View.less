@@ -1,1 +1,23 @@
-@import './views/columns/components/Column';
+@import './views/columns/Column';
+body {
+    -webkit-app-region: drag;
+}
+.app-wrapper {
+    position: relative;
+
+    display: block;
+    width: 100%;
+    height: 100%;
+
+    -webkit-app-region: drag;
+
+    & > .view-wrapper {
+        position: absolute;
+        top: 20px;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        -webkit-app-region: no-drag;
+    }
+}
