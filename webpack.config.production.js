@@ -4,14 +4,13 @@
 
 import path from 'path';
 import webpack from 'webpack';
-import validate from 'webpack-validator';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import merge from 'webpack-merge';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import BabiliPlugin from 'babili-webpack-plugin';
 import baseConfig from './webpack.config.base';
 
-export default validate(merge(baseConfig, {
+export default merge(baseConfig, {
     devtool: 'cheap-module-source-map',
 
     entry: [
@@ -28,25 +27,25 @@ export default validate(merge(baseConfig, {
             // Extract all .global.css to style.css as is
             {
                 test: /\.less$/,
-                loader: ExtractTextPlugin.extract( 'style-loader', 'css-loader!less-loader' )
+                loader: ExtractTextPlugin.extract({fallback: 'style-loader', use: 'css-loader!less-loader'})
             },
 
             // Fonts
             {
                 test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'url?limit=10000&mimetype=application/font-woff'
+                loader: 'url-loader?limit=10000&mimetype=application/font-woff'
             }, {
                 test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'url?limit=10000&mimetype=application/font-woff'
+                loader: 'url-loader?limit=10000&mimetype=application/font-woff'
             }, {
                 test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'url?limit=10000&mimetype=application/octet-stream'
+                loader: 'url-loader?limit=10000&mimetype=application/octet-stream'
             }, {
                 test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'file'
+                loader: 'file-loader'
             }, {
                 test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'url?limit=10000&mimetype=image/svg+xml'
+                loader: 'url-loader?limit=10000&mimetype=image/svg+xml'
             },
 
             // Images
@@ -67,11 +66,11 @@ export default validate(merge(baseConfig, {
 
         new BabiliPlugin( ),
 
-        new ExtractTextPlugin('style.css', { allChunks: true }),
+        new ExtractTextPlugin('style.css'),
 
         new HtmlWebpackPlugin({ filename: '../app.html', template: 'app/app.html', inject: false })
     ],
 
     // https://github.com/chentsulin/webpack-target-electron-renderer#how-this-module-works
     target: 'electron-renderer'
-}));
+})

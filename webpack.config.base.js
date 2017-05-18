@@ -3,10 +3,9 @@
  */
 
 import path from 'path';
-import validate from 'webpack-validator';
 import { dependencies as externals } from './app/package.json';
 
-export default validate({
+export default {
     module: {
         loaders: [
             {
@@ -34,18 +33,18 @@ export default validate({
     // https://webpack.github.io/docs/configuration.html#resolve
     resolve: {
         extensions: [
-            '', '.js', '.jsx', '.json', '.less'
+            '.js', '.jsx', '.json', '.less'
         ],
-        packageMains: [
-            'webpack',
-            'browser',
-            'web',
-            'browserify',
-            [
-                'jam', 'main'
-            ],
-            'main'
-        ],
+        // packageMains: [
+        //     'webpack',
+        //     'browser',
+        //     'web',
+        //     'browserify',
+        //     [
+        //         'jam', 'main'
+        //     ],
+        //     'main'
+        // ],
         alias: {
             'alias-redux': path.resolve(__dirname, './app/redux'),
             'alias-resources': path.resolve(__dirname, './resources'),
@@ -56,4 +55,4 @@ export default validate({
     plugins: [],
 
     externals: Object.keys(externals || {})
-});
+}
