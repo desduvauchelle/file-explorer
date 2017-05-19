@@ -44,7 +44,9 @@ class FileItem extends Component {
                             let foundApps = self.props.state.settings.apps.filter(a => a.id === specialPathOpening[0].appId)
                             if (foundApps.length > 0) {
                                 try {
-                                    spawn(foundApps[0].path, [file])
+
+                                    spawn(`open`, [file, '-a', `"${foundApps[0].name}"`])
+                                // spawn(foundApps[0].path, [file])
                                 } catch (ex) {
                                     console.log(`Failed to launch: ${file} with ${foundApps[0].name}, Caused by: ${ex}`); // eslint-disable-line
                                 }
@@ -63,7 +65,10 @@ class FileItem extends Component {
                         let foundApps = self.props.state.settings.apps.filter(a => a.id === specialExtensionOpening[0].appId)
                         if (foundApps.length > 0) {
                             try {
-                                spawn(foundApps[0].path, [file])
+                                // spawn(`open ${file} -a "${foundApps[0].name}"`)
+                                // spawn(`open`, ['-a', `"${foundApps[0].name}"`, file])
+                                spawn(`open`, [file])
+                            // spawn(foundApps[0].path, [file])
                             } catch (ex) {
                                 console.log(`Failed to launch: ${file} with ${foundApps[0].name}, Caused by: ${ex}`); // eslint-disable-line
                             }
